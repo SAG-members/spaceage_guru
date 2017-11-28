@@ -1,0 +1,235 @@
+.remove-message{
+	float: right;
+	top: 0px;
+	right: 0px;
+	position: absolute;
+} 
+.message{
+	margin-bottom: 20px;
+	margin-top: 60px;
+	padding: 15px;
+	/*margin: 10px 15px 10px 15px;*/
+	position: relative;
+	/*-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;*/
+	
+}
+.message p{
+	margin: 0 0 0px;
+}
+
+.action-btns {text-align:right;}
+
+/* 
+*Default-margins
+*/
+/* Top margins */
+.mar-t-5{ margin-top:5px;}
+.mar-t-10{ margin-top:10px;}
+.mar-t-15{ margin-top:15px;}
+.mar-t-20{ margin-top:20px;}
+.mar-t-60{ margin-top:60px;}
+
+/* Bottom margins */
+.mar-b-5{ margin-bottom:5px;}
+.mar-b-10{ margin-bottom:10px;}
+.mar-b-15{ margin-bottom:15px;}
+.mar-b-20{ margin-bottom:20px;}
+
+/* Left margins */
+.mar-l-5{ margin-left:5px;}
+.mar-l-10{ margin-left:10px;}
+.mar-l-15{ margin-left:15px;}
+.mar-l-20{ margin-left:20px;}
+
+/* Right margins */
+.mar-r-5{ margin-right:5px;}
+.mar-r-10{ margin-right:10px;}
+.mar-r-15{ margin-right:15px;}
+.mar-r-20{ margin-right:20px;}
+
+
+.pad-20 { padding: 20px !important; }
+
+
+.post input[type="text"] {
+    width: 100%;
+    padding: 5px 12px;
+    color: #635c5c !important;
+}
+.modal-body .classyedit { width:100%;}
+.toolbar .button{background:transparent; padding: 0;}
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+//    filter: alpha(opacity=0);
+}
+.avtar-image-box {
+    border: 1px solid;
+    height: 120px;
+    width: 120px;
+    position: relative;
+    background: #000;
+}
+.col-centered {
+    float: none;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: -50px;
+}
+
+#forgot-password .modal-dialog {
+    width: 430px;
+}
+#forgot-password .normal_text {
+    padding: 15px 10px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 20px;
+    background: #2E363F;
+    color: #fff;
+}
+.popup-message-box{text-align:center;}
+.error-change-password{display:none;}
+.classyedit{width:100% !important;}
+.manage_coupon_error{display:none;}
+
+.visibility-block label{padding-left:0px !important;}
+
+.country-label
+{
+	display: inline-block;
+    border: 1px solid #f3ad6e;
+    padding: 10px;
+    background: #f3ad6e;
+    margin-right: 20px;
+    position : relative;
+    margin-bottom : 20px;
+}
+.remove-country
+{
+	position: absolute;
+    top: -13px;
+    right: -5px;
+    cursor : pointer; 
+}
+
+.visibility-block label{
+	border: 1px solid #e7e7e7;
+    padding: 6px 8px;
+    text-align: center;
+    display: inline-block;
+    text-transform: uppercase;
+    margin-right: 5px;
+}
+ 
+.visibility-block label div{
+    position: relative;
+    margin-left: 10px;
+    text-transform: uppercase;	
+}
+
+.visibility-block label:nth-child(2) {
+  background:red;
+  color : #FFF;
+  font-weight:bold;
+}
+
+.visibility-block label:nth-child(3) {
+  background:#FFA500;
+  color : #FFF;
+  font-weight:bold;
+}
+
+.visibility-block label:nth-child(4) {
+  background:#f3ad6e;
+  color : #FFF;
+  font-weight:bold;
+}
+.visibility-block label:nth-child(5) {
+  background:#3bca3b;
+  color : #FFF;
+  font-weight:bold;
+}
+.visibility-block label:nth-child(6) {
+  background:#089bd3;
+  color : #FFF;
+  font-weight:bold;
+}
+
+
+/* Volume Slider CSS */
+#player {
+    width: 350px;
+    height: 50px;    
+    position: relative;
+    margin: 0 auto;
+    /*top: 150px;*/
+    background: url('http://iviewsource.com/exercises/audioslider/images/volume-background.png') no-repeat left top;
+}
+
+#volume {
+    position: absolute;
+    left: 24px;
+    margin: 0 auto;
+    height:15px;
+    width: 300px;
+    background: url('http://iviewsource.com/exercises/audioslider/images/volume-empty.png') no-repeat left top;
+  border: none;
+  outline: none;
+}
+
+#volume .ui-slider-range-min {
+    height:15px;
+    width: 300px;
+    position: absolute;
+    background: url('http://iviewsource.com/exercises/audioslider/images/volume-full.png') no-repeat left top;
+  border: none;
+  outline: none;
+}
+
+#volume .ui-slider-handle {
+    width: 38px;
+    height:39px;
+    background: url('http://iviewsource.com/exercises/audioslider/images/volume-knob.png') no-repeat left top;
+    position: absolute;
+    margin-left: -15px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    top : -6px;
+} 
+.ui-helper-hidden-accessible{display:none;}
+.thumbimage {
+    width: 120px;
+    height: 120px;
+}
+.delete-thumb {
+    position: absolute;
+    right: 0px;
+    top: -7px;
+}
+
+
+.map_preview_box_wrapper{
+	border: 1px solid #e7e7e7;
+    height: 220px;
+    width: 220px;
+    position : relative;
+}
+.thumbimage_220{
+	width:220px;
+}
+	
