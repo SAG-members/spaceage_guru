@@ -215,8 +215,8 @@ header .menu .navbar-nav>li>a {
 }
 
 #midmain .rightmain ul li:first-child {
-	background: #fbaa62;
-	color: #fff;
+	background: #FFD700;
+	color:#DAA520 !important;
 	min-height: 35px;
 	padding: 0px;
 	line-height: 34px;

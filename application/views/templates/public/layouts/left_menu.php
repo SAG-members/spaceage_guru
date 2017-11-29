@@ -75,11 +75,7 @@
 			
 		</li>
 	</ul>
-	<ul>
-		<li>Friends <a class="pull-right add-pss pointer add-friend" title="Add Friend" alt="Add Friend"><i class="fa fa-plus"></i> </a></li>
 		
-	</ul>
-	
 	<ul>
 		<li>Data <a class="pull-right add-pss" href="<?php echo base_url('user/add/data');?>" title="Add Data" alt="Add Data"><i class="fa fa-plus"></i> </a></li>
 		<!-- 

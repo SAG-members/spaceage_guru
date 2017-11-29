@@ -161,7 +161,7 @@
 	<ul>
 		<li>
 		
-		<span class="text-center" style="margin-left: 40px;">Number Game</span>
+		<span class="text-center" style="margin-left: 40px;">Chat/ Friends</span>
 		
 		</li>
 
@@ -169,7 +169,7 @@
 
 	<div class="number_game_holder" style="min-height: 250px;">
 		<?php if($this->session->userdata('id')): ?>
-			<div id="cometchat_embed_synergy_container" style="width:350px;height:420px;max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;" ></div><script src="/spaceage_guru/cometchat/js.php?type=core&name=embedcode" type="text/javascript"></script><script>var iframeObj = {};iframeObj.module="synergy";iframeObj.style="min-height:420px;min-width:350px;";iframeObj.width="350px";iframeObj.height="420px";iframeObj.src="/spaceage_guru/cometchat/cometchat_embedded.php"; if(typeof(addEmbedIframe)=="function"){addEmbedIframe(iframeObj);}</script>
+			<div id="cometchat_embed_synergy_container" style="width:350px;height:420px;max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;" ></div><script src="/cometchat/js.php?type=core&name=embedcode" type="text/javascript"></script><script>var iframeObj = {};iframeObj.module="synergy";iframeObj.style="min-height:420px;min-width:350px;";iframeObj.width="350px";iframeObj.height="420px";iframeObj.src="/cometchat/cometchat_embedded.php"; if(typeof(addEmbedIframe)=="function"){addEmbedIframe(iframeObj);}</script>
     	<?php endif; ?>
 	</div>
 
