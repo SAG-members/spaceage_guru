@@ -51,7 +51,7 @@
 <!-- EmojiOneArea -->
 <script src="//cdn.rawgit.com/mervick/emojionearea/master/dist/emojionearea.min.js"></script>
 
-
+<script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#property=5a24e3ec1b118100135877d2&product=inline-share-buttons' async='async'></script>
 
 </head>
 
@@ -61,10 +61,9 @@
 		
 		<!-- Header includes header and main menu  -->
 		<header>
-			<?php $this->load->view($siteHeader)?>
-			<?php if($this->session->userdata('id')):?>
+			<?php #$this->load->view($siteHeader)?>
 			<?php $this->load->view($siteNavigation)?>
-			<?php endif;?>
+			
 		</header>
 		
 		
@@ -125,7 +124,8 @@
 	
 	
 	
-	
+	<!-- Go to www.addthis.com/dashboard to customize your tools --> 
+	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a21103aad337c00"></script> 
 	
 	<?php //$this->output->enable_profiler(TRUE);?>
 </body>

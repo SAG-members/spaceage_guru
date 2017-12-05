@@ -72,7 +72,7 @@ class Base extends CI_Controller
 			
 			# Load page model and get all data
 			$this->data['datas'] = $this->page->get_data(20, 'desc', $membershipLevel);
-			$this->template->setLeftSideBar('left_menu',$this->data);
+			$this->template->setLeftSideBar('left_sidebar',$this->data);
 			
 			# Load country model
 			$this->load->model('country');
@@ -83,7 +83,7 @@ class Base extends CI_Controller
 			$this->data['communication'] = $this->ulec->get_communication_data($this->session->userdata('id'));
 			
 			
-			$this->template->setRightSideBar('library_right_menu', $this->data);
+			$this->template->setRightSideBar('right_sidebar', $this->data);
 			
 			if(isset($_COOKIE['bakeme']))
 			{

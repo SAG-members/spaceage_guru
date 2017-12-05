@@ -890,6 +890,9 @@ switch ($page->{Page::_VISIBILITY})
 <div class="clearfix"></div>
 <hr/>
 
+<div class="sharethis-inline-share-buttons"></div>
+
+<hr/>
 <?php if(!$page->{Page::_PRICELESS} && $page->{Page::_PRICE} !=0 ) :?>
 <div class ="row mar-b-20">
 

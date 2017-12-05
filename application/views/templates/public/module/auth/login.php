@@ -1,3 +1,11 @@
+<div style="width: 120px; margin: 0px auto;">
+	<img src="<?php echo base_url('assets/img/spaceage_guru_logo.jpg')?>" class="img-responsive">
+</div>
+
+<div style="width: 320px; margin: 0px auto;">
+	<img src="<?php echo base_url('assets/img/mother_earth.jpg')?>"  class="img-responsive">
+</div>
+
 <h2>Login</h2>
 <div class="services_text feedback">
 	<form action="<?php echo base_url('/index.php/login')?>" method="post"

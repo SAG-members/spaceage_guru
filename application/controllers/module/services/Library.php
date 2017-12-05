@@ -210,7 +210,25 @@ class Library extends Application
 				
 				$this->submodility->update_page_submodility($lastId, $mod1, $mod2, $mod3, $mod4, $mod5, $mod6, $mod7, $mod8, $mod9, $mod10, $mod11, $mod12, $mod13, $mod14, $mod15, $mod16, $mod17, $mod18, $mod19, $mod20, $mod21, $mod22, $mod23, $mod24, $mod25, $mod26, $mod27, $mod28, $mod29, $mod30, $mod31, $mod32, $mod33, $mod34, $mod35, $mod36, $mod37, $mod38, $mod39, $mod40, $mod41, $mod42, $mod43, $mod44, $mod45, $mod46, $mod47, $mod48, $mod49, $mod50, $mod51, $mod52);
 			}
-					
+		    
+			# Once the data is created we can do rss feed subscription for the user
+			
+			$this->load->model('rss_feed_subscription_model','rss');
+			$this->rss->create_rss_feed_subscription($this->session->userdata('id'), $lastId, $this->input->post('data_type'), '');
+			
+			# Now once the data is created, rss subscription is also done, now it's time to create
+			# a group with the name of the data
+			# Load cometchat engine
+			
+			$this->load->library('cometchat_engine');
+			
+			ob_start();
+			$this->cometchat_engine->create_group($lastId, $this->input->post('title'), 0);
+			$chatroomData = ob_get_clean();
+			$chatroomDataArr = json_decode($chatroomData, true);
+			
+			$res = $this->cometchat_engine->add_user_to_group($chatroomDataArr['success']['roomid'], $this->session->userdata('id'));
+			
 			if($lastId) {$this->message->setFlashMessage(Message::DATA_CREATE_SUCCESS, array('id'=>'1'));}
 			else {$this->message->setFlashMessage(Message::DATA_CREATE_FAILURE);}
 
