@@ -79,17 +79,17 @@ class Payment extends Application
 	    # First step is to get custom value, this will let us now whether it is PSSS or membership
 	        
 	     $paypalInfo = $this->input->post();
-	     
-	     $data['txn_id'] = $paypalInfo['tx'];
-	     $data['status'] = $paypalInfo['st'];
-	     $data['payment_gross'] = $paypalInfo["amt"];
-	     $data['mc_gross'] = $paypalInfo["amt"];
-	     $data['currency_code'] = $paypalInfo["cc"];
+// 	     pre($paypalInfo);die;
+	     $data['txn_id'] = $paypalInfo['txn_id'];
+	     $data['status'] = $paypalInfo['payment_status'];
+	     $data['payment_gross'] = $paypalInfo["mc_gross"];
+	     $data['mc_gross'] = $paypalInfo["mc_gross"];
+	     $data['currency_code'] = $paypalInfo["mc_currency"];
 	     $data['item_number']	= $paypalInfo["item_number"];
 	     $data['item_name'] = $paypalInfo["item_name"];
 	     $data['payer_email'] = '';
 	     
-	     $type = explode(':', $paypalInfo['cm']);
+	     $type = explode(':', $paypalInfo['custom']);
 	     
 	     $data['subscription_type'] = $type[1];
 	     $data['category'] = $type[0];
