@@ -398,7 +398,7 @@ $(function(){
 	$('div.eraser-btn').click(function(){
 		$('div.eraser-btn').addClass('select');
 		ctx.lineWidth = $('span.selected').attr('val');
-		$('canvas').css('cursor', 'url(images/eraser.png), auto');
+		$('canvas').css('cursor', 'url(<?php echo STATIC_CDN_URL;?>plugins/handwrite/images/eraser.png), auto');
 		$('div.color-select').hide();
 		ctx.fillStyle = 'white';
 		ctx.strokeStyle = 'white';
@@ -407,7 +407,7 @@ $(function(){
 		$('div.eraser-btn').removeClass("select");
 		ctx.lineWidth = $('span.selected').attr('val');
 		ctx.strokeStyle = selectedColor;
-		$('canvas').css('cursor', 'url(images/pencil.png), auto');
+		$('canvas').css('cursor', 'url(<?php echo STATIC_CDN_URL;?>plugins/handwrite/images/pencil.png), auto');
 	});
 	$('div.clear-btn').click(function(){
 		ctx.clearRect(0, 0, canvas.width, canvas.height);

@@ -2,13 +2,13 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Faq extends Application 
+class Faq extends Base 
 {
 	public function __construct()
 	{
 		parent::__construct();
 		
-		if(!$this->isLoggedIn()) { $this->redirectToLogin(); }
+// 		if(!$this->isLoggedIn()) { $this->redirectToLogin(); }
 
 		$this->load->model('faq_model', 'faq');
 		$this->load->model('admin/user', 'user');

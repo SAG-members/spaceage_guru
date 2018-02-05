@@ -1,5 +1,7 @@
 <div class="midmain faq">
+	<?php if($this->session->userdata('user_id')) :?>
 	<div class="pull-right mar-t-10"><a href="<?php echo base_url('faq/post-question');?>" class="new-post">Add New Question</a></div>
+	<?php endif;?>
 	<h2><?php echo $title;?></h2>
 	<div class="services_text">
 		<p>Frequently asked questions and answers</p>

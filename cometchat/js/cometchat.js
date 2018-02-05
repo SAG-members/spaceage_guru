@@ -9,7 +9,8 @@
 (function($){
 	$.cometchat = $.cometchat||function(){
 		var baseUrl = '<?php echo BASE_URL;?>',
-			roleid = '',
+			role = '',
+			staticCDNUrl = '<?php echo STATIC_CDN_URL;?>',
 			sendajax = true,
 			broadcastData = {},
 			sendbroadcastinterval = 0,
@@ -91,6 +92,8 @@
 				lastmessagereadstatus: {},
 				loggedinusertype : 'loginuser',
 				registeredCallbacks : {},
+				lastmessageid : {},
+        		dockedAlignment : 'right',
 			};
 		ccvariable.currentTime = ccvariable.idleTime = Math.floor(ccvariable.todaysDate.getTime()/1000);
 		ccvariable.todays12am = ccvariable.currentTime -(ccvariable.currentTime%(24*60*60*1000));
@@ -107,7 +110,7 @@
 			if(!ccvariable.windowFocus){
 				jqcc.each( ccvariable.openChatboxId, function( key, value ) {
 					if(typeof ccvariable.lastmessagereadstatus[value] != 'undefined' && ccvariable.lastmessagereadstatus[value] == 0){
-						var messageid = ccvariable.lastmessagereadstatus[value];
+						var messageid = ccvariable.lastmessageid[value];
 						var message = {"id": messageid, "from": value, "self": 0, "old": 0};
 						if(ccvariable.currentStatus != 'invisible'){
 							jqcc.cometchat.sendReceipt(message, 'readMessageNotify');
@@ -197,6 +200,7 @@
 					}
 					ccvariable.externalVars["buddylist"] = '1';
 					ccvariable.externalVars["initialize"] = '1';
+					jqcc.cometchat.restoreFromCCState();
 					ccvariable.externalVars["currenttime"] = ccvariable.currentTime;
 					if (ccvariable.runHeartbeat == 1) {
 					  jqcc.cometchat.chatHeartbeat();
@@ -321,7 +325,7 @@
 			ccvariable.externalVars['currenttime'] = Math.floor(new Date().getTime()/1000);
 			ccvariable.externalVars["basedata"] = ccvariable.baseData;
 			ccvariable.externalVars["readmessages"] = jqcc.cometchat.getFromStorage('readmessages');
-			ccvariable.externalVars["receivedunreadmessages"] = jqcc.cometchat.getFromStorage('receivedunreadmessages');
+			/*ccvariable.externalVars["receivedunreadmessages"] = jqcc.cometchat.getFromStorage('receivedunreadmessages');*/
 
 			if((settings.theme == "synergy" || settings.theme == "embedded") && settings.enableType == 1 && embeddedchatroomid > 0 && ccvariable.externalVars["initialize"] == 1){
 				ccvariable.externalVars["buddylist"] = 0;
@@ -348,7 +352,7 @@
 						}
 						if(data){
 							jqcc.cometchat.setInternalVariable('allowchatboxpopup', '1');
-
+							jqcc.cometchat.updateToStorage('readmessages',{});
 							if(ccvariable.externalVars['initialize'] == 1 && typeof initializeCometService == 'function' && (data.hasOwnProperty('userstatus')||data.hasOwnProperty('userid'))){
 								initializeCometService();
 							}
@@ -381,9 +385,9 @@
 										jqcc[calleeAPI].botList(item);
 									}
 								}
-								if(type=='recentchats'){
+								if(type=='recent'){
 									if(typeof (jqcc.cometchat.updateRecentChats)=='function'){
-										var params = {'force':1,'list':JSON.parse(item)};
+										var params = {'force':1,'list':item};
 										jqcc.cometchat.updateRecentChats(params);
 									}
 									/*Callback for Recent Chats*/
@@ -392,12 +396,10 @@
 								if(type=='loggedintype'){
 									ccvariable.loggedinusertype = item;
 								}
-								if(type=='roleid'){
-									roleid = item;
+								if(type=='role'){
+									role = item;
 								}
 								if(type=='loggedout'){
-									jqcc.cometchat.updateToStorage('receivedunreadmessages',{});
-									jqcc.cometchat.updateToStorage('readmessages',{});
 									if(ccvariable.cometid!='' && typeof(cometuncall_function)==="function"){
 										cometuncall_function(ccvariable.cometid);
 										jqcc.cometchat.setThemeVariable('cometid','');
@@ -440,10 +442,10 @@
 									}
 									if(settings.messageBeep==1&&(ccvariable.callbackfn==""||ccvariable.callbackfn=="desktop")){
 										if(typeof (jqcc[calleeAPI].messageBeep)!='undefined'){
-											jqcc[calleeAPI].messageBeep(baseUrl);
+											jqcc[calleeAPI].messageBeep(staticCDNUrl);
 										}
 									}
-									if(ccvariable.callbackfn!=""&&ccvariable.callbackfn=="desktop"){
+									if(ccvariable.callbackfn!=""&&ccvariable.callbackfn=="desktop" && (settings.plugins).indexOf('screenshare') > -1){
 										var ccpluginindex=(settings.plugins).indexOf('screenshare');
 										(settings.plugins).splice(ccpluginindex,1);
 									}
@@ -510,6 +512,7 @@
 								if (type == 'chatrooms') {
 									if (jqcc.cometchat.getChatroomVars('initializeAutoLogin') == 1 && jqcc.cometchat.getChatroomVars('themename') == 'embedded') {
 										var autoLoginCr = jqcc.cometchat.getChatroomVars('autoLogin');
+										jqcc.cometchat.setChatroomVars('chatroomdetails',item);
 										$.each(item, function(i,room) {
 											if (('_'+autoLoginCr) == i) {
 												if(typeof(btoa) != 'undefined'){
@@ -559,7 +562,7 @@
 									}
 									jqcc.cometchat.stimulateHeartbeat({heartbeatTime:settings.minHeartbeat});
 									if(ccvariable.externalVars['initialize'] != 1){
-										ccvariable.externalVars["crtimestamp"] = item[Object.keys(item).sort().reverse()[0]].id;
+										ccvariable.externalVars["lastgroupmessageid"] = item[Object.keys(item).sort().reverse()[0]].id;
 									}
 									/*Callback for Groups Messages*/
 							        jqcc.cometchat.processSubscribeCallback('onGroupMessageReceived',item);
@@ -573,6 +576,9 @@
 								}
 								if (type == 'subscribeChatrooms') {
 									jqcc.cometchat.subscribeCometChatrooms(item);
+								}
+								if(type == 'lastgroupmessageid'){
+									ccvariable.externalVars["lastgroupmessageid"] = item;
 								}
 								/*chatroom responses end*/
 							});
@@ -609,7 +615,8 @@
 			}
 		};
 		arguments.callee.memberPluginRestrictions = function(memberfeature){
-			var memberAvailablePlugin = settings[roleid+'_plugins'];
+
+			var memberAvailablePlugin = settings[role+'_plugins'];
 			if (memberAvailablePlugin.indexOf(memberfeature) > -1) {
 				return true;
 			}else {
@@ -617,7 +624,7 @@
 			}
 		}
 		arguments.callee.memberExtensionRestrictions = function(memberfeature){
-			var memberAvailableExt = settings[roleid+'_extensions'];
+			var memberAvailableExt = settings[role+'_extensions'];
 			if (memberAvailableExt.indexOf(memberfeature) > -1) {
 				return true;
 			}else {
@@ -625,7 +632,7 @@
 			}
 		}
 		arguments.callee.memberModuleRestrictions = function(memberfeature){
-			var memberAvailableModule = settings[roleid+'_modules'];
+			var memberAvailableModule = settings[role+'_modules'];
 			if (memberAvailableModule.indexOf(memberfeature) > -1) {
 				return true;
 			}else {
@@ -633,8 +640,8 @@
 			}
 		}
 		arguments.callee.membershipAccess = function(feature,type){
-			if ( typeof (settings.memberShipLevel) != 'undefined' && settings.memberShipLevel == 1) {
-				var memberAvailableFeature = settings[roleid+'_'+type];
+			if ( typeof (settings.memberShipLevel) != 'undefined' && settings.memberShipLevel == 1 && role != '') {
+				var memberAvailableFeature = settings[role+'_'+type];
 				if (memberAvailableFeature.indexOf(feature) > -1) {
 					return true;
 				}else {
@@ -688,6 +695,7 @@
 			if(typeof(userid) != "undefined" && userid > 0) {
 				var recentlist = jqcc.cometchat.getFromStorage(recentkey);
 				if(params.force == 1){
+					var recentlist = {};
 					if(typeof(params.list) == "object" && params.list != 'null' && params.list != null){
 						$.each(params.list, function(i, details){
 							details.m = jqcc.cometchat.processRecentmessages(details.m);
@@ -787,7 +795,7 @@
 
 		arguments.callee.processRecentmessages = function(recentlist){
 			if(typeof(recentlist) == "object") {
-				var baseUrl = jqcc.cometchat.getBaseUrl();
+				var staticCDNUrl = jqcc.cometchat.getStaticCDNUrl();
 				$.each(recentlist, function(id, details){
 					if(typeof(details.m) != "undefined" && details.m.indexOf("CC^CONTROL_") != -1) {
 						var data = (details.m).replace('CC^CONTROL_','');
@@ -802,7 +810,7 @@
 								var arrStr = data.m.split(/[::]/);
 								for(var i=0;i<arrStr.length;i++) {
 									if(arrStr[i] != '' && arrStr[i].indexOf(' ') == -1) {
-										var smiley = '<img class="cometchat_smiley" height="15" width="15" src="'+baseUrl+'writable/images/smileys/'+arrStr[i]+'.png" title="'+arrStr[i]+'"> ';
+										var smiley = '<img class="cometchat_smiley" height="15" width="15" src="'+staticCDNUrl+'writable/images/smileys/'+arrStr[i]+'.png" title="'+arrStr[i]+'"> ';
 										data.m = (data.m).replace(':'+arrStr[i]+':',smiley);
 									}
 								}
@@ -864,9 +872,7 @@
 				} else if(colortextcount > 0) {
 					recentlist = recentlist.replace(/<\/?span[^>]*>/g,"");
 				} else if(recentlist.indexOf("<a ") != -1) {
-					var regex = /<a.*?href=['"](.*?)['"]/;
-					var linktext = regex.exec(recentlist)[1];
-					recentlist = recentlist.replace(/<\/?a[^>]*>/g,linktext);
+					recentlist = $(recentlist).text();
 				}
 
 				if(recentlist.length > 20 && recentlist.indexOf("CC^CONTROL_") == -1){
@@ -925,9 +931,20 @@
 		arguments.callee.setSessionVariable = function(name, value){
 			/**
 				Session variables:
-				chats: The variable indicates whether the "Chats" panel is open or close. The possible values are: (0 or '' ) => close and 1 => Open
-				openedtab: The variable stores the tab opened under chats tab. The possible values are: (0 or '' ) => Recent tab, 1 => Contacts tab and 2 => Groups tab
-				chatboxes: The variable stores the chatboxes, whether the chat box is related to group or private chat, their states(closed/opened/minimized) and unread message count.
+				The variables are separated by colon(':')
+				chats:
+					The variable indicates whether the "Chats" panel is open or close.
+					The possible values are: (0 or '' ) => close and 1 => Open
+				openedtab:
+					The variable stores the tab opened under chats tab.
+					The possible values are: (0 or '' ) => Recent tab, 1 => Contacts tab and 2 => Groups tab
+				chatboxes:
+					The variable stores the chatboxes along with their properties.
+					The chatboxes are separated by comma (',')
+					The properties of a chatbox are separated by pipe ('|')
+					The first chatbox property stores the userid or groupid. The groupids are prefixed by '_'
+					The second chatbox property stores the state of the chatbox. 0=> closed, 1=>opened and 2=>minimized
+					The third chatbox property stores unread message count.
 			**/
 			ccvariable.sessionVars[name] = value;
 			var cc_state = '';
@@ -1050,6 +1067,8 @@
 			unreadcount += params.c;
 			if(chatboxstates.hasOwnProperty(key)){
 				var states = chatboxstates[key].split('|');
+				var oldstate = states[1];
+				var oldunreadcount = states[2];
 				if(!params.hasOwnProperty('s')){
 					params.s = states[1];
 				}
@@ -1057,8 +1076,8 @@
 					case 0:
 					case '':
 					case '0':
-						if(states[2]){
-							unreadcount += parseInt(states[2]);
+						if(oldunreadcount){
+							unreadcount += parseInt(oldunreadcount);
 						}
 						if(ccvariable.chatBoxOrder.indexOf(key)>-1 && unreadcount == 0){
 							ccvariable.chatBoxOrder.splice(ccvariable.chatBoxOrder.indexOf(key),1);
@@ -1075,7 +1094,7 @@
 							}
 							ccvariable.chatBoxOrder.push(key);
 						}else {
-							if(states[1] == 0 || states[1] == ''){
+							if(oldstate == 0 || oldstate == ''){
 								if(ccvariable.chatBoxOrder.indexOf(key)==-1){
 									ccvariable.chatBoxOrder.push(key);
 								}
@@ -1085,9 +1104,9 @@
 						break;
 					case 2:
 					case '2':
-						if(states[1]){
-							if(states[2]){
-								unreadcount += parseInt(states[2]);
+						if(oldstate==2){
+							if(oldunreadcount){
+								unreadcount += parseInt(oldunreadcount);
 							}
 						}
 						break;
@@ -1122,6 +1141,7 @@
 			if(typeof(params.r) == "undefined"){
 				jqcc.cometchat.setSessionVariable('chatboxstates',chatboxstatesarray.join());
 			}
+			return unreadcount;
 		}
 		/** Session Variable End **/
 
@@ -1287,81 +1307,78 @@
 		   				}
 		   			}
 		   		}else if(typeof(id) == 'object' && id.hasOwnProperty('groupid')){
-		   			jqcc.cometchat.getChatroomDetails({'id':id.groupid,'loadroom':1});
+		   			jqcc.cometchat.loadGroup({'id':id.groupid});
 		   		}
 			}
 		};
 		/**
 		 * getUnreadMessageCount
-		 * @params {contact:[],group:[]}
-		 * return total count of unread messages
+		 * @params undefined
+		 *			returns total count of unread messages including all the contacts and groups.
+		 * @params string 'contacts' or 'groups'
+		 *			returns total count of unread messages only for one-on-one chat or group chat.
+		 * @params {contact: [userid1, userid2, ...], group: [groupid1, groupid2, ...]}
+		 * 			returns the sum of unread message counts for the contacts and groups provided in params
 		 */
 		arguments.callee.getUnreadMessageCount = function(params){
-			if(typeof(params) == 'undefined'){
-				params = {};
-			}
-			if(typeof(params) == 'string'){
+			var cc_state = jqcc.cookie('cc_state');
+			if(cc_state==null){
 				return 0;
 			}
-			var obj = params;
-			var cc_state = jqcc.cookie("cc_state");
-			var splitOncc_state = cc_state.split(":");
-			if(splitOncc_state[2] == '' && splitOncc_state[2] == 'undefined'){
+			if(typeof params == 'undefined'){
+				params = {contacts: [], groups: []};
+			}
+			if(typeof params == 'string'){
+				if(params == 'contact' || params == 'contacts'){
+					params = {contacts: []};
+				}else if(params == 'group' || params == 'groups'){
+					params = {groups: []};
+				}
+			}
+			if(typeof params != 'object'){
+				console.warn('Please check the document to use the JS API getUnreadMessageCountTest');
 				return 0;
 			}
-			var splitOnComma = splitOncc_state[2].split(",");
-			var userUnreadmessageCount = groupUnreadmessageCount = totalUnreadmessageCount = totaluserUnreadmessageCount = totalgroupUnreadmessageCount = 0;
 
-			for(var i = 0; i<splitOnComma.length; i++){
-				var splitOnPipe = splitOnComma[i].split("|");
-				splitOnPipe[2] = (splitOnPipe[2] == "") ? 0 : splitOnPipe[2];
-				totalUnreadmessageCount = totalUnreadmessageCount+parseInt(splitOnPipe[2]);
-
-				if(typeof(obj) == 'number'){
-					if(splitOnPipe[0] == obj){
-						userUnreadmessageCount = splitOnPipe[2];
-					}
-				}
-
-				if( obj.hasOwnProperty('contact') && typeof(obj.contact) != 'undefined' && obj.contact != ''){
-					if(typeof(obj.contact) == 'number'){
-						if(splitOnPipe[0] == obj.contact){
-							userUnreadmessageCount = splitOnPipe[2];
-						}
-					}else if(typeof(obj.contact) == 'object') {
-						var userarr=obj.contact;
-						for (var index = 0; index < userarr.length; index++) {
-						    if(splitOnPipe[0] == userarr[index]){
-								totaluserUnreadmessageCount = totaluserUnreadmessageCount+parseInt(splitOnPipe[2]);
-							}
-						}
-					}
-				}
-
-				if(obj.hasOwnProperty('group') && typeof(obj.group) != 'undefined' && obj.group != ''){
-					if(typeof(obj.group) == 'number'){
-						if(splitOnPipe[0] == '_'+obj.group){
-							groupUnreadmessageCount = splitOnPipe[2];
-						}
-					}else if(typeof(obj.group) == 'object') {
-						var grouparr=obj.group;
-						for (var index = 0; index < grouparr.length; index++) {
-						    if(splitOnPipe[0] == '_'+grouparr[index]){
-								totalgroupUnreadmessageCount = totalgroupUnreadmessageCount+parseInt(splitOnPipe[2]);
-							}
-						}
-					}
-				}
-
-			}
-			var total = parseInt(userUnreadmessageCount)+parseInt(totaluserUnreadmessageCount)+parseInt(groupUnreadmessageCount)+parseInt(totalgroupUnreadmessageCount);
-
-			if(!obj.hasOwnProperty('group') && !obj.hasOwnProperty('contact') && typeof(obj) != 'number'){
-				total = totalUnreadmessageCount;
+			var chatboxstates = cc_state.split(':')[2];
+			if(chatboxstates == '' || chatboxstates == 'undefined'){
+				return 0;
 			}
 
-			return total;
-		};
+			chatboxstates = chatboxstates.split(',')
+			var groupsdata = {};
+			var contactsdata = {};
+			chatboxstates.forEach(function(chatboxstate){
+				states = chatboxstate.split('|');
+				if(states[2]=='' || states[2] == 'undefined'){
+					states[2] = 0;
+				}
+				states[2] = parseInt(states[2]);
+				if(states[0].charAt(0)=='_'){
+					groupsdata[states[0].slice(1)] = states[2];
+				}else{
+					contactsdata[states[0]] = states[2];
+				}
+			});
+			var unreadmessagecount = 0;
+			for(param in params){
+				if(param == 'contact' || param == 'contacts'){
+					for(contact in contactsdata){
+						if($.isEmptyObject(params[param]) || params[param].indexOf(parseInt(contact))!=-1){
+							unreadmessagecount += contactsdata[contact];
+						}
+					}
+				}
+				if(param == 'group' || param == 'groups'){
+					for(group in groupsdata){
+						if($.isEmptyObject(params[param]) || params[param].indexOf(parseInt(group))!=-1){
+							unreadmessagecount += groupsdata[group];
+						}
+					}
+				}
+			}
+			return unreadmessagecount;
+		}
 		arguments.callee.getRecentData = function(id){
 			$.ajax({
 				cache: false,
@@ -1437,7 +1454,7 @@
 		};
 		arguments.callee.joinChatroom = function(roomid, inviteid, roomname){
 			if(typeof (jqcc[calleeAPI].joinChatroom)!=='undefined'){
-				jqcc[calleeAPI].joinChatroom(roomid, inviteid, roomname);
+				jqcc.cometchat.chatroom(roomid, roomname, 2, inviteid);
 			}
 		};
 		arguments.callee.createChatboxSet = function(id, name, status, message, avatar, link, isdevice, chatboxstate, unreadmessagecount, restored){
@@ -1756,6 +1773,9 @@
 		arguments.callee.getBaseUrl = function(){
 			return baseUrl;
 		};
+		arguments.callee.getStaticCDNUrl = function(){
+			return staticCDNUrl;
+		};
 		arguments.callee.setAlert = function(id, number){
 			if(typeof (jqcc[calleeAPI].setModuleAlert)!=='undefined'){
 				jqcc[calleeAPI].setModuleAlert(id, number);
@@ -1775,7 +1795,7 @@
 		};
 		arguments.callee.goToHomePage = function(){
 			if ((jqcc.cometchat.membershipAccess('home','modules'))){
-				location.href = "\'/\'";
+				location.href = "/";
 			}
 		};
 		arguments.callee.reinitialize = function(){
@@ -1818,7 +1838,7 @@
 		};
 		arguments.callee.subscribe = function(callbackData){
 			$.each(callbackData,function(callbackKey,callbacks){
-				if(typeof callbackKey == 'string' && typeof callbacks == 'object'){		
+				if(typeof callbackKey == 'string' && typeof callbacks == 'object'){
 					ccvariable.registeredCallbacks[callbackKey] = callbacks;
 					window[callbackKey] = callbacks;
 				}
@@ -2017,6 +2037,9 @@
 		arguments.callee.processcontrolmessage = function(incoming){
 			var callbackParameter = incoming;
 			var processedMessage = '';
+			if(typeof incoming != 'undefined' && incoming.hasOwnProperty('groupid')){
+				jqcc.cometchat.processgroupcontrolmessage(incoming);
+			}
 			if(typeof incoming.message != "undefined" && (incoming.message).indexOf('CC^CONTROL_')!=-1){
 				var message = (incoming.message).replace('CC^CONTROL_','');
 				var data = incoming.message.split('_');
@@ -2135,7 +2158,7 @@
 								case 'kicked':
 									if (jqcc.cometchat.getChatroomVars('myid') == data[2]) {
 										alert ("<?php echo $chatrooms_language['kicked'];?>");
-										jqcc.cometchat.leaveChatroom(incoming.chatroomid);
+										jqcc.cometchat.leaveChatroom(incoming.chatroomid,'kick');
 									}
 									processedMessage = '';
 									break;
@@ -2143,7 +2166,7 @@
 									var roomindex = jqcc.cometchat.getChatroomVars('joinedrooms').indexOf(incoming.chatroomid);
 									if (jqcc.cometchat.getChatroomVars('myid') == data[2] && roomindex > -1) {
 										alert ("<?php echo $chatrooms_language['banned'];?>");
-										jqcc.cometchat.leaveChatroom(incoming.chatroomid, 1);
+										jqcc.cometchat.leaveChatroom(incoming.chatroomid, 'ban');
 									}
 									processedMessage = '';
 									break;
@@ -2315,7 +2338,7 @@
                 error: function(){
                 }
             });
-		}
+		},
 		arguments.callee.htmlEntities = function(str){
 			if(typeof str != 'undefined' && str != '' && str != null){
 				str = str.trim();
@@ -2324,6 +2347,14 @@
 				} else {
 					return str;
 				}
+			}
+		},
+		arguments.callee.checkMobileDevice = function(){
+			if(ccvariable.hasOwnProperty('mobileDevice') && ccvariable.mobileDevice){
+				alert(jqcc.cometchat.getLanguage('mobile_feature_restriction'));
+				return true;
+			}else {
+				return false;
 			}
 		}
 

@@ -4,20 +4,7 @@
 			<div class="idealsteps-wrap">
 				<!-- Step 1 -->
 
-				<section class="idealsteps-step" id="step-1">
-				    <!-- 
-					<h2>Select the country where you desire to use the program</h2>
-					<select name="country1">
-						<option value="0">You may change the selected country at any given time</option>
-						<?php foreach ($countries as $country) :
-						$class = ""; $selected="";
-						if($country['flag']) $class = " gold";
-						if($country['id'] == $profile->{User::_COUNTRY}){$selected = "selected='selected'";}						
-						?>																
-						<option class="country<?php echo $class?>" value="<?php echo $country['id'];?>" <?php echo $selected;?>><?php echo $country['name']?></option>
-						<?php endforeach; ?>
-					</select>
-					-->
+				<section class="idealsteps-step" id="step-1">			    
 					<?php 
 						$achecked=""; $bchecked="";
 						

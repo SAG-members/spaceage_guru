@@ -141,7 +141,7 @@ body #cometchat {
 }
 
 #cometchat_searchbar_icon {
-    background: url('layouts/<?php echo $layout;?>/images/searchicon.svg') no-repeat;
+    background: url('<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/searchicon.svg') no-repeat;
     width:20px;
     height:20px;
     pointer-events: none;
@@ -191,7 +191,11 @@ input#cometchat_search:focus {
     bottom: 0;
     direction: ltr;
     position: fixed;
+    <?php if ($dockedAlignToLeft):?>
+    left: 15px;
+    <?php else :?>
     right: 1px;
+    <?php endif;?>
     z-index: 3000;
     margin: 0 15px 0 0;
     background-color: <?php echo $layoutSettings['primary_color']; ?>;
@@ -210,7 +214,11 @@ input#cometchat_search:focus {
     width: 238px;
     height: 353px;
     bottom: 0px;
+    <?php if ($dockedAlignToLeft):?>
+    left :15px;
+    <?php else :?>
     right: 15px;
+    <?php endif;?>
     overflow: hidden;
     box-shadow: none;
 }
@@ -313,7 +321,7 @@ input#cometchat_search:focus {
 }
 
 .cometchat_vline {
-    background: url(layouts/<?php echo $layout;?>/images/vline.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/vline.svg) no-repeat top left;
     float: <?php echo $right;?>;
     height: 21px;
     width: 5px;
@@ -322,7 +330,7 @@ input#cometchat_search:focus {
 
 .cometchat_closeboxsearch {
     cursor: pointer;
-    background: url(layouts/<?php echo $layout;?>/images/closesearchoutline.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/closesearchoutline.svg) no-repeat top left;
     float: <?php echo $right;?>;
     height: 21px;
     width: 21px;
@@ -331,19 +339,19 @@ input#cometchat_search:focus {
     display: none;
 }
 .cometchat_closeboxsearch:hover {
-    background: url(layouts/<?php echo $layout;?>/images/closesearchglyph.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/closesearchglyph.svg) no-repeat top left;
     background-position: 0px 4px;
 }
 .cometchat_closebox, .cometchat_closebotsbox {
     cursor: pointer;
-    background: url(layouts/<?php echo $layout;?>/images/closeoutline.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/closeoutline.svg) no-repeat top left;
     float: <?php echo $right;?>;
     height: 21px;
     width: 21px;
 }
 .cometchat_back {
     cursor: pointer;
-    background: url(layouts/<?php echo $layout;?>/images/leftarrow.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/leftarrow.svg) no-repeat top left;
     float: <?php echo $left;?>;
     height: 21px;
     width: 18px;
@@ -361,7 +369,7 @@ input#cometchat_search:focus {
     opacity: 0.6;
     margin-right: 6px;
     margin-top: 1px;
-    background: url(layouts/<?php echo $layout;?>/images/power.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/power.svg) no-repeat top left;
     float: <?php echo $right;?>;
     height: 21px;
     width: 21px;
@@ -372,36 +380,36 @@ input#cometchat_search:focus {
 }
 
 .cometchat_closebox:hover {
-    background: url(layouts/<?php echo $layout;?>/images/closeglyph.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/closeglyph.svg) no-repeat top left;
 }
 
 #cometchat_alertsicon {
-    background: url(layouts/<?php echo $layout;?>/images/alertsoutline.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/alertsoutline.svg) no-repeat top left;
 }
 
 #cometchat_alertsicon:hover {
-    background: url(layouts/<?php echo $layout;?>/images/alertsglyph.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/alertsglyph.svg) no-repeat top left;
 }
 
 #cometchat_moreicon {
-    background: url(layouts/<?php echo $layout;?>/images/moreoutline.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/moreoutline.svg) no-repeat top left;
     width: 30px;
 }
 
 #cometchat_moreicon:hover {
-    background: url(layouts/<?php echo $layout;?>/images/moreglyph.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/moreglyph.svg) no-repeat top left;
 }
 
 #cometchat_newchat {
-    background: url(layouts/<?php echo $layout;?>/images/newchatoutline.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/newchatoutline.svg) no-repeat top left;
 }
 
 #cometchat_newchat:hover {
-    background: url(layouts/<?php echo $layout;?>/images/newchatglyph.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/newchatglyph.svg) no-repeat top left;
 }
 
 .cometchat_maxwindow {
-    background: url(layouts/<?php echo $layout;?>/images/scale-up.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/scale-up.svg) no-repeat top left;
     float: <?php echo $right;?>;
     height: 20px;
     width: 20px;
@@ -410,7 +418,7 @@ input#cometchat_search:focus {
 }
 
 .cometchat_popwindow {
-    background: url(layouts/<?php echo $layout;?>/images/popup.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/popup.svg) no-repeat top left;
     float: <?php echo $right;?>;
     cursor: pointer;
     height: 20px;
@@ -421,7 +429,7 @@ input#cometchat_search:focus {
 #cometchat_backbutton_newchatpopup, .cometchat_backbutton_viewgroupuserspopup, #cometchat_backbutton_createchatroompopup {
     float: left;
     cursor: pointer;
-    background: url(layouts/<?php echo $layout;?>/images/backarrow.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/backarrow.svg) no-repeat top left;
     height: 17px;
     width: 17px;
     margin-top: 1px;
@@ -429,7 +437,7 @@ input#cometchat_search:focus {
 
 #cometchat_blockedusersoptions .cometchat_arrowright {
     float: right;
-    background: url(layouts/<?php echo $layout;?>/images/arrowright.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/arrowright.svg) no-repeat top left;
     height: 13px;
     width: 13px;
     margin-right: 0px;
@@ -566,7 +574,7 @@ input#cometchat_search:focus {
 }
 
 .cometchat_sentnotification {
-    background-image: url(layouts/<?php echo $layout;?>/images/sent.png);
+    background-image: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/sent.png);
     background-size: auto 100%;
     background-repeat: no-repeat;
     display: inline-block;
@@ -578,7 +586,7 @@ input#cometchat_search:focus {
 }
 
 .cometchat_deliverednotification {
-    background-image: url(layouts/<?php echo $layout;?>/images/delivered.png);
+    background-image: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/delivered.png);
     background-size: auto 100%;
     background-repeat: no-repeat;
     display: inline-block;
@@ -590,7 +598,7 @@ input#cometchat_search:focus {
 }
 
 .cometchat_readnotification {
-    background-image: url(layouts/<?php echo $layout;?>/images/read.png);
+    background-image: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/read.png);
     background-size: auto 100%;
     background-repeat: no-repeat;
     display: inline-block;
@@ -605,8 +613,8 @@ input#cometchat_search:focus {
     float: <?php echo $left;?>;
     font-size: <?php echo $layoutSettings['font_size_small']; ?>;
     color: <?php echo $layoutSettings['color_grey']; ?>;
-    max-width: 125px;
-    width: 125px;
+    max-width: 70px;
+    width: 70px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -696,7 +704,11 @@ input#cometchat_search:focus {
     width: 238px;
     bottom: 0px;
     box-shadow: none;
+    <?php if ($dockedAlignToLeft):?>
+    left: 15px;
+    <?php else: ?>
     right: 15px;
+    <?php endif; ?>
     height: 353px;
 }
 
@@ -1239,7 +1251,7 @@ textarea.cometchat_textarea {
         height: 20px;
         float: left;
         cursor: pointer;
-        background: url(layouts/<?php echo $layout;?>/images/arrows_up.svg) no-repeat top left;
+        background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/arrows_up.svg) no-repeat top left;
     }
 
     .cometchat_pluginsopenup_arrowrotate {
@@ -1486,7 +1498,7 @@ textarea.cometchat_textarea {
     filter: opacity(70%);
     -khtml-opacity: 0.7;
     opacity: 0.7;
-    background: url(layouts/<?php echo $layout;?>/images/cometchat_plugins_dropdown_icon.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/cometchat_plugins_dropdown_icon.svg) no-repeat top left;
     background-position: 0px !important;
     height: 20px;
     width: 13px;
@@ -1499,24 +1511,24 @@ textarea.cometchat_textarea {
 }
 
 .cometchat_avchat{
-    background: url(layouts/<?php echo $layout;?>/images/avchatoutline.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/avchatoutline.svg) no-repeat top left;
 }
 
 .cometchat_audiochat{
-    background: url(layouts/<?php echo $layout;?>/images/audiochatoutline.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/audiochatoutline.svg) no-repeat top left;
     transform: rotate(-5deg);
 }
 
 .cometchat_avchat:hover {
-    background: url(layouts/<?php echo $layout;?>/images/avchatglyph.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/avchatglyph.svg) no-repeat top left;
 }
 
 .cometchat_audiochat:hover {
-    background: url(layouts/<?php echo $layout;?>/images/audiochatglyph.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/audiochatglyph.svg) no-repeat top left;
 }
 
 .cometchat_smilies{
-    background: url(layouts/<?php echo $layout;?>/images/smilies_icon.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/smilies_icon.svg) no-repeat top left;
     cursor: pointer;
     float: right;
     height: 16px;
@@ -1525,7 +1537,7 @@ textarea.cometchat_textarea {
 }
 
 .cometchat_smilies:hover{
-    background: url(layouts/<?php echo $layout;?>/images/smilies_iconglyph.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/smilies_iconglyph.svg) no-repeat top left;
 }
 
 .cometchat_container_body {
@@ -1841,7 +1853,7 @@ textarea.cometchat_textarea {
 }
 
 .cometchat_unseenClose {
-    background: url(layouts/<?php echo $layout;?>/images/userlistclose.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/userlistclose.svg) no-repeat top left;
     font-size: 14px;
     color: #ccc;
     font-weight: bold;
@@ -1854,7 +1866,7 @@ textarea.cometchat_textarea {
 }
 
 .cometchat_unseenClose:hover {
-    background: url(layouts/<?php echo $layout;?>/images/userlistcloseglyph.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/userlistcloseglyph.svg) no-repeat top left;
 }
 
 
@@ -2005,14 +2017,18 @@ textarea.cometchat_textarea {
         bottom: 0px;
         cursor: pointer;
         position: fixed;
+        <?php if ($dockedAlignToLeft):?>
+        left: 18px;
+        <?php else:?>
         right: 18px;
+        <?php endif; ?>
         z-index: 100000;
         display: none;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
     }
     #cometchat_hidden_content {
-        background: url(layouts/<?php echo $layout;?>/images/cometchat.png) no-repeat top left;
+        background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/cometchat.png) no-repeat top left;
         background-position: 8px -259px !important;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
@@ -2282,7 +2298,7 @@ div#social_login {
     background-color: #FAFAFA;
 }
 #cometchat_minimize_auth_popup{
-    background: url('layouts/<?php echo $layout;?>/images/closeoutline.svg') no-repeat;
+    background: url('<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/closeoutline.svg') no-repeat;
     float: right;
     height: 21px;
     width: 21px;
@@ -2303,7 +2319,7 @@ div#social_login {
     padding: 3px 0px;
     cursor: pointer;
     width: 18px;
-    background: url(layouts/<?php echo $layout;?>/images/send.svg) no-repeat top left;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/send.svg) no-repeat top left;
     -ms-transform: rotate(42deg);
     -webkit-transform: rotate(42deg);
     transform: rotate(42deg);
@@ -2550,7 +2566,7 @@ div#social_login {
 }
 
 .cometchat_offlinemessage {
-    background-image: url(layouts/<?php echo $layout;?>/images/clock.svg);
+    background-image: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/clock.svg);
     background-size: auto 100%;
     background-repeat: no-repeat;
     display: inline-block;
@@ -2594,4 +2610,12 @@ div.cometchat_userlist, div.cometchat_grouplist{
     float: left;
     position: relative;
     right: 3px;
+}
+.cometchat_audiocallsvg_icon{
+    fill:<?php echo $layoutSettings['primary_color'];?>;
+    float: right;    
+    height: 25px;
+    width: 25px;
+    margin-right: 5px;
+    margin-top: -15px;
 }

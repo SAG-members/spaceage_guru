@@ -28,9 +28,6 @@ if($rtl==1){
 $mtime = explode(" ",microtime());
 $starttime = $mtime[1]+$mtime[0];
 
-$HTTP_USER_AGENT = '';
-$useragent = (!empty($_SERVER["HTTP_USER_AGENT"])) ? $_SERVER["HTTP_USER_AGENT"] : $HTTP_USER_AGENT;
-
 ob_start();
 if(!empty($_REQUEST['admin'])){
 	$adminappjs = empty($_GET['app'])?'':'app';
@@ -203,19 +200,20 @@ if(!empty($_REQUEST['admin'])){
 					array_splice($plugins,$key,1); // Unset report conversation plugin if E-mail / SMTP is not configured from CometChat Administartion Panel
 				}
 			}
-			/* MEMBERSHIP LEVEL START */
+			/* ROLE BASE ACCESS CONTROL START */
 			if (defined('ROLE_BASE_ACCESS') && ROLE_BASE_ACCESS==1) {
 			    $membersRes = getRolesDetails();
 			    foreach ($membersRes as $mRkey => $mRvalue) {
-			        $cometchat['settings'][$mRkey.'_plugins']    = array_values(${$mRkey.'_plugins'});
-			        $cometchat['settings'][$mRkey.'_modules']    = array_values(${$mRkey.'_modules'});
-			        $cometchat['settings'][$mRkey.'_extensions'] = array_values(${$mRkey.'_extensions'});
+			        $cometchat['settings'][$mRkey.'_core']    = array_keys(${$mRkey.'_core'});
+			        $cometchat['settings'][$mRkey.'_plugins']    = array_keys(${$mRkey.'_plugins'});
+			        $cometchat['settings'][$mRkey.'_modules']    = array_keys(${$mRkey.'_modules'});
+			        $cometchat['settings'][$mRkey.'_extensions'] = array_keys(${$mRkey.'_extensions'});
 			    }
 			    $cometchat['settings']['memberShipLevel'] = 1;
 			} else{
 				$cometchat['settings']['memberShipLevel'] = 0;
 			}
-			/* MEMBERSHIP LEVEL END */
+			/* ROLE BASE ACCESS CONTROL END */
 			$cometchat['settings']['plugins'] = array_values($plugins);
 			$cometchat['settings']['extensions'] = array_values($extensions);
 			$cometchat['settings']['disableRecentTab'] = intval($disableRecentTab); // Disable recent chats tab
@@ -266,7 +264,10 @@ if(!empty($_REQUEST['admin'])){
 			$cometchat['settings']['usebots'] = $usebots;
 			$cometchat['settings']['channelprefix'] = $channelprefix;
 			$cometchat['settings']['allowAvatar'] = $allowAvatar;
-			$cometchat['settings']['dockedChatBoxAvatar'] = $dockedChatBoxAvatar;
+			$cometchat['settings']['dockedChatBoxAvatar'] = !empty($dockedChatBoxAvatar)?$dockedChatBoxAvatar:'0';
+			$cometchat['settings']['dockedAlignToLeft'] = !empty($dockedAlignToLeft)?$dockedAlignToLeft:'0'; //Set to yes, if docked layout has to be aligned to left.
+			$cometchat['settings']['dockedChatListAudioCall'] = !empty($dockedChatListAudioCall)?$dockedChatListAudioCall:'0'; //Set to yes, if docked layout has to be aligned to left.
+
 
 			if(defined('CC_SITE_URL')) {
 				$cometchat['settings']['ccsiteurl'] = CC_SITE_URL;
@@ -426,12 +427,8 @@ if(!empty($_REQUEST['admin'])){
 	$lastModified = filemtime($jsfile);
 	$etag = md5_file($jsfile);
 }
-if(phpversion()>='4.0.4pl1'&&(strstr($useragent,'compatible')||strstr($useragent,'Gecko'))){
-	if(extension_loaded('zlib')&&GZIP_ENABLED==1){
-		ob_start('ob_gzhandler');
-	}else{
-		ob_start();
-	}
+if(phpversion()>='4.0.4pl1' && extension_loaded('zlib') && GZIP_ENABLED==1 && (strstr($GLOBALS['useragent'],'compatible') || strstr($GLOBALS['useragent'],'Gecko'))){
+	ob_start('ob_gzhandler');
 }else{
 	ob_start();
 }

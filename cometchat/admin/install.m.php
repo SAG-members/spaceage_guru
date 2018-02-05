@@ -12,6 +12,7 @@ if (!defined('CCADMIN')) { echo "NO DICE"; exit; }
 
 function index() {
 	global $body,$color_original,$layout_original,$ts,$client,$availableIntegrations,$cms,$login_url,$logout_url,$protocol,$pluginkey;
+	$staticCDNUrl = STATIC_CDN_URL;
 	$addcometchat = '';
     $athemes = array();
 
@@ -155,7 +156,7 @@ if(checkLicenseVersion()){
 		    		Docked Layout
 		    	</div>
 			    <div class="card-block">
-			    <img src="images/docked.png" width="100%">
+			    <img src="{$staticCDNUrl}/admin/images/docked.png" width="100%">
 			     <div class="card-footer" style="padding-left:5px;">
 		        <a class="btn btn-primary" href="javascript:void(0);" onclick="javascript:themetype_embedcode('docked')">Add To Site</a>
 			   </div>
@@ -168,7 +169,7 @@ if(checkLicenseVersion()){
 		    		Embedded Layout
 		    	</div>
 			    <div class="card-block">
-			    <img src="images/embedded.png" width="100%">
+			    <img src="{$staticCDNUrl}/admin/images/embedded.png" width="100%">
 			     <div class="card-footer" style="padding-left:5px;">
 		        <a class="btn btn-primary" href="javascript:void(0);" onclick="javascript:themetype_embedcode('embedded')">Add To Site</a>
 

@@ -17,19 +17,25 @@ if(stripos(dirname(__FILE__),'/plugins/cometchat')){
 		}
 	}
 }
+function cleanRequestParams($Input){
+    if (!is_array($Input)){
+    	return str_replace('<','',str_replace('"','',str_replace("'",'',str_replace('>','',trim($Input)))));
+    }
+    return array_map('cleanRequestParams', $Input);
+}
 if(!$iscmsplugin && !isset($_REQUEST['deny_sanitize'])){
-	$requestKeyExceptions = array('message', 'statusmessage', 'social_details', 'receivedunreadmessages', 'readmessages', 'crreadmessages','appinfo','recentchats');
+	$requestKeyExceptions = array('message', 'statusmessage', 'social_details', 'receivedunreadmessages', 'readmessages', 'crreadmessages','appinfo','recentchats','ci_session');
 	foreach($_REQUEST as $key => $val){
 		if(!in_array($key, $requestKeyExceptions)){
-			$_REQUEST[$key] = str_replace('<','',str_replace('"','',str_replace("'",'',str_replace('>','',$_REQUEST[$key]))));
+			$_REQUEST[$key] = cleanRequestParams($_REQUEST[$key]);
 			if(!empty($_POST[$key])){
-				$_POST[$key] = str_replace('<','',str_replace('"','',str_replace("'",'',str_replace('>','',$_POST[$key]))));
+				$_POST[$key] = cleanRequestParams($_POST[$key]);
 			}
 			if(!empty($_GET[$key])){
-				$_GET[$key] = str_replace('<','',str_replace('"','',str_replace("'",'',str_replace('>','',$_GET[$key]))));
+				$_GET[$key] = cleanRequestParams($_GET[$key]);
 			}
 			if(!empty($_COOKIE[$key])){
-				$_COOKIE[$key] = str_replace('<','',str_replace("'",'',str_replace('>','',$_COOKIE[$key])));
+				$_COOKIE[$key] = cleanRequestParams($_COOKIE[$key]);
 			}
 		}
 	}
@@ -63,7 +69,7 @@ if(empty($_REQUEST['basedata'])){
 }else{
 	if(CROSS_DOMAIN == 1 || (!empty($_REQUEST['callbackfn']) && in_array($_REQUEST['callbackfn'],array('desktop','mobileapp')))){
 		if($_REQUEST['basedata'] != 'null'){
-			$basedata = (json_decode(base64_decode(rawurldecode($_REQUEST['basedata']))));
+			$basedata = json_decode(utf8_encode(base64_decode(rawurldecode($_REQUEST['basedata']))));
 			if(is_object($basedata) && $basedata->id){
 				$sessionid = $basedata->id;
 			}else {
@@ -100,7 +106,7 @@ if(CROSS_DOMAIN == 1  || (!empty($_REQUEST['callbackfn']) && $_REQUEST['callback
 
 if(!empty($_REQUEST['basedata'])){
 	if(!empty($client)){
-		$_SESSION['old_basedata'] = !empty($_SESSION['basedata'])?$_SESSION['basedata']:'';
+		$_SESSION['old_basedata'] = !empty($_SESSION['basedata']) ? rawurldecode($_SESSION['basedata']):'';
 	}
 	$_SESSION['basedata'] = $_REQUEST['basedata'];
 }
@@ -149,11 +155,11 @@ if($guestsMode && $userid == 0 && (empty($_REQUEST['callbackfn']) ||  ($_REQUEST
 
 if(defined('ROLE_BASE_ACCESS') && ROLE_BASE_ACCESS == 1){
 	$platformType = empty($_REQUEST['callbackfn']) ? 'web' : $_REQUEST['callbackfn'];
-	$getRoleId = getRoleId($userid);
-	if ($GLOBALS[$getRoleId."_disabled".$platformType] == 1) {
+	$getRole = getRole($userid);
+	if ($GLOBALS[$getRole."_disabled".$platformType] == 1) {
 		$userid = 0;
 	}
-	if ($GLOBALS[$getRoleId."_disabledcc"] == 1) {
+	if ($GLOBALS[$getRole."_disabledcc"] == 1) {
 		$userid = 0;
 	}
 }

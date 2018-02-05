@@ -272,13 +272,17 @@ function plugins_updateorder(del) {
 
 function plugins_removeplugin(id) {
 	var rel = $('#'+id).attr('rel');
+	$('.tooltip').remove();
+	if (rel == 'filetransfer' && $('tr[rel="voicenote"]').attr('oneonone') == 'active') {
+		alert("Please remove Voice Note feature from One-one-one before removing this feature");
+		return;
+	}
 	var answer = confirm ('Are You Sure You Want To Deactivate This Feature?');
 	if (answer) {
 		$('#'+id).attr('oneonone','');
 		plugins_updateorder(true);
 		$('#oneonone_'+rel).parent().html('<a data-toggle="tooltip" title="Add in one on one" style="color:#008000;opacity: 0.2;" href="?module=features&amp;action=addplugin&amp;data='+rel+'&amp;ts='+ts+'" id="oneonone_'+rel+'"><i class="fa fa-lg fa-user"></i></a>');
-		$('.tooltip').remove();
-       	$('[data-toggle="tooltip"]').tooltip();
+		$('[data-toggle="tooltip"]').tooltip();
 	}
 }
 
@@ -303,12 +307,16 @@ function plugins_updatechatroomorder(del) {
 
 function plugins_removechatroomplugin(id) {
        	var rel = $('#'+id).attr('rel');
+       	$('.tooltip').remove();
+		if (rel == 'filetransfer' && $('tr[rel="voicenote"]').attr('group') == 'active') {
+			alert("Please remove Voice Note Feature from Group before removing this feature");
+			return;
+		}
        	var answer = confirm ('Are you sure you want to deactivate this plugin?');
         if (answer) {
         	$('#'+id).attr('group','');
         	plugins_updatechatroomorder(true);
         	$('#group_'+rel).parent().html('<a data-toggle="tooltip" title="Add in group" style="color:#008000;opacity: 0.2;" href="?module=features&amp;action=addchatroomplugin&amp;data='+rel+'&amp;ts='+ts+'" id="crpluginaction'+rel+'"><i class="fa fa-lg fa-users"></i></a>');
-       		$('.tooltip').remove();
        		$('[data-toggle="tooltip"]').tooltip();
         }
 }
@@ -518,7 +526,7 @@ function language_importlanguage(id) {
 	var answer = confirm ('Are you sure you want to add this language?');
 	if (answer) {
 		$("#over").show();
-		$.getJSON('//www.cometchat.com/software/getlanguage/?v=6.2&callback=?', {id: id}, function(data) {
+		$.getJSON('//www.cometchat.com/software/getlanguage/?v=<?php echo $currentversion; ?>&callback=?', {id: id}, function(data) {
 			if (data) {
 				$.post('?module=localize&action=importlanguage&ts='+ts+'&callback=?', {data: data}, function(data) {
 					if (data) {
@@ -536,7 +544,7 @@ function language_previewlanguage(id) {
 	$("#admin-modal-title").text('Preview Language');
 	$('.tooltip').remove();
 	$("#admin-modal-body").html("<center><img src='images/simpleloading.gif'></center>");
-	$.getJSON('//www.cometchat.com/software/getlanguage/?v=6.2&callback=?', {id: id}, function(data) {
+	$.getJSON('//www.cometchat.com/software/getlanguage/?v=<?php echo $currentversion; ?>&callback=?', {id: id}, function(data) {
 		if (data) {
 			$.post('?module=localize&action=previewlanguage&ts='+ts+'&callback=?', {data: data}, function(data) {
 				if (data) {
@@ -549,12 +557,15 @@ function language_previewlanguage(id) {
 }
 
 function language_getlanguages() {
-	$.getJSON('//www.cometchat.com/software/getlanguages/?v=6.2&callback=?', {}, function(data) {
+	$.getJSON('//www.cometchat.com/software/getlanguages/?v=<?php echo $currentversion; ?>&callback=?', {}, function(data) {
+		data.sort(function(a,b){
+			return a.id > b.id;
+		});
 		if (data) {
 			var html = '';
 			for (language in data) {
 				language = data[language];
-				if(((language['id']) !='.') && ((language['id']) !='..')){
+				if(((language['id']) !='.') && ((language['id']) !='..') && $('#downloadedlanguage_'+language['name']).length == 0){
 					html += '<tr id="'+language['id']+'"><td id="'+language['id']+'_title">'+language['language']+' ('+language['name']+')</td><td><a title="Preview Language" style="color:#000000;" href="javascript:void(0)" data-toggle="tooltip" onclick="javascript:language_previewlanguage(\''+language['id']+'\')"><i class="fa fa-lg fa-folder-open"></i></a></td><td><a style="color:green;" data-toggle="tooltip" title="Add Language" href="javascript:void(0)" onclick="javascript:language_importlanguage(\''+language['id']+'\')"><i class="fa fa-lg fa-plus-circle"></i></a></td></tr>';
 				}
 			}
@@ -590,7 +601,7 @@ function embed_link(url,width,height) {
 	var baseUrl = mod[0]+'/';
 	var style ="";
 	$("#admin-modal-title").text('Embed Code');
-	var embedscript = '<script src="'+baseUrl+'js.php?type=core&amp;name=embedcode" type="text/javascript"></script>\n<script>var iframeObj = {};iframeObj.module="'+module[0]+'";iframeObj.src="'+url+'";iframeObj.width="'+width+'";iframeObj.height="'+height+'";if(typeof(addEmbedIframe)=="function"){addEmbedIframe(iframeObj);}</script>';
+	var embedscript = '<?php echo getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'embedcode','escapetags'=>1, 'ext' => 'js'));?><script>var iframeObj = {};iframeObj.module="'+module[0]+'";iframeObj.src="'+url+'";iframeObj.width="'+width+'";iframeObj.height="'+height+'";if(typeof(addEmbedIframe)=="function"){addEmbedIframe(iframeObj);}</script>';
 	if(module[0]=='chatrooms'){
 		if(mod[mod.length-1].indexOf('id=') > -1) {
 			var crid = (mod[mod.length-1].split('?')[1]).split('=')[1];
@@ -619,7 +630,7 @@ function embed_code(url) {
 	embedcode.document.write("<title>Embed Code</title><style>.input{padding:10px;} .input input{padding:5px;border-radius:2px;border:1px solid #aeaeae;width:100%;},textarea { border:1px solid #ccc; color: #333; font-family:verdana; font-size:12px; }button{border: 1px solid #76b6d2;padding: 4px;background: #76b6d2;color: #fff;font-weight: bold;font-size: 10px;font-family: arial;text-transform: uppercase;padding-left: 10px;padding-right: 10px;cursor: pointer;}</style>");
 	var script1 = '<script>function generateCode(){ var height = document.getElementById("height").value;	var width = document.getElementById("width").value;if(width < 300){	alert("Width should be greater than 300");		return;	} if(height < 420){	alert("Height should be greater than 420");		return;	} var ips = document.getElementsByClassName("input");	for(var i = 0; i<ips.length;i++){		ips[i].style.display = "none";	}';
 
-	var script2 = "var embedscript = '&lt;script src=\""+baseUrl+"js.php?type=core&amp;name=embedcode\" type=\"text/javascript\"&gt;&lt;/script&gt;&lt;script&gt;var iframeObj = {};iframeObj.module=\"synergy\";iframeObj.style=\"min-height:420px;min-width:300px;\";iframeObj.src=\""+url+"\"; if(typeof(addEmbedIframe)==\"function\"){addEmbedIframe(iframeObj);}&lt;/script&gt;';";
+	var script2 = "var embedscript = '&lt;script src=\"<?php echo getDynamicScriptAndLinkTags(array('type' => 'core','name' => 'embedcode','urlonly'=>1, 'ext' => 'js')); ?>\" type=\"text/javascript\"&gt;&lt;/script&gt;&lt;script&gt;var iframeObj = {};iframeObj.module=\"synergy\";iframeObj.style=\"min-height:420px;min-width:300px;\";iframeObj.src=\""+url+"\"; if(typeof(addEmbedIframe)==\"function\"){addEmbedIframe(iframeObj);}&lt;/script&gt;';";
 
 	var script3 = "document.write('<textarea readonly style=\"width:500px;height:130px\"><div id=\"cometchat_embed_synergy_container\" style=\"width:'+width+'px;height:'+height+'px;\" ></div>'+embedscript+'</textarea>');}</script>";
 

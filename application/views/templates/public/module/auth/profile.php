@@ -86,7 +86,7 @@
 									</div>
 									<div class="col-sm-6">
 										<label class="control-label">Email</label>
-										<input type="email" class="password" name="secondary-email" value="<?php echo $profile->{User::_SECONDARY_EMAIL}?>"/>
+										<input type="email" class="password" name="secondary-email" value="<?php echo $profile->{User::_EMAIL}?>"/>
 									</div>
 								</div>
 								

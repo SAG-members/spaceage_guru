@@ -32,11 +32,7 @@ $messages = array();
 $lastPushedAnnouncement = 0;
 $processFurther = 1;
 
-$status['available'] = $language[30];
-$status['busy'] = $language[31];
-$status['offline'] = $language[32];
-$status['invisible'] = $language[33];
-$status['away'] = $language[34];
+
 
 if (empty($_REQUEST['activeChatboxIds'])) {
 	$_REQUEST['activeChatboxIds'] = 0;
@@ -91,19 +87,16 @@ if ($userid > 0) {
 				if (!empty($client) && isset($_REQUEST['callbackfn']) && $_REQUEST['callbackfn'] == 'mobileapp') {
 			        sql_query('insertStatus',array('userid'=>$userid));
 			    }
-				$response['initialize'] = 0;
-				$response['init'] = '1';
+			}
+			$query = sql_query('getMaxID',array('field'=>'id', 'tablename'=>'cometchat'));
+			if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
+			$result = sql_fetch_assoc($query);
 
-			} else {
-				$query = sql_query('getMaxID',array('field'=>'id', 'tablename'=>'cometchat'));
-				if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
-				$result = sql_fetch_assoc($query);
+			$response['init'] = '1';
+			$response['initialize'] = '0';
 
-				$response['init'] = '1';
-				$response['initialize'] = '0';
-				if(!empty($result['id'])){
-					$response['initialize'] = $result['id'];
-				}
+			if(!empty($result['id'])){
+				$response['initialize'] = $result['id'];
 			}
 
 			getStatus();
@@ -128,7 +121,7 @@ if ($userid > 0) {
 			$response['st'] = time();
 			$response['loggedintype'] = ($userid > $firstguestID) ? 'guestuser': 'loginuser';
 			if(defined('ROLE_BASE_ACCESS') && ROLE_BASE_ACCESS == 1){
-				$response['roleid'] = getRoleId($userid);
+				$response['role'] = getRole($userid);
 			}
 		}
 
@@ -161,16 +154,6 @@ if ($userid > 0) {
 			$query = sql_query('insertIsTyping',array('userid'=>$userid, 'typingto'=>$_REQUEST['typingto'], 'typingtime'=>getTimeStamp()));
 			if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
 		}
-    }
-
-    if($usebots == 1) {
-    	$botList = getBotList();
-    	$botlh = md5(serialize($botList));
-
-    	if((((empty($_REQUEST['botlh'])) || (!empty($_REQUEST['botlh']) && $botlh != $_REQUEST['botlh'])) && !empty($botList)) || !empty($_REQUEST['initialize'])){
-    		$response['botlist'] = $botList;
-    		$response['botlh'] = $botlh;
-    	}
     }
 
     if ($disableRecentTab == 0) {
@@ -222,8 +205,9 @@ function getRecentList() {
 	global $guestsMode;
 	global $guestnamePrefix;
 	global $chromeReorderFix;
-	global $joinedrooms;
 	global $recentListLimit;
+    global $blockpluginmode;
+    global $plugins;
 
 	if(!empty($_REQUEST['initialize'])) {
 		$recentbuddyids = $recentdetails = array();
@@ -262,20 +246,46 @@ function getRecentList() {
 			if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
 
 			while($result = sql_fetch_assoc($query)){
-				if(empty($response['buddylist'])||(!empty($response['buddylist']) && empty($response['buddylist'][$chromeReorderFix.$result['userid']]))) {
-					$recentdetails[$result['userid']]['n'] = $result['username'];
-					$recentdetails[$result['userid']]['a'] = getAvatar($result['avatar']);
+				$recentdetails[$result['userid']]['n'] = $result['username'];
+				$recentdetails[$result['userid']]['a'] = getAvatar($result['avatar']);
+			}
+		}
+
+		if (function_exists('hooks_blockuser')) {
+			hooks_blockuser($recentdetails);
+		}
+
+		$blockList = array();
+		if (in_array('block',$plugins)) {
+			if($blockpluginmode == 1){
+				$blockedIds = getBlockedUserIDs(1);
+			} else {
+				$blockedIds = getBlockedUserIDs();
+			}
+			$blockedusercount = count($blockedIds);
+			foreach ($blockedIds as $bid) {
+				array_push($blockList,$bid);
+				if (!empty($recentdetails[$bid])) {
+					if($blockpluginmode == 0){
+						unset($recentdetails[$bid]);
+					}
 				}
 			}
 		}
+
 		/* Get User Details End*/
 
+		$joinedgroups = getJoinedGroups($userid);
 		/* Get group's last message Start*/
-		$query = sql_query('getRecentGroupMessages');
+		$sqlpart = '';
+		if (count($joinedrooms)>0) {
+			$sqlpart = ' where cometchat_chatroommessages.chatroomid in ('.implode(",", $joinedgroups).')';
+		}
+		$query = sql_query('getRecentGroupMessages',array('sqlpart'=>$sqlpart));
 		if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
 
 		while($result = sql_fetch_assoc($query)){
-			if(in_array($result['chatroomid'], $joinedrooms)){
+			if(in_array($result['chatroomid'], $joinedgroups)){
 				$key = '_'.$result['chatroomid'];
 				$recentdetails[$key]['id'] = $result['id'];
 				$recentdetails[$key]['f'] = $result['userid'];
@@ -286,8 +296,8 @@ function getRecentList() {
 		/* Get group's last message End*/
 
 		/* Get Group Details Start*/
-		if(!empty($joinedrooms)){
-			$query = sql_query('getRecentGroupDetails',array('joinedrooms'=>implode(",", $joinedrooms)));
+		if(!empty($joinedgroups)){
+			$query = sql_query('getRecentGroupDetails',array('joinedrooms'=>implode(",", $joinedgroups)));
 			if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
 
 			while($result = sql_fetch_assoc($query)){
@@ -298,18 +308,19 @@ function getRecentList() {
 			}
 		}
 		/* Get Group Details End*/
+		$recentdetails = array_slice($recentdetails,0,$recentListLimit,true);
 
-		if($recentdetails != 'null' && $recentdetails != null){
-			$recentdetails = array_slice($recentdetails,0,$recentListLimit,true);
-			$response['recentchats'] = json_encode($recentdetails);
-		}
+		/* START: Backward Compatibility 10-Nov-2017 CometChat v6.9.10 */
+		$response['recentchats'] = json_encode($recentdetails);
+		/* End: Backward Compatibility 10-Nov-2017 CometChat v6.9.10 */
+
+		$response['recent'] = $recentdetails;
 	}
 }
 
 function getBuddyList() {
 	global $response;
 	global $userid;
-	global $status;
 	global $hideOffline;
 	global $plugins;
 	global $guestsMode;
@@ -318,6 +329,7 @@ function getBuddyList() {
     global $blockpluginmode;
     global $bannedUserIDs;
     global $firstguestID;
+    global $language;
 
 	$time = getTimeStamp();
 	$blockedusercount = 0;
@@ -334,9 +346,12 @@ function getBuddyList() {
 			if($userid > $firstguestID){
 				$onlineCacheKey .= 'guest';
 			}
-			$roleid = getRoleId($userid);
-			if(!empty($roleid)){
-				$onlineCacheKey .= $roleid;
+			if(defined('UNIQUE_CACHE_KEY') && UNIQUE_CACHE_KEY == 1){
+				$onlineCacheKey .= $userid;
+			}
+			$role = getRole($userid);
+			if(!empty($role)){
+				$onlineCacheKey .= $role;
 			}
 			if (!is_array($buddyList = getCache($onlineCacheKey)) || ($_REQUEST['f'] == 1)) {
 				$buddyList = array();
@@ -369,56 +384,69 @@ function getBuddyList() {
 				}
 				$query = sql_query($sql,array(),1);
 				if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
-				while ($chat = sql_fetch_assoc($query)) {
-					if(in_array($chat['userid'],$bannedUserIDs)) {
+				while ($contact = sql_fetch_assoc($query)) {
+					if(in_array($contact['userid'],$bannedUserIDs)) {
 						continue;
  					}
-					if (((($time-processTime($chat['lastactivity'])) < ONLINE_TIMEOUT) || $chat['isdevice'] == 1) && $chat['status'] != 'invisible' && $chat['status'] != 'offline') {
-						if (($chat['status'] != 'busy' && $chat['status'] != 'away')) {
-							$chat['status'] = 'available';
+					if (((($time-processTime($contact['lastactivity'])) < ONLINE_TIMEOUT) || $contact['isdevice'] == 1) && $contact['status'] != 'invisible' && $contact['status'] != 'offline') {
+						if (($contact['status'] != 'busy' && $contact['status'] != 'away')) {
+							$contact['status'] = 'available';
 						}
 					} else {
-						$chat['status'] = 'offline';
+						$contact['status'] = 'offline';
 					}
 
-					if ($chat['message'] == null) {
-						$chat['message'] = $status[$chat['status']];
+					if ($contact['message'] == null) {
+						$contact['message'] = $language['status_'.$contact['status']];
 					}
 
-					$link = fetchLink($chat['link']);
-					$avatar = getAvatar($chat['avatar']);
+					$link = fetchLink($contact['link']);
+					$avatar = getAvatar($contact['avatar']);
 
 					if (function_exists('processName')) {
-						$chat['username'] = processName($chat['username']);
+						$contact['username'] = processName($contact['username']);
 					}
 
-					if(empty($chat['isdevice'])){
-						$chat['isdevice'] = "0";
+					if(empty($contact['isdevice'])){
+						$contact['isdevice'] = "0";
 					}
-					if (empty($chat['grp'])) {
-						$chat['grp'] = '';
+					if (empty($contact['grp'])) {
+						$contact['grp'] = '';
 					}
 
-					if (empty($chat['ch'])) {
+					if (empty($contact['ch'])) {
 						if( defined('KEY_A') && defined('KEY_B') && defined('KEY_C') ){
 								$key = KEY_A.KEY_B.KEY_C;
 						}
-						$chat['ch'] = md5($chat['userid'].$key);
+						$contact['ch'] = md5($contact['userid'].$key);
 					}
-					if($chat['lastseensetting'] == null || $chat['lastseensetting'] == "null"){
-						$chat['lastseensetting'] = '';
+					if($contact['lastseensetting'] == null || $contact['lastseensetting'] == "null"){
+						$contact['lastseensetting'] = '';
 					}
-					if($chat['lastseen'] == null || $chat['lastseen'] == "null"){
-						$chat['lastseen'] = '';
+					if($contact['lastseen'] == null || $contact['lastseen'] == "null"){
+						$contact['lastseen'] = '';
 					}
-					if(empty($chat['readreceiptsetting']) || $chat['readreceiptsetting'] == null || $chat['readreceiptsetting'] == "null"){
-						$chat['readreceiptsetting'] = 0;
+					if(empty($contact['readreceiptsetting']) || $contact['readreceiptsetting'] == null || $contact['readreceiptsetting'] == "null"){
+						$contact['readreceiptsetting'] = 0;
 						if(MESSAGE_RECEIPT==1){
-							$chat['readreceiptsetting'] = 1;
+							$contact['readreceiptsetting'] = 1;
 						}
 					}
-					if (!empty($chat['username']) && ($hideOffline == 0 || ($hideOffline == 1 && $chat['status'] != 'offline')) || in_array($chat['userid'],explode(",",$_REQUEST['activeChatboxIds']))) {
-						$buddyList[$chromeReorderFix.$chat['userid']] = array('id' => $chat['userid'], 'n' => $chat['username'], 'l' => $link,  'a' => $avatar, 'd' => $chat['isdevice'], 's' => $chat['status'], 'm' => $chat['message'], 'g' => $chat['grp'], 'ls' => $chat['lastseen'], 'lstn' => $chat['lastseensetting'], 'ch' => $chat['ch'],'rdrs' => $chat['readreceiptsetting']);
+					if (!empty($contact['username']) && ($hideOffline == 0 || ($hideOffline == 1 && $contact['status'] != 'offline')) || in_array($contact['userid'],explode(",",$_REQUEST['activeChatboxIds']))) {
+						$buddyList[$chromeReorderFix.$contact['userid']] = array(
+							'id' => $contact['userid'],
+							'n' => $contact['username'],
+							'l' => $link,
+							'a' => $avatar,
+							'd' => $contact['isdevice'],
+							's' => $contact['status'],
+							'm' => $contact['message'],
+							'g' => $contact['grp'],
+							'ls' => $contact['lastseen'],
+							'lstn' => $contact['lastseensetting'],
+							'ch' => $contact['ch'],
+							'rdrs' => $contact['readreceiptsetting']
+						);
 					}
 				}
 				setCache($onlineCacheKey,$buddyList,30);
@@ -671,32 +699,10 @@ function checkAnnoucements() {
 	}
 }
 
-header('Content-type: application/json; charset=utf-8');
-
-if (isset($response['initialize'])) {
-	$initialize = $response['initialize'];
-	unset($response['initialize']);
-	$response['initialize'] = $initialize;
-}
 
 if (!empty($messages)) {
 	$response['messages'] = $messages;
 }
 
-$useragent = (!empty($_SERVER["HTTP_USER_AGENT"])) ? $_SERVER["HTTP_USER_AGENT"] : '';
-if(phpversion()>='4.0.4pl1'&&(strstr($useragent,'compatible')||strstr($useragent,'Gecko'))){
-	if(extension_loaded('zlib')&&GZIP_ENABLED==1 && !in_array('ob_gzhandler', ob_list_handlers())){
-		ob_start('ob_gzhandler');
-	}else{
-		ob_start();
-	}
-}else{
-	ob_start();
-}
-
-if (!empty($_GET['callback'])) {
-	echo $_GET['callback'].'('.json_encode($response).')';
-} else {
-	echo json_encode($response);
-}
+sendCCResponse(json_encode($response));
 exit;

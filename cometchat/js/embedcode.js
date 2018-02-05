@@ -16,12 +16,12 @@ function addEmbedIframe(iframeObj,callbackfn) {
 		if(typeof(callbackfn)!='undefined'){
 			cbfn=callbackfn;
 		}
-		var baseurl = '<?php echo BASE_URL; ?>';
-		if(jqcc('link[href*="'+baseurl+'cometchatcss.php"]').length<=0 && cbfn!='desktop') {
-			jqcc('head').append('<link type="text/css" id="cc_link" href="'+baseurl+'cometchatcss.php?cc_layout=embedded" rel="stylesheet" charset="utf-8">');
-			addScript(baseurl+'cometchatjs.php');
+		var dynamicCDNUrl = '<?php echo DYNAMIC_CDN_URL; ?>';
+		if(jqcc('link[href*="'+dynamicCDNUrl+'cometchatcss.php"]').length<=0 && cbfn!='desktop') {
+			jqcc('head').append('<?php echo getDynamicScriptAndLinkTags(array('layout'=>'embedded', 'ext'=>'css'));?>');
+			addScript('<?php echo getDynamicScriptAndLinkTags(array('urlonly'=>1, 'ext'=>'js'));?>');
 		}else{
-			jqcc('link[href*="'+baseurl+'cometchatcss.php"]').attr('href',baseurl+'cometchatcss.php?cc_layout=embedded');
+			jqcc('link[href*="'+dynamicCDNUrl+'cometchatcss.php"]').attr('href','<?php echo getDynamicScriptAndLinkTags(array('layout'=>$layout,'urlonly'=>1, 'ext'=>'css'));?>');
 		}
 	}
 	if(typeof(iframeObj.width)=="undefined"){

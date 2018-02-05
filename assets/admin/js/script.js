@@ -1090,6 +1090,7 @@ ManageProduct = {
 		},
 		unPublishProduct : function(e)
 		{
+			console.log(ManageProduct.productIds);
 			if(ManageProduct.productIds.length == 0) {Util.showWarningMessage('Please select some product first'); return false;}
 			var newForm = jQuery('<form>', {
 		        'action': BASE_URL + 'admin/unpublish-page',

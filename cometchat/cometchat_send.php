@@ -91,7 +91,7 @@ if (isset($_REQUEST['guestname']) && $userid > 0) {
 }
 
 if (isset($_REQUEST['statusmessage'])) {
-	$message = sql_real_escape_string($_REQUEST['statusmessage']);
+	$message = $_REQUEST['statusmessage'];
 	if (empty($_SESSION['cometchat']['statusmessage']) || ($_SESSION['cometchat']['statusmessage'] != $message)) {
 		$query = sql_query('insertStatusMessage',array('userid'=>$userid, 'message'=>sanitize_core($message)));
 		if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }

@@ -3,6 +3,9 @@
 	<?php echo $pageDescription;?>
 </div>
 <div class="clearfix"></div>
+<?php if($pageTitle=='Intro')  :?>
+<img src="<?php echo base_url('assets/img/beta_test.jpg'); ?>" class="img-responsive"/>
+<?php endif;?>
 <?php if(!$this->session->userdata('isLoggedIn') && $pageTitle=='Intro')  :?>
 
 <h2 class="text-center">Login</h2>
@@ -23,5 +26,6 @@
 	</form>
 </div>
 <?php endif;?>
+
 
 

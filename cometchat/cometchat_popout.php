@@ -48,10 +48,10 @@ if(!empty($_REQUEST['crid'])) {
 		var embeddedchatroomid = <?php echo (!empty($_REQUEST['crid']) ? $_REQUEST['crid'] : '0').';'; ?>
 		var chatroomsonly = <?php echo (!empty($_REQUEST['chatroomsonly']) ? '1' : '0').';'; ?>
 	</script>
-	<link type="text/css" href="./cometchatcss.php?cc_layout=embedded<?php echo $chatroomid; ?><?php echo $chatroomsonly; ?><?php echo $callbackfn;?>" rel="stylesheet" charset="utf-8">
-	<script type="text/javascript" src="./cometchatjs.php?cc_layout=embedded<?php echo $chatroomid; ?><?php echo $chatroomsonly; ?><?php echo $callbackfn;?>" charset="utf-8"></script>
-	 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<?php echo getDynamicScriptAndLinkTags(array('type' => 'core','name' => 'default', 'layout'=> 'embedded', 'callbackfn' => $callbackfn, 'ext' => 'css')); ?>
+	<?php echo getDynamicScriptAndLinkTags(array('type' => 'core','name' => 'default', 'layout'=> 'embedded', 'callbackfn' => $callbackfn, 'ext' => 'js')); ?>
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script type="text/javascript">
 	        var embeddedchatroomid = <?php echo (!empty($_REQUEST['crid']) ? $_REQUEST['crid'] : '0').';'; ?>
 		var chatroomsonly = <?php echo (!empty($_REQUEST['chatroomsonly']) ? '1' : '0').';'; ?>

@@ -86,11 +86,10 @@ $sql_queries['getGuestID'] = "select id from cometchat_guests where id = '{id}'"
 $sql_queries['getChatroomBannedGuests'] = "select DISTINCT cometchat_guests.id userid, concat('{guestnamePrefix}',cometchat_guests.name) username, '' link, '' avatar, cometchat_status.lastactivity lastactivity, cometchat_status.isdevice isdevice, cometchat_status.status, cometchat_status.message from cometchat_guests left join cometchat_status on cometchat_guests.id = cometchat_status.userid inner join cometchat_chatrooms_users on  cometchat_guests.id =  cometchat_chatrooms_users.userid where chatroomid = '{chatroomid}' and cometchat_chatrooms_users.isbanned = 1 Union {originalsql}";
 $sql_queries['getGuestDetails'] = "select cometchat_guests.id userid, concat('{guestnamePrefix}',cometchat_guests.name) username,  '' link,  '' avatar, cometchat_status.lastactivity lastactivity, cometchat_status.lastseen lastseen, cometchat_status.lastseensetting lastseensetting, cometchat_status.status, cometchat_status.message, cometchat_status.isdevice isdevice, cometchat_status.readreceiptsetting readreceiptsetting from cometchat_guests left join cometchat_status on cometchat_guests.id = cometchat_status.userid where cometchat_guests.id = '{userid}'";
 $sql_queries['receive_sqlpart1'] = " (`from` = {from} and `id` <= {id}) OR";
-$sql_queries['getRecentMessages'] = "select * from cometchat_recentconversation where cometchat_recentconversation.to = '{userid}' or cometchat_recentconversation.from = '{userid}'";
 $sql_queries['getRecentGuestDetails'] = "select DISTINCT cometchat_guests.id userid, concat('{guestnamePrefix}',cometchat_guests.name) username, '' avatar from cometchat_guests where cometchat_guests.id in ({recentbuddyids}) UNION {sqlpart}";
-$sql_queries['getRecentGroupMessages'] = "select * from cometchat_chatroommessages where id in (select max(id) from cometchat_chatroommessages group by chatroomid)";
+$sql_queries['getRecentGroupMessages'] = "select * from cometchat_chatroommessages where id in (select max(id) from cometchat_chatroommessages {sqlpart} group by chatroomid)";
 $sql_queries['getRecentGroupDetails'] = "select cometchat_chatrooms.id id, cometchat_chatrooms.name name from cometchat_chatrooms where cometchat_chatrooms.id in ({joinedrooms})";
-$sql_queries['fetchMessages'] = "select cometchat.id, cometchat.from, cometchat.to, cometchat.message, cometchat.sent, cometchat.read, cometchat.direction from cometchat where ((cometchat.to = '{userid}' and cometchat.direction <> 2) or (cometchat.from = '{userid}' and cometchat.direction <> 1)) and (cometchat.id > '{timestamp}' or (cometchat.to = '{userid}' and cometchat.read <> 1)) and cometchat.direction <> 3 order by cometchat.id";
+$sql_queries['fetchMessages'] = "select cometchat.id, cometchat.from, cometchat.to, cometchat.message, cometchat.sent, cometchat.read, cometchat.direction from cometchat where ((cometchat.to = '{userid}' and cometchat.direction <> 2) or (cometchat.from = '{userid}' and cometchat.direction <> 1)) and (cometchat.id > '{timestamp}') and cometchat.direction <> 3 order by cometchat.id";
 $sql_queries['fetchunreadMessages'] = "select cometchat.id, cometchat.from, cometchat.to, cometchat.message, cometchat.sent, cometchat.read, cometchat.direction from cometchat where cometchat.to = '{userid}' and cometchat.read <> 1 and cometchat.direction < 2 order by cometchat.id";
 $sql_queries['typingTo'] = "select GROUP_CONCAT(userid, ',') as tt from cometchat_status where typingto = '{userid}' and ('{timestamp}'-typingtime < 10)";
 $sql_queries['getAnnouncementCount'] = "select count(id) as count from cometchat_announcements where `to` = '{userid}' and  `recd` = '0'";
@@ -101,12 +100,12 @@ $sql_queries['getFriends'] = "select friends from `cometchat_users` where uid = 
 $sql_queries['api_getData'] = "select {fetchfield} from cometchat_users where `{fieldname}` = '{value}'";
 $sql_queries['api_authenticateUser'] = "select userid from cometchat_users where username = '{username}' and password = '{password}'";
 $sql_queries['announcement_datifyextra'] = "or `to` = '0' or `to` = '{userid}'";
-$sql_queries['announcement_datify'] = "select id,announcement,time,`to` from cometchat_announcements where `to` = '-1' {extra} order by id desc {limit}";
+$sql_queries['announcement_datify'] = "select id,announcement,time,`to` from cometchat_announcements where `to` = '-1' {extra} order by id desc limit {limitClause}";
 $sql_queries['getChatrooms'] = "select id,name,type from cometchat_chatrooms where name = '{name}'";
 $sql_queries['getChatroomById'] = "select * from cometchat_chatrooms where id ='{id}'";
 $sql_queries['getUserIdByChatroom'] = "select userid from cometchat_chatroommessages where id ='{id}'";
 $sql_queries['getChatroom'] = "select id,name,type from cometchat_chatrooms where id = '{id}' and (type = '0' or type='3') limit 1";
-$sql_queries['getJoinedGroups'] = "select DISTINCT cometchat_chatrooms.id from cometchat_chatrooms where cometchat_chatrooms.id IN (select cometchat_chatrooms_users.chatroomid from cometchat_chatrooms_users where cometchat_chatrooms_users.userid = '{userid}')";
+$sql_queries['getJoinedGroups'] = "select distinct chatroomid as id from cometchat_chatrooms_users where userid = '{userid}' and isbanned <> 1";
 $sql_queries['groups_sqlpart'] = "(select COUNT(cometchat_chatrooms_users.userid) members from cometchat_chatrooms_users left join cometchat_status on cometchat_chatrooms_users.userid = cometchat_status.userid where cometchat_chatrooms_users.chatroomid = cometchat_chatrooms.id and isbanned <> 1 {timestampCondition})";
 $sql_queries['getGroupsData'] = "select DISTINCT cometchat_chatrooms.id, cometchat_chatrooms.name, cometchat_chatrooms.type, cometchat_chatrooms.password, cometchat_chatrooms.lastactivity, cometchat_chatrooms.invitedusers, cometchat_chatrooms.createdby, {sqlpart} members from cometchat_chatrooms order by name asc";
 $sql_queries['getGroupMsgMaxIds'] = "select max(cometchat_chatroommessages.id) id, cometchat_chatroommessages.chatroomid from cometchat_chatroommessages where cometchat_chatroommessages.chatroomid IN ({implodedChatrooms}) group by cometchat_chatroommessages.chatroomid";
@@ -172,7 +171,7 @@ $sql_queries['setBaseUrl'] = "replace into cometchat_settings(`setting_key`,`val
 $sql_queries['insertMessage'] = "insert into cometchat (cometchat.from,cometchat.to,cometchat.message,cometchat.sent,cometchat.read, cometchat.direction) values ('{userid}', '{to}','{message}','{timestamp}','{old}','{dir}')";
 $sql_queries['insertRecentConversation'] = "insert into cometchat_recentconversation (cometchat_recentconversation.id,cometchat_recentconversation.from,cometchat_recentconversation.to,cometchat_recentconversation.message,cometchat_recentconversation.sent,cometchat_recentconversation.convo_id) values ('{insertedid}', '{userid}', '{to}','{message}','{timestamp}','{convo_hash}') on duplicate key update cometchat_recentconversation.from = '{userid}', cometchat_recentconversation.to = '{to}', cometchat_recentconversation.message = '{message}', cometchat_recentconversation.id = '{insertedid}', cometchat_recentconversation.sent = '{timestamp}'";
 $sql_queries['insertBroadcastMessages'] = "insert into cometchat (cometchat.from,cometchat.to,cometchat.message,cometchat.sent,cometchat.read, cometchat.direction) values {sqlpart}";
-$sql_queries['insertGroupMessage'] = "insert into cometchat_chatroommessages (userid,chatroomid,message,sent) values ('{userid}', '{to}','{styleStart} {message} {styleEnd}','{timestamp}')";
+$sql_queries['insertGroupMessage'] = "insert into cometchat_chatroommessages (userid,chatroomid,message,sent) values ('{userid}', '{to}','{styleStart}{message}{styleEnd}','{timestamp}')";
 $sql_queries['insertAnnouncement'] = "insert into cometchat_announcements (announcement,time,`to`) values ('{announcement}', '{time}','{to}')";
 $sql_queries['updateLastActivity'] = "insert into cometchat_status (userid,lastactivity,lastseen) values ('{userid}','{timestamp}','{timestamp}') on duplicate key update lastactivity = '{timestamp}',lastseen = '{timestamp}'";
 $sql_queries['setLastseensettings'] = "insert into cometchat_status (userid,lastseensetting) values ('{userid}','{message}') on duplicate key update lastseensetting = '{message}'";
@@ -195,6 +194,7 @@ $sql_queries['insertChatroomUser'] = "insert into cometchat_chatrooms_users (use
 $sql_queries['unbanChatroomUser'] = "insert into cometchat_chatrooms_users (userid,chatroomid,isbanned) values ('{userid}','{chatroomid}','0') on duplicate key update chatroomid = '{chatroomid}'";
 $sql_queries['blockUser'] = "insert into cometchat_block (fromid, toid) values ('{fromid}','{toid}')";
 $sql_queries['insertFirstGuestID'] = "insert into `cometchat_guests` (`id`, `name`) VALUES ('{id}', 'guest-{id}');";
+$sql_queries['getTblDetails'] = "SELECT * from {table} where {key}={value};";
 $sql_queries['updateGroupActivity'] = "update cometchat_chatrooms set lastactivity = '{lastactivity}' where id = '{id}'";
 $sql_queries['cometchatdelete_sql1'] = "update cometchat set cometchat.direction = 1 where cometchat.from = {from} and cometchat.direction = 0 and cometchat.to = {to}";
 $sql_queries['cometchatdelete_sql2'] = "update cometchat set cometchat.direction = 2 where cometchat.from = {from} and cometchat.direction = 0 and cometchat.to = {to}";
@@ -214,17 +214,18 @@ $sql_queries['addUsersToChatroom'] = "update cometchat_chatrooms set inviteduser
 $sql_queries['cometchatSessionDestroy'] = "delete from cometchat_session where session_id = '{session_id}'";
 $sql_queries['cometchatSessionGarbageCollector'] = "delete from cometchat_session where session_lastaccesstime < DATE_SUB(NOW(), INTERVAL {lifetime} SECOND)";
 $sql_queries['api_removeuser'] = "delete from `cometchat_users` where `userid` = '{userid}'";
+$sql_queries['check_group'] = "select name, guid from cometchat_chatrooms where name = '{groupname}'";
 $sql_queries['cron_groups'] = "delete from cometchat_chatrooms where createdby <> 0 and lastactivity < ({lastactivity}- {timeout})";
 $sql_queries['cron_groupmessages'] = "delete from cometchat_chatroommessages where sent < ({sent}-10800)";
 $sql_queries['cron_groupusers'] = "delete from cometchat_chatrooms_users where lastactivity < ({lastactivity}-3600)";
-$sql_queries['deleteGroup'] = "delete from cometchat_chatrooms where id = '{id}' {createdby}";
+$sql_queries['deleteGroup'] = "delete from cometchat_chatrooms where id = '{id}' and createdby != 0 ";
 $sql_queries['deleteGroup_messages'] = "delete from cometchat_chatroommessages where chatroomid = '{id}'";
 $sql_queries['deleteKickedMessage'] = "delete from cometchat_chatroommessages where chatroomid = '{chatroomid}' and (message like '%kicked_{userid}')";
 $sql_queries['leavechatroom'] = "delete from cometchat_chatrooms_users where userid = '{userid}' and chatroomid = '{chatroomid}' and isbanned != 1";
 $sql_queries['kickUser'] = "delete from cometchat_chatrooms_users where userid = '{userid}' and chatroomid = '{chatroomid}'";
 $sql_queries['deleteBanUserMessage'] = "delete from cometchat_chatroommessages where chatroomid = '{chatroomid}' and (message like '%banned_{userid}')";
 $sql_queries['unbanusers'] = "delete from cometchat_chatrooms_users where userid = '{userid}' and chatroomid = '{chatroomid}'";
-$sql_queries['deleteChatroomMessage'] = "delete from cometchat_chatroommessages where id='{id}' and chatroomid = '{chatroomid}'";
+$sql_queries['deleteGroupMessage'] = "delete from cometchat_chatroommessages where id='{id}'";
 $sql_queries['unblockUser'] = "delete from cometchat_block where toid = '{toid}' and fromid = '{fromid}'";
 
 $sql_queries['install_cometchatsettings'] = "select `value` from `cometchat_settings` where `setting_key` like '{setting_key}'";
@@ -559,8 +560,9 @@ $sql_queries['install_createstatus'] = "CREATE TABLE  IF NOT EXISTS `cometchat_s
 class SqlQueries{
 	function getQueries(){
 		$sqlqueries = array();
+		$sqlqueries['getRecentMessages'] = "select cometchat_recentconversation.* from cometchat_recentconversation join  " . TABLE_PREFIX . DB_USERTABLE . " on  " . TABLE_PREFIX . DB_USERTABLE . "." . DB_USERTABLE_USERID . " = cometchat_recentconversation.from join  " . TABLE_PREFIX . DB_USERTABLE . " a on  a." . DB_USERTABLE_USERID . " = cometchat_recentconversation.to where cometchat_recentconversation.to = '{userid}' or cometchat_recentconversation.from = '{userid}'";
 
-		$sqlqueries['checkUserExists'] = "select ".DB_USERTABLE.".".DB_USERTABLE_USERID." as userid from ".TABLE_PREFIX.DB_USERTABLE." where {field} = '{value}'";
+		$sqlqueries['checkUserExists'] = "select ".TABLE_PREFIX.DB_USERTABLE.".".DB_USERTABLE_USERID." as userid from ".TABLE_PREFIX.DB_USERTABLE." where {field} = '{value}'";
 		$sqlqueries['selectUser'] = "select userid, username, link, avatar, uid, friends, grp, displayname from ".TABLE_PREFIX.DB_USERTABLE." ";
 		$sqlqueries['checkSocialLogin'] = "select ".DB_USERTABLE.".".DB_USERTABLE_USERID." from ".DB_USERTABLE." where ".DB_USERTABLE.".{db_usertable_username} = '{network_name}_{identifier}'";
 		$sqlqueries['auth_getFriendsList'] = "select DISTINCT ".DB_USERTABLE.".".DB_USERTABLE_USERID." userid, ".DB_USERTABLE.".".DB_USERTABLE_NAME." username, ".DB_USERTABLE.".".DB_LINKFIELD." link, ".DB_AVATARFIELD." avatar, ".DB_USERTABLE.".{db_groupfield} grp, cometchat_status.lastactivity lastactivity, cometchat_status.lastseen lastseen, cometchat_status.lastseensetting lastseensetting, cometchat_status.status, cometchat_status.message, cometchat_status.isdevice from ".DB_USERTABLE." left join cometchat_status on ".DB_USERTABLE.".".DB_USERTABLE_USERID." = cometchat_status.userid ".DB_AVATARTABLE." where {timestampCondition} (cometchat_status.status IS NULL OR cometchat_status.status <> 'invisible' OR cometchat_status.status <> 'offline') order by username asc";
@@ -578,7 +580,7 @@ class SqlQueries{
 		$sqlqueries['getchatroomusers'] = "select DISTINCT ".TABLE_PREFIX.DB_USERTABLE.".".DB_USERTABLE_USERID." userid, ".TABLE_PREFIX.DB_USERTABLE.".".DB_USERTABLE_NAME." username, ".DB_AVATARFIELD." avatar, cometchat_status.lastactivity lastactivity, cometchat_status.isdevice isdevice, cometchat_chatrooms_users.isbanned , cometchat_status.status from ".TABLE_PREFIX.DB_USERTABLE." left join cometchat_status on ".TABLE_PREFIX.DB_USERTABLE.".".DB_USERTABLE_USERID." = cometchat_status.userid inner join cometchat_chatrooms_users on  ".TABLE_PREFIX.DB_USERTABLE.".".DB_USERTABLE_USERID." =  cometchat_chatrooms_users.userid ". DB_AVATARTABLE ." where chatroomid = '{chatroomid}' {timestampCondition} group by userid order by username asc";
 		$sqlqueries['unban'] = "select DISTINCT ".TABLE_PREFIX.DB_USERTABLE.".".DB_USERTABLE_USERID." userid, ".TABLE_PREFIX.DB_USERTABLE.".".DB_USERTABLE_NAME." username, ".TABLE_PREFIX.DB_USERTABLE.".".DB_USERTABLE_NAME." link, ".DB_AVATARFIELD." avatar, cometchat_status.lastactivity lastactivity, cometchat_status.isdevice isdevice, cometchat_status.status, cometchat_status.message from ".TABLE_PREFIX.DB_USERTABLE." left join cometchat_status on ".TABLE_PREFIX.DB_USERTABLE.".".DB_USERTABLE_USERID." = cometchat_status.userid right join cometchat_chatrooms_users on ".TABLE_PREFIX.DB_USERTABLE.".".DB_USERTABLE_USERID." =cometchat_chatrooms_users.userid ".DB_AVATARTABLE." where ".TABLE_PREFIX.DB_USERTABLE.".".DB_USERTABLE_USERID." <> '{userid}' and cometchat_chatrooms_users.chatroomid = '{chatroomid}' and cometchat_chatrooms_users.isbanned ='1' group by userid order by username asc";
 		$sqlqueries['insertSocialLogin'] = "insert into ".DB_USERTABLE." (".DB_USERTABLE.".{db_usertable_username},".DB_USERTABLE.".".DB_USERTABLE_NAME.",".DB_AVATARFIELD.",".DB_USERTABLE.".".DB_LINKFIELD.",".DB_USERTABLE.".{db_groupfield}) values ( '{network_name}_{identifier}','{firstName}','{photoURL}','{profileURL}','{groupfield}')";
-		$sqlqueries['cloudapi_createuser'] = "insert into ".TABLE_PREFIX.DB_USERTABLE." set `username` = '{username}',`password` = '{password}', `link` = '{link}', `avatar` = '{avatar}', `displayname` = '{displayname}', `uid` = '{uid}', `roleid` = '{roleid}'";
+		$sqlqueries['cloudapi_createuser'] = "insert into ".TABLE_PREFIX.DB_USERTABLE." set `username` = '{username}',`password` = '{password}', `link` = '{link}', `avatar` = '{avatar}', `displayname` = '{displayname}', `uid` = '{uid}', `role` = '{role}'";
 		$sqlqueries['loginWithUserDetails'] = "insert into ".TABLE_PREFIX.DB_USERTABLE." set `username` = '{username}', `link` = '{link}', `avatar` = '{avatar}', `displayname` = '{displayname}', `uid` = '{uid}'";
 		$sqlqueries['updateSocialLogin'] = "update ".DB_USERTABLE." set ".DB_USERTABLE.".".DB_USERTABLE_NAME."='{firstName}',".DB_AVATARFIELD."='{photoURL}',".DB_USERTABLE.".".DB_LINKFIELD."='{profileURL}' where ".DB_USERTABLE.".{db_usertable_username}='{network_name}_{identifier}'";
 		$sqlqueries['cloudapi_updateuser'] = "update ".TABLE_PREFIX.DB_USERTABLE." set {set} where `userid` = '{userid}'";

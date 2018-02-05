@@ -78,6 +78,7 @@ if(!function_exists("authenticate")) {
             $usernameplaceholder='Username';
             $texttype='text';
       }
+      $staticCDNUrl = STATIC_CDN_URL;
       global $body;
       $body = <<<EOD
         <script>
@@ -89,7 +90,7 @@ if(!function_exists("authenticate")) {
         </script>
         <div class="outerframe">
           <div class="middleform">
-            <div class="cometchat_logo_div"><img class="cometchat_logo_image" src="images/logo.png"></div>
+            <div class="cometchat_logo_div"><img class="cometchat_logo_image" src="{$staticCDNUrl}/admin/images/logo.png"></div>
             <div class="module form-module">
               <div class="form" >
                 <h2 >CometChat Administration Panel</h2>
@@ -251,8 +252,8 @@ echo <<<EOD
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="shortcut icon" href="images/favicon.ico">
   <title>CometChat Admin Panel</title>
-  <link href="../css.php?admin=1&v={$currentversion}" rel="stylesheet" >
-  <script src="../js.php?admin=1&v={$currentversion}"></script>
+  {$GLOBALS['adminjstag']}
+  {$GLOBALS['admincsstag']}
 </head>
 EOD;
 
@@ -301,9 +302,9 @@ echo <<<EOD
 <!-- Modal -->
 EOD;
 }
+$adminappjstag =  getDynamicScriptAndLinkTags(array('admin'=>1,'app'=>1,'ext'=>'js'));
 echo <<<EOD
-
-  <script src="../js.php?admin=1&app=1&v={$currentversion}"></script>
+  {$adminappjstag}
   {$errorjs}
   <script>
   $(document).ready(function(){

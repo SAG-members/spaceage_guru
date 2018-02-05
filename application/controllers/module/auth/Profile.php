@@ -187,6 +187,14 @@ class Profile extends Application
 		redirect('profile');
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
 	public function update_user_rpq()
 	{
 		$flag = false;
@@ -312,5 +320,5 @@ class Profile extends Application
 	    
 	    redirect('profile');
 	}
-		
+	
 }

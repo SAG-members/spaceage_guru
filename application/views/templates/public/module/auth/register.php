@@ -29,17 +29,19 @@
 	</div>
 	<div class="clearfix"></div>
 	
-	<!-- 
-	<h2>What are you ?</h2>
-	<input type="text" name="what_you_want_to_become" class="password" placeholder="What are you?" autocomplete="off">
 	
-	<h2>What do you want to become ?</h2>
-	<input type="text" name="what_are_you" class="password" placeholder="What do you want to become?" autocomplete="off">
+	<h2>What are you?</h2>
+	<input type="text" name="what_you_want_to_become" class="password" placeholder="How would you describe yourself in your life" autocomplete="off">
 	
+	<h2>What do you want to become?</h2>
+	<input type="text" name="what_are_you" class="password" placeholder="Describe to which you want to develop yourself" autocomplete="off">
+	
+	<h2>What do you need?</h2>
+	<input type="text" name="what_do_you_need" class="password" placeholder="We all know time&money, but rather write what would you get with them" autocomplete="off">
 	 
-	<h2>What is the problem that is preventing you from becoming the one you desire to become ?</h2>
-	<input type="text" name="problem_preventing" class="password" placeholder="What is the problem that is preventing you from becoming the one you desire to become?" autocomplete="off">
-	-->
+	<!-- <h2>What is the problem that is preventing you from becoming the one you desire to become ?</h2>
+	<input type="text" name="problem_preventing" class="password" placeholder="What is the problem that is preventing you from becoming the one you desire to become?" autocomplete="off"> -->
+	
 	 
 	<h2>Are you a ?</h2>
 	<div class="checkboobmain">
@@ -80,7 +82,7 @@
     
 	<div class="checkboobmain">
 		<input type="checkbox" id="age-flag" name="age-flag" required /> <label>I
-			agree I'm 18 years old</label><br /> 
+			agree I'm above 18 years old</label><br /> 
 		
 		<input type="checkbox"
 			id="terms-flag" name="terms-flag" required /> <label>I accept all

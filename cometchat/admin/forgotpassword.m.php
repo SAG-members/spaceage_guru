@@ -24,12 +24,13 @@ function forgotpassword($param=array()){
 	* Params: none
 	* Returns/Results load html body
 	*/
+	$staticCDNUrl = STATIC_CDN_URL;
 	global $body;
 	$body=<<<EOD
 	<div class="outerframe">
 		<div class="middleform">
 			<div class="cometchat_logo_div">
-				<img class="cometchat_logo_image" src="images/logo.png" style="height:50px;" />
+				<img class="cometchat_logo_image" src="{$staticCDNUrl}/admin/images/logo.png" style="height:50px;" />
 			</div>
 				<div class="module form-module">
 					<div class="form" >
@@ -56,6 +57,7 @@ function resetpassword($param=array()){
 	* Params: none
 	* Returns/Results load html body
 	*/
+	$staticCDNUrl = STATIC_CDN_URL;
 	if($_REQUEST['key']==base64_encode(ADMIN_USER) && (time()-$_REQUEST['ts'] <='1800')){
 		$_SESSION['cometchat']['reseturl']=$_SERVER['REQUEST_URI'];
 		global $body;
@@ -63,7 +65,7 @@ function resetpassword($param=array()){
 		<div class="outerframe">
 			<div class="middleform">
 				<div class="cometchat_logo_div">
-					<img class="cometchat_logo_image" src="images/logo.png" style="height:50px;" />
+					<img class="cometchat_logo_image" src="{$staticCDNUrl}/admin/images/logo.png" style="height:50px;" />
 				</div>
 				<div class="module form-module">
 					<div class="form" >

@@ -38,7 +38,7 @@ body {
 }
 
 #sketch {
-    cursor: url(plugins/handwrite/images/pencil.png), auto;
+    cursor: url(<?php echo STATIC_CDN_URL; ?>plugins/handwrite/images/pencil.png), auto;
 }
 
 .width-btn {

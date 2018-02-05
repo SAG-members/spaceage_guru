@@ -1,0 +1,25 @@
+
+ Dec 13 04:44:01 : {"LATEST_VERSION":"","api_response":""}
+ Dec 13 04:49:48 : {"LATEST_VERSION":"","api_response":""}
+ Dec 13 04:50:46 : {"licensekey":"XI6WE-VEB6Z-T3TXB-E1GIV-L6SJQ","api_response":""}
+ Dec 13 04:51:14 : {"plugins":["smilies","clearconversation","filetransfer"]}
+ Dec 13 04:51:34 : {"plugins":["smilies","clearconversation","filetransfer","handwrite"]}
+ Dec 13 04:51:36 : {"plugins":["smilies","clearconversation","filetransfer","handwrite","report"]}
+ Dec 13 04:51:40 : {"plugins":["smilies","clearconversation","filetransfer","handwrite","report","stickers"]}
+ Dec 13 04:51:43 : {"plugins":["smilies","clearconversation","filetransfer","handwrite","report","stickers","transliterate"]}
+ Dec 13 04:51:45 : {"plugins":["smilies","clearconversation","filetransfer","handwrite","report","stickers","transliterate","whiteboard"]}
+ Dec 13 04:51:47 : {"plugins":["smilies","clearconversation","filetransfer","handwrite","report","stickers","transliterate","whiteboard","writeboard"]}
+ Dec 13 04:51:49 : {"plugins":["smilies","clearconversation","filetransfer","handwrite","report","stickers","transliterate","whiteboard","writeboard","voicenote"]}
+ Dec 13 04:51:52 : {"crplugins":["style","filetransfer","smilies","voicenote"]}
+ Dec 13 04:51:54 : {"crplugins":["style","filetransfer","smilies","voicenote","writeboard"]}
+ Dec 13 04:51:56 : {"crplugins":["style","filetransfer","smilies","voicenote","writeboard","whiteboard"]}
+ Dec 13 04:51:58 : {"crplugins":["style","filetransfer","smilies","voicenote","writeboard","whiteboard","transliterate"]}
+ Dec 13 04:51:59 : {"crplugins":["style","filetransfer","smilies","voicenote","writeboard","whiteboard","transliterate","stickers"]}
+ Dec 13 04:52:07 : {"plugins":["smilies","clearconversation","filetransfer","handwrite","report","stickers","transliterate","whiteboard","writeboard","voicenote","block"]}
+ Dec 13 04:52:09 : {"plugins":["smilies","clearconversation","filetransfer","handwrite","report","stickers","transliterate","whiteboard","writeboard","voicenote","block","chathistory"]}
+ Dec 13 04:52:10 : {"plugins":["smilies","clearconversation","filetransfer","handwrite","report","stickers","transliterate","whiteboard","writeboard","voicenote","block","chathistory","save"]}
+ Dec 13 04:52:11 : {"crplugins":["style","filetransfer","smilies","voicenote","writeboard","whiteboard","transliterate","stickers","save"]}
+ Dec 13 04:52:12 : {"crplugins":["style","filetransfer","smilies","voicenote","writeboard","whiteboard","transliterate","stickers","save","clearconversation"]}
+ Dec 13 04:52:13 : {"crplugins":["style","filetransfer","smilies","voicenote","writeboard","whiteboard","transliterate","stickers","save","clearconversation","chathistory"]}
+ Dec 14 12:06:33 : {"LATEST_VERSION":"","api_response":""}
+ Dec 14 12:08:33 : {"trayicon":{"home":["home","Home","\/","","","","","",""],"chatrooms":["chatrooms","Chatrooms","modules\/chatrooms\/index.php","_popup","600","300","","1","1"],"announcements":["announcements","Announcements","modules\/announcements\/index.php","_popup","280","300","","1",""],"games":["games","Single Player Games","modules\/games\/index.php","_popup","465","300","","1",""],"share":["share","Share This Page","modules\/share\/index.php","_popup","350","50","","1",""],"scrolltotop":["scrolltotop","Scroll To Top","javascript:jqcc.cometchat.scrollToTop();","","","","","",""],"translate":["translate","Translate This Page","modules\/translate\/index.php","_popup","280","310","","1",""]}}

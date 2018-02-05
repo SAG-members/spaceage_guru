@@ -12,7 +12,7 @@ $(function() {
 	} else{
 		$(".announcements").css("height","100%");
 	}
-	
+
 	jqcc('.chattime').each(function(key,value){
 		var ts = jqcc(this).attr('timestamp');
 		jqcc(this).html(ts);

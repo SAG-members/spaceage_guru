@@ -11,7 +11,7 @@ if (empty($_GET['process']) && empty($_GET['updatesettings'])) {
     include_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'config.php');
     $base_url = BASE_URL;
     $form = '';
-if(empty($generateembedcodesettings)) {
+    if(empty($generateembedcodesettings)) {
         $curl = 0;
         $errorMsg = '';
 
@@ -26,12 +26,12 @@ if(empty($generateembedcodesettings)) {
         } else if ($enableType == '2') {
             $private = "selected";
         }
-
-echo <<<EOD
+        $jqueryjstag =  getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery', 'ext' => 'js'));
+        echo <<<EOD
     <!DOCTYPE html>
     <html>
     <head>
-    <script src="../js.php?type=core&name=jquery"></script>
+    {$jqueryjstag}
     <script>
         $ = jQuery = jqcc;
         function resizeWindow() {
@@ -92,8 +92,8 @@ echo <<<EOD
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="images/favicon.ico">
     <title>Generate Embed Code</title>
-    <link href="{$base_url}/css.php?admin=1" rel="stylesheet">
-    <script src="{$base_url}/js.php?admin=1"></script>
+    {$GLOBALS['adminjstag']}
+    {$GLOBALS['admincsstag']}
 </head>
  <body class="navbar-fixed sidebar-nav fixed-nav" style="background-color: white;overflow-y:hidden;">
     <div class="col-sm-6 col-lg-6">
@@ -148,7 +148,7 @@ EOD;
             $chatboxWidth  = !empty($_POST['chatboxWidth'])  ? $_POST['chatboxWidth']  : 350;
             $chatboxHeight = !empty($_POST['chatboxHeight']) ? $_POST['chatboxHeight'] : 420;
             if (empty($_POST['onlygroup'])) {
-                $embed_code = '&lt;div id="cometchat_embed_synergy_container" style="width:'.$_POST['chatboxWidth'].'px;height:'.$_POST['chatboxHeight'].'px;max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;" &gt;&lt;/div&gt;&lt;script src="'.BASE_URL.'js.php?type=core&name=embedcode" type="text/javascript"&gt;&lt;/script&gt;&lt;script&gt;var iframeObj = {};iframeObj.module="synergy";iframeObj.style="min-height:420px;min-width:350px;";iframeObj.width="'.$_POST['chatboxWidth'].'px";iframeObj.height="'.$_POST['chatboxHeight'].'px";iframeObj.src="'.BASE_URL.'cometchat_embedded.php"; if(typeof(addEmbedIframe)=="function"){addEmbedIframe(iframeObj);}&lt;/script&gt;';
+                $embed_code = '&lt;div id="cometchat_embed_synergy_container" style="width:'.$_POST['chatboxWidth'].'px;height:'.$_POST['chatboxHeight'].'px;max-width:100%;border:1px solid #CCCCCC;border-radius:5px;overflow:hidden;" &gt;&lt;/div&gt;&lt;script src="'.getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'embedcode','urlonly'=>1, 'ext' => 'js')).'" type="text/javascript"&gt;&lt;/script&gt;&lt;script&gt;var iframeObj = {};iframeObj.module="synergy";iframeObj.style="min-height:420px;min-width:350px;";iframeObj.width="'.$_POST['chatboxWidth'].'px";iframeObj.height="'.$_POST['chatboxHeight'].'px";iframeObj.src="'.BASE_URL.'cometchat_embedded.php"; if(typeof(addEmbedIframe)=="function"){addEmbedIframe(iframeObj);}&lt;/script&gt;';
                 $cmscode = '';
                 if(method_exists($GLOBALS['integration'], 'iscmsActive') && $GLOBALS['integration']->iscmsActive()){
                     $cmscode = getCometChatEmbedCode(array('width' => $chatboxWidth, 'height' =>  $chatboxHeight));
@@ -163,15 +163,15 @@ EOD;
                 if(!(method_exists($GLOBALS['integration'], 'iscmsActive') && $GLOBALS['integration']->iscmsActive())){
                     $cmscode = '';
                 }
-                $embed_code = '<div id="cometchat_embed_chatrooms_container" style="display:inline-block; border:1px solid #CCCCCC;"></div><script src="'.BASE_URL.'js.php?type=core&amp;name=embedcode" type="text/javascript"></script><script>var iframeObj = {};iframeObj.module="chatrooms";iframeObj.style="min-height:420px;min-width:300px;";iframeObj.src="'.BASE_URL.'cometchat_embedded.php?'.$querystring.'";iframeObj.width="'.$_POST['chatboxWidth'].'";iframeObj.height="'.$_POST['chatboxHeight'].'";if(typeof(addEmbedIframe)=="function"){addEmbedIframe(iframeObj);}</script>';
+                $embed_code = '<div id="cometchat_embed_chatrooms_container" style="display:inline-block; border:1px solid #CCCCCC;"></div>'.getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'embedcode', 'ext' => 'js')).'<script>var iframeObj = {};iframeObj.module="chatrooms";iframeObj.style="min-height:420px;min-width:300px;";iframeObj.src="'.BASE_URL.'cometchat_embedded.php?'.$querystring.'";iframeObj.width="'.$_POST['chatboxWidth'].'";iframeObj.height="'.$_POST['chatboxHeight'].'";if(typeof(addEmbedIframe)=="function"){addEmbedIframe(iframeObj);}</script>';
 
             }
             echo <<<EOD
                 <!DOCTYPE html>
                 <html>
                     <head>
-                        <link href="{$base_url}css.php?admin=1" rel="stylesheet">
-                        <script type="text/javascript" src="{$base_url}js.php?admin=1"></script>
+                        {$GLOBALS['adminjstag']}
+                        {$GLOBALS['admincsstag']}
                         <script type="text/javascript" language="javascript">
                             $(function() {
                                 setTimeout(function(){

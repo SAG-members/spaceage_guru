@@ -16,6 +16,7 @@
 <link href="<?php echo base_url('assets/css/font-awesome.css')?>" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/bootstrap-toggle/bootstrap-toggle.css')?>" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/custom.css')?>" rel="stylesheet">
+<link href="<?php echo base_url('assets/css/responsive.css')?>" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/jquery/jquerysctipttop.css')?>" rel="stylesheet">
 
 <link
@@ -52,6 +53,15 @@
 <script src="//cdn.rawgit.com/mervick/emojionearea/master/dist/emojionearea.min.js"></script>
 
 <script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#property=5a24e3ec1b118100135877d2&product=inline-share-buttons' async='async'></script>
+
+<!-- start Mixpanel --><script type="text/javascript">(function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,
+0)))}}var d=a;"undefined"!==typeof f?d=a[f]=[]:f="mixpanel";d.people=d.people||[];d.toString=function(b){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);b||(a+=" (stub)");return a};d.people.toString=function(){return d.toString(1)+".people (stub)"};k="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+for(h=0;h<k.length;h++)e(d,k[h]);a._i.push([b,c,f])};a.__SV=1.2;b=e.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";c=e.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c)}})(document,window.mixpanel||[]);
+mixpanel.init("87b5c558f76ec0cd24e8ecdec25acf65");</script><!-- end Mixpanel -->
+
+<script type="text/javascript">
+mixpanel.track("<?php echo $title?>");
+</script>
 
 </head>
 
@@ -128,5 +138,41 @@
 	<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a21103aad337c00"></script> 
 	
 	<?php //$this->output->enable_profiler(TRUE);?>
+	
+	<script type="text/javascript">
+	
+	<?php if(isset($leftSideData['playVideo']) && $leftSideData['playVideo'] == true) :?>
+	$(function(){
+		$('#virginUserVideoModal').modal('show');
+
+
+		$('video').on('ended',function(){
+			$('#virginUserVideoModal').modal('hide');
+			console.log("video ended");
+		});
+	});
+	
+	<?php endif;?>
+
+	
+	
+	</script>
+	
+	
+	<?php if(isset($leftSideData['playVideo']) && $leftSideData['playVideo'] == true) :?>
+	<!-- Virgin User Video Modal -->
+    <div id="virginUserVideoModal" class="modal fade" role="dialog">
+    	<div class="modal-dialog" style="width:100%; height:100%; margin:0px; padding:0px;" >
+    
+            <!-- Modal content-->
+        	<div class="modal-content">          		
+          		<div class="modal-body">
+          			<iframe style="width:100%;"  width="100%" src="https://www.youtube.com/embed/wr5qcKUIAgo?rel=0&autoplay=1"></iframe>            		
+          		</div>          		
+        	</div>
+    	</div>
+    </div>
+	<?php endif; ?>
+	
 </body>
 </html>

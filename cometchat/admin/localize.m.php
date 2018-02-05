@@ -25,18 +25,24 @@ function index() {
     while ($language = sql_fetch_assoc($query)) {
     	$code = $language['code'];
     	$default = '';
-		$opacity = '0.5;cursor:default;';
-		$titlemakedefault = 'title="Set As Default"';
-		$setdefault = 'onclick="javascript:language_makedefault(\''.$code.'\')"';
-		$removelanguage = '<a style="color:red;" data-toggle="tooltip" title="Remove Language" href="javascript:void(0)" onclick="javascript:language_removelanguage(\''.$code.'\')"><i class="fa fa-lg fa-minus-circle"></i></a>';
-		if (strtolower($lang) == strtolower($code)) {
-			$default = ' (Default)';
-			$opacity = $titlemakedefault = '';
-			$setdefault = '';
+		$opacityfordefault = 'opacity:0.5;cursor:default;';
+		$opacityfordelete  = 'cursor:default;';
+		$titlemakedefault  = 'title="Set As Default"';
+		$setdefault = 'onclick="javascript:language_makedefault(\''.$code.'\');"';
+		$removelanguage = 'onclick="javascript:language_removelanguage(\''.$code.'\');"';
+
+		if (strtolower($code) == 'en' || strtolower($lang) == strtolower($code)) {
+			$opacityfordelete = 'opacity:0.5;cursor:default;';
 			$removelanguage = '';
 		}
+		if (strtolower($lang) == strtolower($code)) {
+			$default = ' (Default)';
+			$titlemakedefault = '';
+			$opacityfordefault = 'cursor:default;';
+			$setdefault = '';
+		}
 		++$no;
-		$activelanguages .= '<tr id="'.$no.'" d1="'.$code.'"><td id="'.$code.'_title">'.$code.$default.'</td><td><a data-toggle="tooltip" style="color:#4CAF50;opacity:'.$opacity.';" '.$titlemakedefault.' href="javascript:void(0)" '.$setdefault.'><i class="fa fa-lg fa-star"></i></a></td><td><a style="text-decoration:none;color:#000000;" data-toggle="tooltip" title="Edit Language" href="?module=localize&amp;action=editlanguage&amp;data='.$code.'&amp;ts='.$ts.'"<i class="fa fa-lg fa-edit"></i></a></td><td>'.$removelanguage.'</td></tr>';
+		$activelanguages .= '<tr id="downloadedlanguage_'.$code.'" d1="'.$code.'"><td id="'.$code.'_title">'.$code.$default.'</td><td><a data-toggle="tooltip" style="color:#4CAF50;'.$opacityfordefault.';" '.$titlemakedefault.' href="javascript:void(0)" '.$setdefault.'><i class="fa fa-lg fa-star"></i></a></td><td><a style="text-decoration:none;color:#000000;" data-toggle="tooltip" title="Edit Language" href="?module=localize&amp;action=editlanguage&amp;data='.$code.'&amp;ts='.$ts.'"<i class="fa fa-lg fa-edit"></i></a></td><td><a style="color:red;'.$opacityfordelete.'" '.$removelanguage.' data-toggle="tooltip" title="Remove Language" ><i class="fa fa-lg fa-minus-circle"></i></a></td></tr>';
     }
 
 $body .= <<<EOD
@@ -523,7 +529,7 @@ function importlanguage(){
 			foreach($langdata as $type => $addondata){
 				foreach($addondata as $name => $lang_keys){
 					foreach($lang_keys as $lang_key => $lang_text){
-						$sql .= sql_getQuery('admin_importLanguage',array('lang_key'=>$lang_key, 'lang_text'=>$lang_text, 'code'=>$code, 'type'=>$type, 'name'=>$name));
+						$sql .= sql_getQuery('admin_importLanguage',array('lang_key'=>$lang_key, 'lang_text'=>htmlentities(stripslashes($lang_text)), 'code'=>$code, 'type'=>$type, 'name'=>$name));
 					}
 				}
 			}
@@ -616,7 +622,7 @@ function uploadlanguageprocess() {
 					foreach($langdata as $type => $addondata){
 						foreach($addondata as $name => $lang_keys){
 							foreach($lang_keys as $lang_key => $lang_text){
-								$sql .= sql_getQuery('admin_importLanguage',array('lang_key'=>$lang_key, 'lang_text'=>$lang_text, 'code'=>$code, 'type'=>$type, 'name'=>$name));
+								$sql .= sql_getQuery('admin_importLanguage',array('lang_key'=>$lang_key, 'lang_text'=>htmlentities(stripslashes($lang_text)), 'code'=>$code, 'type'=>$type, 'name'=>$name));
 							}
 						}
 					}

@@ -916,7 +916,7 @@ class Public_ajax_controller extends CI_Controller
 	        
 	        $this->load->model('psss_purchase_history','psss');
 	        
-	        $result = $this->psss->create_purchase_history('PRICELESS', $this->session->userdata('id'), $payload['item-number'], $result->{Page::_PAGE_TITLE}, $result->{Page::_CATEGORY_ID}, 0, 'EUR', $this->session->userdata('email'));
+	        $result = $this->psss->create_purchase_history('PRICELESS', $this->session->userdata('id'), $payload['item-number'], $result->{Page::_PAGE_TITLE}, $result->{Page::_CATEGORY_ID}, 0, 'EUR', $this->session->userdata('email'), 'priceless');
 	    }
 	    
 	    if($result) $response = array('flag'=>1, 'message'=>'Priceless data accquiring successfull');

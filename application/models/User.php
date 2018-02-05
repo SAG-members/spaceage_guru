@@ -24,6 +24,7 @@ class User extends CI_Model
 	const _GENDER = 'gender';
 	const _WHAT_ARE_YOU = 'what_are_you';
 	const _WHAT_YOU_WANT_TO_BECOME = 'what_you_want_to_become';
+	const _WHAT_DO_YOU_NEED = 'what_do_you_need';
 	const _PROBLEM_PREVENTING = 'problem_preventing';
 	const _USER_GROUP = 'user_group';
 	const _USER_MEMBERSHIP_LEVEL = 'membership_level';
@@ -99,7 +100,7 @@ class User extends CI_Model
 	
 	/* Since we are following ne signup process, new method is implemented*/
 	
-	public function sign_up($recommendor, $country, $avatarName, $avatarImage, $gender, $whatAreYou, $whatYouWantToBecome, $problemPreventing, $password, $securityQuestion, $securityQuestionAnswer, $suggestionRequired)
+	public function sign_up($recommendor, $country, $avatarName, $avatarImage, $gender, $whatAreYou, $whatYouWantToBecome, $problemPreventing, $password, $securityQuestion, $securityQuestionAnswer, $suggestionRequired, $whatDoYouNeed = null)
 	{
 		$date = new DateTime();
 		$date = $date->format('Y-m-d H:i:s');
@@ -113,6 +114,7 @@ class User extends CI_Model
 		        User::_GENDER => $gender,
 				User::_WHAT_ARE_YOU=>$whatAreYou,
 				User::_WHAT_YOU_WANT_TO_BECOME=>$whatYouWantToBecome,
+		        User::_WHAT_DO_YOU_NEED => $whatDoYouNeed,
 		        User::_PROBLEM_PREVENTING => $problemPreventing,
 				User::_PASSWORD=>md5($password),
 				User::_SECRET_QUESTION=>$securityQuestion,

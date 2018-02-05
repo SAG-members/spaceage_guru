@@ -39,7 +39,7 @@ ul {
 }
 
 li:before {
-    background: url("layouts/<?php echo $layout;?>/images/bullet.png") no-repeat scroll rgba(0, 0, 0, 0);
+    background: url("<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/bullet.png") no-repeat scroll rgba(0, 0, 0, 0);
     content: "";
     height: 10px;
     position: absolute;

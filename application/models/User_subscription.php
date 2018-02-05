@@ -22,6 +22,9 @@ class User_subscription extends CI_Model
 	const _SUBSCRIPTION_EXPIRY = 'subscription_expiry';
 	const _SUBSCRIPTION_TYPE = 'subscription_type';
 		
+	const TYPE_PAID_SUBSCRIPTION = 'paid';
+	const TYPE_COUPON_SUBSCRIPTION = 'coupon';
+	
 	public function __construct()
 	{
 		parent::__construct();

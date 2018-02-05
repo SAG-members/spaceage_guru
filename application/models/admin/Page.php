@@ -272,7 +272,7 @@ class Page extends CI_Model
 		$data = array( static::_DATE_MODIFIED=>$date, static::_STATUS=>static::PUBLISH_PAGE);
 		$pageIds = array_map('intval', explode(',', $page));
 		
-		$this->db->where(static::_CATEGORY_ID, $category);
+// 		$this->db->where(static::_CATEGORY_ID, $category);
 		$this->db->where_in(static::_ID, $pageIds);
 		$flag = $this->db->update(static::_TABLE, $data);
 		
@@ -289,7 +289,7 @@ class Page extends CI_Model
 		$data = array( static::_DATE_MODIFIED=>$date, static::_STATUS=>static::UNPUBLISH_PAGE);
 		$pageIds = array_map('intval', explode(',', $page));
 		
-		$this->db->where(static::_CATEGORY_ID, $category);
+// 		$this->db->where(static::_CATEGORY_ID, $category);
 		$this->db->where_in(static::_ID, $pageIds);
 		$flag = $this->db->update(static::_TABLE, $data);
 		

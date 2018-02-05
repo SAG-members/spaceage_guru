@@ -113,6 +113,7 @@ if($cc_layout == 'embedded'){
 $jQuerytag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery', 'ext' => 'js'));
 $csstag = getDynamicScriptAndLinkTags(array('type' => "plugin",'name' => 'smilies','subtype' => 'smilies','layout' => $cc_layout,'ext' => 'css'));
 $baseurl = BASE_URL;
+$staticCDNUrl = STATIC_CDN_URL;
 echo <<<EOD
 <!DOCTYPE html>
 <html>
@@ -189,11 +190,11 @@ echo <<<EOD
 	<body>
 		<div class="cometchat_wrapper">
 			<div id="tabs">
-			    <div id="people" class="tab {$tablength} selected"><img src="{$baseurl}images/smile.svg"/></div>
-			    <div id="nature" class="tab {$tablength}"><img src="{$baseurl}images/panda.svg"/></div>
-			    <div id="objects" class="tab {$tablength}"><img src="{$baseurl}images/coffee.svg"/></div>
-			    <div id="places" class="tab {$tablength}"><img src="{$baseurl}images/transportation.svg"/></div>
-			    <div id="symbols" class="tab {$tablength}"><img src="{$baseurl}images/ball.svg"/></div>
+			    <div id="people" class="tab {$tablength} selected"><img src="{$staticCDNUrl}images/smile.svg"/></div>
+			    <div id="nature" class="tab {$tablength}"><img src="{$staticCDNUrl}images/panda.svg"/></div>
+			    <div id="objects" class="tab {$tablength}"><img src="{$staticCDNUrl}images/coffee.svg"/></div>
+			    <div id="places" class="tab {$tablength}"><img src="{$staticCDNUrl}images/transportation.svg"/></div>
+			    <div id="symbols" class="tab {$tablength}"><img src="{$staticCDNUrl}images/ball.svg"/></div>
 			    {$showadditional}
 		    </div>
 			<div class="container_body {$embedcss}">

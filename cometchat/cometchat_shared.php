@@ -274,7 +274,7 @@ function sql_insert_id($tablename, $column = 'id'){
         $row=sql_fetch_assoc($query);
         return $row[0];
 	} else if($dbms == 'pgsql'){
-		$sql = "select max(id) from ".$tablename;
+		$sql = "select max(".$column.") from ".$tablename;
 		$query = sql_query($sql, array(), 1);
         if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
         $row=sql_fetch_assoc($query);
@@ -401,10 +401,19 @@ function setConfigValue($key,$val){
 
 function getDefaultColor($color){
 	cometchatDBConnect();
-	$query = sql_query('getDefaultColor',array('color'=>$color));
-    if($result = sql_fetch_assoc($query)){
-    	return $result['color'];
+	if(empty($_SESSION['cometchat'])){
+		$_SESSION['cometchat'] = array();
 	}
+	if (empty($_SESSION['cometchat']['layoutColor'])) {
+		$query = sql_query('getDefaultColor',array('color'=>$color));
+	    if($result = sql_fetch_assoc($query)){
+	    	$color =  $result['color'];
+		}
+		$_SESSION['cometchat']['layoutColor'] = $color;
+	}else{
+		$color = $_SESSION['cometchat']['layoutColor'];
+	}
+	return $color;
 }
 
 function getParentColor($color){
@@ -630,7 +639,7 @@ function sanitize($text) {
 		foreach ($smileys_sorted as $pattern => $result) {
 			$title = str_replace("-"," ",ucwords(preg_replace("/\.(.*)/","",$result)));
 			$class = str_replace("-"," ",preg_replace("/\.(.*)/","",$result));
-			$text = str_replace(str_replace('&amp;','&',htmlspecialchars($pattern, ENT_NOQUOTES)).' ','<img class="cometchat_smiley" height="20" width="20" src="'.BASE_URL.'writable/images/smileys/'.$result.'" title="'.$title.'"> ',$text.' ');
+			$text = str_replace(str_replace('&amp;','&',htmlspecialchars($pattern, ENT_NOQUOTES)).' ','<img class="cometchat_smiley" height="20" width="20" src="'.STATIC_CDN_URL.'writable/images/smileys/'.$result.'" title="'.$title.'"> ',$text.' ');
 		}
 	}
 	return trim($text);
@@ -757,6 +766,7 @@ function sendMessage($to,$message,$dir = 0,$type = '') {
 	global $bannedMessage;
 	global $usebots;
 	global $disableRecentTab;
+	global $language;
 	$stickersflag = 0;
 	$voicenoteflag = 0;
 	$botflag = 0;
@@ -767,12 +777,13 @@ function sendMessage($to,$message,$dir = 0,$type = '') {
 		$message = sanitize($bannedMessage);
 		$dir = 2;
 	}
-	if($dir === 0 && (empty($type) || ($type != 'filetransfer' && $type != 'handwrite' && $type != 'voicenote' && $type != 'botresponse'))) {
+	if($dir === 0 && (empty($type) || ($type != 'filetransfer' && $type != 'handwrite' && $type != 'voicenote' && $type != 'botresponse' && $type != 'audionote'))) {
 		if(!isset($_REQUEST['deny_sanitize']))
 			$message = sanitize($message);
 	}
 
 	$block = 0;
+	$donotpush = 0;
 	if (in_array('block',$plugins)) {
 		$blockedIds = getBlockedUserIDs(0,1);
 		if(in_array($to,$blockedIds)){
@@ -782,12 +793,14 @@ function sendMessage($to,$message,$dir = 0,$type = '') {
 				$response['id'] = "-1";
 				$response['m'] = "You are blocked";
 				sendCCResponse(json_encode($response));
+				exit();
 			}
 			if($blockpluginmode == 1 && in_array($to,$blockedIds)){
 				if( $dir == 1){
 					$dir = 3;
 				} else {
 					$dir = 2;
+					$donotpush = 1;
 				}
 			} else {
 				return '';
@@ -896,12 +909,25 @@ function sendMessage($to,$message,$dir = 0,$type = '') {
 
 		$timestamp = getTimeStamp();
 		$insertedid = 0;
-		$donotpush = 0;
 
 		if(!empty($_REQUEST['localmessageid'])){
 			$localmessageid = $_REQUEST['localmessageid'];
 		}
 		if(empty($localmessageid) || (!empty($localmessageid) && empty($_SESSION['cometchat']['duplicates']['localmessageid'][$localmessageid]))){
+
+			if(method_exists($GLOBALS['integration'], 'deductCredits') && strpos($message,'CC^CONTROL_') === false){
+				$params =  array();
+				$params['type'] = 'core';
+				$params['name'] = 'core';
+				$params['to'] = $to;
+				$creditdeductioninfo = $GLOBALS['integration']->deductCredits($params);
+				if(!empty($creditdeductioninfo['errorcode']) && $creditdeductioninfo['errorcode'] == 3){
+					$message = $creditdeductioninfo['message'];
+					$dir = 2;
+					$disableRecentTab = 1;
+				}
+			}
+
 			$query = sql_query('insertMessage',array('userid'=>$userid, 'to'=>$to, 'message'=>$message, 'timestamp'=>$timestamp, 'old'=>$old, 'dir'=>$dir));
 			if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
 			$insertedid = sql_insert_id('cometchat');
@@ -912,6 +938,7 @@ function sendMessage($to,$message,$dir = 0,$type = '') {
 			if($disableRecentTab == 0 && $userid > 0 && $to > 0) {
 				$convo_hash = $userid < $to? md5(md5($userid).md5($to)) : md5(md5($to).md5($userid));
 				$query = sql_query('insertRecentConversation',array('insertedid'=>$insertedid, 'userid'=>$userid, 'to'=>$to, 'message'=>$message, 'timestamp'=>$timestamp, 'convo_hash'=>$convo_hash));
+
 				if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
 			}
 		} else if(!empty($localmessageid)){
@@ -1030,6 +1057,7 @@ function broadcastMessage($broadcast) {
 		$sizeof_broadcast=sizeof($broadcast);
 		if (!empty($_REQUEST['callback'])) {
 			if (!empty($_SESSION['cometchat']['duplicates'][$_REQUEST['callback']])) {
+				echo "duplicate callback";
 				exit;
 			}
 			$_SESSION['cometchat']['duplicates'][$_REQUEST['callback']] = 1;
@@ -1043,6 +1071,13 @@ function broadcastMessage($broadcast) {
 				continue;
 			}
 			$sqlpart[] = "('".sql_real_escape_string($userid)."', '".sql_real_escape_string($broadcast[$i]['to'])."','".sql_real_escape_string($broadcast[$i]['message'])."','".sql_real_escape_string(getTimeStamp())."',0,".$broadcast[$i]['dir'].")";
+			if(method_exists($GLOBALS['integration'], 'deductCredits') && strpos($broadcast[$i]['message'],'CC^CONTROL_') === false){
+				$params =  array();
+				$params['type'] = 'core';
+				$params['name'] = 'core';
+				$params['to'] = $broadcast[$i]['to'];
+				$creditdeductioninfo = $GLOBALS['integration']->deductCredits($params);
+			}
 			array_push($newbroadcast, $broadcast[$i]);
 		}
 		if(!empty($sqlpart)){
@@ -1055,8 +1090,14 @@ function broadcastMessage($broadcast) {
 		}
 		$sizeof_broadcast=sizeof($newbroadcast);
 		for ($i=0; $i < $sizeof_broadcast; $i++) {
-			$response = array("id" => $insertedid+$i, "m" => $newbroadcast[$i]['message'], "from"=> $newbroadcast[$i]['to'], "direction" => $newbroadcast[$i]['dir'], "localmessageid" => $newbroadcast[$i]['localmessageid']);
-			array_push($send_response, $response);
+			array_push($send_response, array(
+					'id' => $insertedid+$i,
+					'm' => $newbroadcast[$i]['message'],
+					'from'=> $newbroadcast[$i]['to'],
+					'direction' => $newbroadcast[$i]['dir'],
+					'localmessageid' => $newbroadcast[$i]['localmessageid']
+				)
+			);
 			if(!empty($newbroadcast[$i]['localmessageid'])){
 				$_SESSION['cometchat']['duplicates']['localmessageid'][$newbroadcast[$i]['localmessageid']] = $insertedid+$i;
 			}
@@ -1231,24 +1272,20 @@ function checkBotMessage($to, $message, $chatroommode) {
 }
 
 function sendChatroomMessage($to = 0,$message = '',$notsilent = 1,$messagetype='') {
-	global $userid;
-	global $cookiePrefix;
-	global $chromeReorderFix;
-	global $bannedUserIDs;
-	global $lang;
-	global $usebots;
-	global $firstguestID;
+	global $userid, $cookiePrefix, $chromeReorderFix, $bannedUserIDs, $lang, $usebots, $firstguestID, $groupid;
 	$stickersflag = 0;
 	$flag = 0;
 	$voicenoteflag = 0;
 	$botsflag = 0;
 	$localmessageid = '';
 
-	if(($to == 0 && empty($_REQUEST['currentroom'])) || ($message == '' && $notsilent == 0) || (isset($_REQUEST['message']) && $_REQUEST['message'] == '') || (empty($userid) && !defined('CCADMIN')) || in_array($userid, $bannedUserIDs)){
+	if(!empty($to)){
+		$groupid = $to;
+	}
+	if(($groupid == 0 && empty($_REQUEST['currentroom'])) || ($message == '' && $notsilent == 0) || (isset($_REQUEST['message']) && $_REQUEST['message'] == '') || (empty($userid) && !defined('CCADMIN')) || in_array($userid, $bannedUserIDs)){
 		return;
 	}
-	if (isset($_REQUEST['message']) && !empty($_REQUEST['currentroom'])) {
-		$to = sql_real_escape_string($_REQUEST['currentroom']);
+	if (empty($message) && isset($_REQUEST['message'])) {
 		$message = $_REQUEST['message'];
 	}
 
@@ -1258,7 +1295,7 @@ function sendChatroomMessage($to = 0,$message = '',$notsilent = 1,$messagetype='
 		if(strpos($message,'CC^CONTROL_') !== false){
 			$flag = 1;
 			$message = str_ireplace('CC^CONTROL_','',$message);
-			if($messagetype != 'botresponse'){
+			if($messagetype != 'botresponse'  && $messagetype != 'audionote'){
 				$message = sanitize($message);
 			}
 			$controlparameters = json_decode($message,true);
@@ -1337,19 +1374,19 @@ function sendChatroomMessage($to = 0,$message = '',$notsilent = 1,$messagetype='
 					$message = 'CC^CONTROL_'.$message;
 					break;
 				case 'chatroom':
-					$delid = $controlparameters['params']['id'];
+					$affectedid = $controlparameters['params']['id'];
 					switch($controlparameters['method']){
 						case 'deletemessage':
-							$message = 'CC^CONTROL_deletemessage_'.$delid;
+							$message = 'CC^CONTROL_deletemessage_'.$affectedid;
 						break;
 						case 'kicked':
-							$message = 'CC^CONTROL_kicked_'.$delid;
+							$message = 'CC^CONTROL_kicked_'.$affectedid;
 						break;
 						case 'banned':
-							$message = 'CC^CONTROL_banned_'.$delid;
+							$message = 'CC^CONTROL_banned_'.$affectedid;
 						break;
 						case 'deletedchatroom':
-							$message = 'CC^CONTROL_deletedchatroom_'.$delid;
+							$message = 'CC^CONTROL_deletedchatroom_'.$affectedid;
 						break;
 						default :
 							$message = '';
@@ -1380,7 +1417,7 @@ function sendChatroomMessage($to = 0,$message = '',$notsilent = 1,$messagetype='
 	}
 
 	if(function_exists('hooks_processGroupMessageBefore')){
-		$message = hooks_processGroupMessageBefore(array('to' => $to, 'message' => $message));
+		$message = hooks_processGroupMessageBefore(array('to' => $groupid, 'message' => $message));
 	}
 
 	$styleStart = '';
@@ -1392,8 +1429,8 @@ function sendChatroomMessage($to = 0,$message = '',$notsilent = 1,$messagetype='
 	}
 	$timestamp = getTimeStamp();
 
-	if (empty($_SESSION['cometchat']['cometchat_chatroom_'.$to])) {
-		$_SESSION['cometchat']['cometchat_chatroom_'.$to] = array();
+	if (empty($_SESSION['cometchat']['cometchat_chatroom_'.$groupid])) {
+		$_SESSION['cometchat']['cometchat_chatroom_'.$groupid] = array();
 	}
 
 	if(!empty($_REQUEST['localmessageid'])) {
@@ -1403,8 +1440,17 @@ function sendChatroomMessage($to = 0,$message = '',$notsilent = 1,$messagetype='
 	$insertedid = 0;
 	$donotpush = 0;
 	if(empty($localmessageid) || (!empty($localmessageid) && empty($_SESSION['cometchat']['duplicates']['group_localmessageid'][$localmessageid]))){
-		$query = sql_query('insertGroupMessage',array('userid'=>$userid, 'to'=>$to, 'styleStart'=>$styleStart, 'message'=>$message, 'styleEnd'=>$styleEnd, 'timestamp'=>$timestamp));
+		$query = sql_query('insertGroupMessage',array('userid'=>$userid, 'to'=>$groupid, 'styleStart'=>$styleStart, 'message'=>$message, 'styleEnd'=>$styleEnd, 'timestamp'=>$timestamp));
 		$insertedid = sql_insert_id('cometchat_chatroommessages');
+		if(method_exists($GLOBALS['integration'], 'deductCredits') && strpos($message,'CC^CONTROL_') === false){
+			$params = array(
+				'type' => 'core',
+				'name' => 'core',
+				'to' => $groupid,
+				'isGroup' => 1
+			);
+			$creditdeductioninfo = $GLOBALS['integration']->deductCredits($params);
+		}
 		if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
 		if(!empty($_REQUEST['localmessageid'])) {
 			$_SESSION['cometchat']['duplicates']['group_localmessageid'][$localmessageid] = $insertedid;
@@ -1434,8 +1480,8 @@ function sendChatroomMessage($to = 0,$message = '',$notsilent = 1,$messagetype='
 		$name = $_SESSION['cometchat']['username'];
 	}
 
-	$_SESSION['cometchat']['cometchat_chatroom_'.$to][$insertedid] = array('id' => $insertedid, 'from' => $_SESSION['cometchat']['username'], 'fromid' => $userid, 'chatroomid' => $to, 'message' => $styleStart.$message.$styleEnd, 'sent' => ($timestamp), 'localmessageid' => $localmessageid);
-	krsort($_SESSION['cometchat']['cometchat_chatroom_'.$to]);
+	$_SESSION['cometchat']['cometchat_chatroom_'.$groupid][$insertedid] = array('id' => $insertedid, 'from' => $_SESSION['cometchat']['username'], 'fromid' => $userid, 'chatroomid' => $groupid, 'message' => $styleStart.$message.$styleEnd, 'sent' => ($timestamp), 'localmessageid' => $localmessageid);
+	krsort($_SESSION['cometchat']['cometchat_chatroom_'.$groupid]);
 
 	if($notsilent == 1 && DEV_MODE == 0){
 		header('Content-type: application/json; charset=utf-8');
@@ -1444,7 +1490,7 @@ function sendChatroomMessage($to = 0,$message = '',$notsilent = 1,$messagetype='
 
 	if (USE_COMET == 1 && COMET_CHATROOMS == 1) {
 		if (!empty($name)) {
-			$channel = md5('chatroom_'.$to.KEY_A.KEY_B.KEY_C);
+			$channel = md5('chatroom_'.$groupid.KEY_A.KEY_B.KEY_C);
 			$comet = new Comet(KEY_A,KEY_B);
 			if(method_exists($comet, 'processChannel')){
 				$channel = processChannel($channel);
@@ -1452,17 +1498,28 @@ function sendChatroomMessage($to = 0,$message = '',$notsilent = 1,$messagetype='
 			$localmessageid = !empty($localmessageid)? $localmessageid: ((!empty($_GET['callback'])) ? $_GET['callback'] : '');
 			$info = $comet->publish(array(
 				'channel' => $channel,
-				'message' => array ( "id" => $insertedid, "from" => $name, "fromid"=> $userid, "message" => $styleStart.$message.$styleEnd, "sent" => ($timestamp*1000), "roomid" => $to, "groupid" => $to, 'localmessageid' => $localmessageid)
+				'message' => array (
+					'id' => $insertedid,
+					'from' => $name,
+					'fromid'=> $userid,
+					'message' => $styleStart.$message.$styleEnd,
+					'sent' => ($timestamp*1000),
+					'groupid' => $groupid,
+					/* START: Backward Compatibility 18-Oct-2017 CometChat v6.9.0 */
+					'roomid' => $groupid,
+					'chatroomid' => $groupid,
+					/* END: Backward Compatibility 18-Oct-2017 CometChat v6.9.0 */
+					'localmessageid' => $localmessageid)
 			));
 		}
 	}
 
 	if(function_exists('hooks_processGroupMessageAfter') && !$donotpush) {
-		hooks_processGroupMessageAfter(array('to' => $to, 'message' => $message, 'styleStart' => $styleStart, 'styleEnd' => $styleEnd, 'comet' => $comet, 'channel' => $channel, 'timestamp' => $timestamp));
+		hooks_processGroupMessageAfter(array('to' => $groupid, 'message' => $message, 'styleStart' => $styleStart, 'styleEnd' => $styleEnd, 'comet' => $comet, 'channel' => $channel, 'timestamp' => $timestamp));
 	}
 
 	if(strpos($message,'@') === 0 && $usebots) {
-		checkBotMessage($to, $origmessage, 1);
+		checkBotMessage($groupid, $origmessage, 1);
 	}
 
 	$parsedmessage = $message;
@@ -1514,7 +1571,7 @@ function sendChatroomMessage($to = 0,$message = '',$notsilent = 1,$messagetype='
         $parsedmessage = $handwrite_language[3];								//has shared a file
     }
     if($messagetype != 'botresponse' && !empty($insertedid)){
-		$response['push'] = pushMobileNotification($to,$insertedid,$parsedmessage,'1',0,$timestamp);
+		$response['push'] = pushMobileNotification($groupid,$insertedid,$parsedmessage,'1',0,$timestamp);
 	}
 
 	if(DEV_MODE==1 && $notsilent == 1){
@@ -1522,7 +1579,7 @@ function sendChatroomMessage($to = 0,$message = '',$notsilent = 1,$messagetype='
 		sendCCResponse(json_encode($response));
 	}
 
-	$query = sql_query('updateGroupActivity',array('lastactivity'=>$timestamp, 'id'=>$to));
+	$query = sql_query('updateGroupActivity',array('lastactivity'=>$timestamp, 'id'=>$groupid));
 
 	if($notsilent == 0) {
 		return $response;
@@ -1728,7 +1785,18 @@ function getChatroomData($chatroomid, $prelimit = 0, $lastMessages = 0) {
 					}
 				}
 			}
-			$messages[$chat['id']] = array('id' => $chat['id'], 'from' => $chat['from'],'fromid' => $chat['fromid'],'chatroomid' => $chatroomid, 'message' => $chat['message'],'sent' => ($chat['sent']));
+			$messages[$chat['id']] = array(
+				'id' => $chat['id'],
+				'from' => $chat['from'],
+				'fromid' => $chat['fromid'],
+				'message' => $chat['message'],
+				'sent' => $chat['sent'],
+				'groupid' => $chatroomid,
+				/* START: Backward Compatibility 18-Oct-2017 CometChat v6.9.0 */
+				'roomid' => $chatroomid,
+				'chatroomid' => $chatroomid,
+				/* END: Backward Compatibility 18-Oct-2017 CometChat v6.9.0 */
+			);
 		}
 	}
 
@@ -1870,24 +1938,39 @@ function removeCache($key) {
 	}
 }
 
-function getChatroomDetails($id=0) {
+function getChatroomDetails($groupid=0) {
+	global $userid;
 	$response =array();
 	if(!empty($_GET['action']) && $_GET['action'] == 'getChatroomDetails'){
-		$id = $_REQUEST['id'];
+		$groupid = $_REQUEST['id'];
 	}
-	$query = sql_query('getChatroomDetails',array('id'=>$id));
+	$query = sql_query('getChatroomDetails',array('id'=>$groupid));
 	if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
-	if($chatroom = sql_fetch_assoc($query)){
-		$response = array('id' => $chatroom['id'], 'name' => $chatroom['name'], 'type' => $chatroom['type'], 'password' => $chatroom['password'], 'createdby' => $chatroom['createdby'], 'invitedusers' => $chatroom['invitedusers']);
-		$_SESSION['cometchat']['chatrooms']['_'.$id]=$response;
+	if($group = sql_fetch_assoc($query)){
+		$joined = 0;
+		if(in_array($group['id'], getJoinedGroups($userid))){
+			$joined = 1;
+		}
+		if($joined == 0){
+			$group['password'] = '';
+		}
+		$response = array(
+			'id' => $group['id'],
+			'name' => $group['name'],
+			'type' => $group['type'],
+			'password' => $group['password'],
+			'i' => $group['password'],
+			'owner'  => isOwner($userid, $group['id']),
+			'ismoderator' => isModerator($userid),
+			'createdby' => $group['createdby'],
+			'invitedusers' => $group['invitedusers'],
+			'members' => $group['invitedusers'],
+			'j' => $joined
+		);
+		$_SESSION['cometchat']['chatrooms']['_'.$group['id']] = $response;
 	}
 	if(!empty($_GET['action']) && $_GET['action'] == 'getChatroomDetails'){
-		if (!empty($_GET['callback'])) {
-			header('Content-type: application/json; charset=utf-8');
-			echo $_GET['callback'].'('.json_encode($response).')';
-		} else {
-			echo json_encode($response);
-		}
+		sendCCResponse(json_encode($response));
 		exit;
 	}else{
 		return $response;
@@ -1955,7 +2038,7 @@ function pushMobileNotification($to,$insertedid,$message,$isChatroom = '0',$isWR
 		$rawMessage = array( "id" => $insertedid, "from" => $_SESSION['cometchat']['user']['n'], "fid"=> $userid, "m" => sanitize($parsedmessage), "sent" => $sent, "cid" => $to);
 		$channel = md5($channelprefix."CHATROOM_".$to.BASE_URL);
 	}
-	pushToMobileDevice($channel, $rawMessage, $isChatroom, 0, $isWRTC);
+	return pushToMobileDevice($channel, $rawMessage, $isChatroom, 0, $isWRTC);
 }
 function pushToMobileDevice($channel, $rawMessage, $isChatroom, $isAnnouncement, $isWRTC){
 	include_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'extensions'.DIRECTORY_SEPARATOR.'mobileapp'.DIRECTORY_SEPARATOR.'PushNotification.php');
@@ -1983,21 +2066,49 @@ function decrementCallback(){
 }
 
 function sendCCResponse($response){
-	if (ob_get_contents()) ob_end_clean();
-	header("Connection: close\r\n");
-	header("Content-Encoding: none\r\n");
-	ignore_user_abort(true); // optional
+	$contentencoding = 'none';
+	if(ob_get_contents()){
+		ob_end_clean();
+		if(ob_get_contents()){
+			ob_clean();
+		}
+	}
+
+	header('Connection: close');
+	header("cache-control: must-revalidate");
+	header('Vary: Accept-Encoding');
+	header('content-type: application/json; charset=utf-8');
+
 	ob_start();
-	if (!empty($_GET['callback'])) {
+	if(phpversion()>='4.0.4pl1' && extension_loaded('zlib') && GZIP_ENABLED==1 && (strstr($GLOBALS['useragent'],'compatible') || strstr($GLOBALS['useragent'],'Gecko'))){
+		$contentencoding = 'gzip';
+		ob_start('ob_gzhandler');
+	}
+	header('Content-Encoding: '.$contentencoding);
+
+	if (!empty($_GET['callback'])){
 		echo $_GET['callback'].'('.$response.')';
 	} else {
 		echo $response;
 	}
-	$size = ob_get_length();
-	header("Content-Length: $size");
-	ob_end_flush();     // Strange behaviour, will not work
-	flush();            // Unless both are called !
-	session_write_close();
+
+	if($contentencoding == 'gzip') {
+		if(ob_get_contents()){
+			ob_end_flush(); // Flush the output from ob_gzhandler
+		}
+	}
+	header('Content-Length: '.ob_get_length());
+
+	// flush all output
+	if (ob_get_contents()){
+		ob_end_flush(); // Flush the outer ob_start()
+		if(ob_get_contents()){
+			ob_flush();
+		}
+		flush();
+	}
+
+	if (session_id()) session_write_close();
 }
 
 function bigintval($value) {
@@ -2048,7 +2159,6 @@ function setReadReceiptsettings($message){
 function getStatus() {
 	global $response;
 	global $userid;
-	global $status;
 	global $startOffline;
 	global $processFurther;
 	global $channelprefix;
@@ -2095,7 +2205,7 @@ function getStatus() {
 		}
 
 		if (empty($chat['message'])) {
-			$chat['message'] = $status[$chat['status']];
+			$chat['message'] = $language['status_'.$chat['status']];
 		}
 
 		if(file_exists(dirname(__FILE__).DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."announcements".DIRECTORY_SEPARATOR."config.php")){
@@ -2139,7 +2249,22 @@ function getStatus() {
 			$chat['lastseensetting'] = '';
 		}
 
-	    $s = array('id' => $chat['userid'], 'n' => $chat['username'], 'l' => fetchLink($chat['link']), 'a' => getAvatar($chat['avatar']), 's' => $chat['status'], 'm' => $chat['message'],'push_channel' => 'C_'.md5($channelprefix."USER_".$userid.BASE_URL).getPlatformSuffix($pushplatformsuffix), 'ccmobileauth' => $ccmobileauth, 'push_an_channel' => $announcementpushchannel.getPlatformSuffix($pushplatformsuffix), 'webrtc_prefix' => $channelprefix, 'ch' => $chat['ch'], 'ls' => $chat['lastseen'], 'lstn' => $chat['lastseensetting'],'rdrs' => $chat['readreceiptsetting']);
+	    $s = array(
+	    	'id' => $chat['userid'],
+		    'n' => $chat['username'],
+		    'l' => fetchLink($chat['link']),
+		    'a' => getAvatar($chat['avatar']),
+		    's' => $chat['status'],
+		    'm' => $chat['message'],
+		    'ch' => $chat['ch'],
+		    'ls' => $chat['lastseen'],
+		    'lstn' => $chat['lastseensetting'],
+		    'rdrs' => $chat['readreceiptsetting'],
+		    'push_channel' => 'C_'.md5($channelprefix."USER_".$userid.BASE_URL).getPlatformSuffix($pushplatformsuffix),
+		    'ccmobileauth' => $ccmobileauth,
+		    'push_an_channel' => $announcementpushchannel.getPlatformSuffix($pushplatformsuffix),
+		    'webrtc_prefix' => $channelprefix
+		);
 
 	    if(in_array($chat['userid'],$bannedUserIDs)) {
 			$s['b'] = 1;
@@ -2254,32 +2379,53 @@ function processName($name) {
 	return $name;
 }
 
-function getRoleId($userid) {
-	global $integration;
-	if(method_exists($integration, 'getRoleId') && defined('ROLE_BASE_ACCESS') && ROLE_BASE_ACCESS == 1){
-		return $GLOBALS['integration']->getRoleId($userid);
+function getRole($userid) {
+	global $integration,$response,$writable,$client;
+	$role = 'default';
+	if(empty($_SESSION['cometchat'])){
+		$_SESSION['cometchat'] = array();
 	}
-	return '';
+	if(!empty($_SESSION['cometchat']['role'])){
+		$role = $_SESSION['cometchat']['role'];
+	}elseif(defined('ROLE_BASE_ACCESS') && ROLE_BASE_ACCESS == 1){
+		if(method_exists($integration, 'getRole')){
+			$role = $GLOBALS['integration']->getRole($userid);
+		}elseif(method_exists($integration, 'getRoleId')){
+			$role = $GLOBALS['integration']->getRoleId($userid);
+		}
+		$_SESSION['cometchat']['role'] = $role;
+	}
+	if(!array_key_exists($role ,getCache('roledetails'))){
+		clearcache(dirname(__FILE__).DIRECTORY_SEPARATOR.'writable'.DIRECTORY_SEPARATOR.$writable);
+		// purgecache($client);
+	}
+	return $role;
 }
 
-function getRolesDetails($roleid = '') {
+function getRolesDetails($role = '') {
 	global $integration,$dbh;
+	$roledetails = array();
 	if (!$dbh) {
 		cometchatDBConnect();
 	}
-	if(method_exists($integration, 'getRolesDetails') && defined('ROLE_BASE_ACCESS') && ROLE_BASE_ACCESS == 1){
-		return $GLOBALS['integration']->getRolesDetails($roleid);
+	if (!$GLOBALS['memcache']) {
+		cometchatMemcacheConnect();
 	}
-	return '';
+	if(method_exists($integration, 'getRolesDetails') && defined('ROLE_BASE_ACCESS') && ROLE_BASE_ACCESS == 1 && !is_array($roledetails = getCache('roledetails'))){
+		$roledetails = $GLOBALS['integration']->getRolesDetails($role);
+		setCache('roledetails',$roledetails,3600);
+	}
+
+	return $roledetails;
 }
 
 function checkMembershipAccess($feature, $type) {
 	if(defined('ROLE_BASE_ACCESS') && ROLE_BASE_ACCESS == 1){
 		global $userid, $language;
-		$getRoleId = getRoleId($userid);
-		global ${$getRoleId.'_'.$type};
-		$memberFeature = ${$getRoleId.'_'.$type};
-		if (in_array($feature, $memberFeature)) {
+		$role = getRole($userid);
+		global ${$role.'_'.$type};
+		$memberFeature = ${$role.'_'.$type};
+		if ($memberFeature[$feature]) {
 			return true;
 		} else{
 			echo $language['membership_msg'];
@@ -2347,6 +2493,15 @@ function hooks_activityupdate($userid,$status) {
 	global $integration;
 	if(method_exists($integration, 'hooks_activityupdate')){
 		return $integration->hooks_activityupdate($userid,$status);
+	}
+}
+
+function hooks_blockuser($params = '') {
+	global $integration;
+	if(method_exists($integration, 'hooks_blockuser')){
+		return $integration->hooks_blockuser($params);
+	}else{
+		$params;
 	}
 }
 
@@ -2420,11 +2575,11 @@ function fetchURL($url,$fields) {
 }
 
 function checkplan($type,$name = '') {
-    /*
-    * Checks Cloud and selfhosted plans.
-    * Params: $type =  type of feature (eg:plugins,extensions,modules),$name = name of the feature
-    * Returns/Results 1 if plan exist 0 if it does not.
-    */
+    /**
+     * Checks Cloud and selfhosted plans.
+     * Params: $type =  type of feature (eg:plugins,extensions,modules),$name = name of the feature
+     * Returns/Results 1 if plan exist 0 if it does not.
+     **/
     global $dbh, $planInfo, $api_response, $client,$licensekey,$p_,$planId;
 
     $edition_plugins = array(
@@ -2439,11 +2594,11 @@ function checkplan($type,$name = '') {
 		'whiteboard' 	=> 3,
 		'writeboard' 	=> 3,
     );
-    /*
-    * Checks Cloud plans.
-    * Params: $type =  type of feature (eg:plugins,extensions,modules),$plan = plan Id for cloud
-    * Returns/Results 1 if plan exist 0 if it does not.
-    */
+    /**
+     * Checks Cloud plans.
+     * Params: $type =  type of feature (eg:plugins,extensions,modules),$plan = plan Id for cloud
+     * Returns/Results 1 if plan exist 0 if it does not.
+     **/
     if(!empty($client)){
         $plan = getsetting('plan');
         if (is_array($planInfo[$type][$plan]) && in_array($name,$planInfo[$type][$plan])) {
@@ -2452,11 +2607,11 @@ function checkplan($type,$name = '') {
         	return 0;
         }
     }
-    /*
-    * Checks Selfhosted plans old and new license.
-    * Params: $type =  type of feature (eg:plugins,extensions,modules),$p_ = plan Id for cloud
-    * Returns/Results 1 if plan exist 0 if it does not.
-    */
+    /**
+     * Checks Selfhosted plans old and new license.
+     * Params: $type =  type of feature (eg:plugins,extensions,modules),$p_ = plan Id for cloud
+     * Returns/Results 1 if plan exist 0 if it does not.
+     **/
     if(!checkLicenseVersion()){
     	if((!empty($edition_plugins[$name]) && $p_>=$edition_plugins[$name]) || empty($edition_plugins[$name])){
     		return 1;
@@ -2546,7 +2701,7 @@ function log_error($message, $logtype="error") {
 
 function error_handler($errno,$errstr, $file, $line) {
 	$debug_backtrace = 'print_r(debug_backtrace(),true)';
-	if(defined('DEV_MODE')&&DEV_MODE==1){
+	if(defined('ERROR_LOGGING')&&ERROR_LOGGING==1){
 		$debug_backtrace = print_r(debug_backtrace(),true);
 	}
 	$errorlog = <<<EOD
@@ -2563,9 +2718,9 @@ EOD;
 
 
 function checkLicenseVersion(){
-	/*
-	* Checks New License
-	*/
+	/**
+	 * Checks New License
+	 **/
 	if(substr($GLOBALS['licensekey'],0,10) == "COMETCHAT-"){
 		return true;
 	}
@@ -2573,9 +2728,9 @@ function checkLicenseVersion(){
 }
 
 function checkAuthMode($name){
-	/*
-	* Checks status Authentication mode for specified key
-	*/
+	/**
+	 * Checks status Authentication mode for specified key
+	 **/
 	if(checkLicenseVersion() && !empty($GLOBALS['authentication']) && in_array($name, $GLOBALS['authentication'])){
 		return true;
 	}
@@ -2635,17 +2790,45 @@ function getDynamicScriptAndLinkTags($params){
 	/**
 	 * $params is an associative array with the below keys and default values:
 	 * callbackfn => '', type => '', name => '', lang => '',
-	 * layout => '',  color => '',   ext => 'js', escapetags = ''
-	 * ext decides whether to create a script tag or a link tag
-	 */
-	global $client, $enablecustomcss, $enablecustomjs ;
+	 * layout => '',  color => '',   ext => 'js', escapetags = '',
+	 * ext => 'js' or 'css' decides whether to create a script tag or a link tag
+	 * admin => '1' for admin panel, 'app' => '1' admin app
+	 * 'urlonly' => '1' returns only url instead of complete HTML tag.
+	 **/
 
-	$custom = '';
-	if(!empty(${'enablecustom'.$params['ext']})){
-		$custom = '1';
+	global $client, $enablecustomcss, $enablecustomjs, $currentversion;
+
+	$defaultParams = array(
+		'type'		=> '',
+		'name'		=> '',
+		'layout' 	=> '',
+		'color'		=> '',
+		'callbackfn'=> '',
+		'lang'		=> '',
+		'subtype'	=> '',
+		'admin'		=> '',
+		'app'		=> '',
+		'urlonly'	=> 0,
+		'escapetags'=> 0
+	);
+	$params =  array_merge($defaultParams,$params);
+
+	$ext = $params['ext'];
+	unset($params['ext']);
+
+	$urlonly = $params['urlonly'];
+	unset($params['urlonly']);
+
+	$escapetags = $params['escapetags'];
+	unset($params['escapetags']);
+
+	if(!empty($params['admin'])){
+		$params['v'] = $currentversion;
 	}
+
 	$client = empty($client) ? 0 : $client;
 	if (!empty($client)) {
+		/* non-empty $client indicates cloud */
 		$nameparts = array(
 			0 => $client,
 			1 => substr(md5($client),0,5),
@@ -2655,33 +2838,257 @@ function getDynamicScriptAndLinkTags($params){
 			5 => $params['color'],
 			6 => $params['callbackfn'],
 			7 => $params['lang'],
-			8 => $params['subtype']
+			8 => $params['subtype'],
+			9 => $params['admin'],
+			10 => $params['app'],
+			11 => $params['v']
 		);
-		$cdnurl = DYNAMIC_CDN_URL.implode('x_x', $nameparts).'.'.$params['ext'];
-
-		if($params['ext']=='css'){
-			$HTMLtag = '<link type="text/css" rel="stylesheet" media="all" href="'.$cdnurl.'" />'."\n";// generate link tag
-		}else{
-			$HTMLtag = '<script type="text/javascript" charset="utf-8" src="'.$cdnurl.'"></script>'."\n";;// generate script tag
-
-		}
+		$url = DYNAMIC_CDN_URL.rtrim(implode('x_x', $nameparts),'x_x').'.'.$ext;
 	}else{
-		$queryString = http_build_query($params);
-		if($params['ext']=='css'){
-			$url = DYNAMIC_CDN_URL.'css.php?'.$queryString;
-			$HTMLtag = '<link type="text/css" charset="utf-8" rel="stylesheet" media="all" href="'.$url.'" />'."\n";// generate link tag
+		$url =  rtrim(DYNAMIC_CDN_URL.$ext.'.php?'.http_build_query(array_filter($params)),'?');
+	}
+	if(empty($urlonly)){
+		if($ext=='css'){
+			$HTMLtag = '<link type="text/css" rel="stylesheet" media="all" href="'.$url.'" />';// generate link tag
 		}else{
-			$url = DYNAMIC_CDN_URL.'js.php?'.$queryString;
-			$HTMLtag = '<script type="text/javascript" charset="utf-8" src="'.$url.'"></script>'."\n";;// generate script tag
-
+			$HTMLtag = '<script type="text/javascript" charset="utf-8" src="'.$url.'"></script>';// generate script tag
 		}
+		if(!empty($escapetags)){
+			$HTMLtag = str_replace('<', '&lt;', $HTMLtag);
+		}
+		return $HTMLtag;
+	}else{
+		return $url;
 	}
-	if(!empty($params['escapetags'])){
-		$HTMLtag = str_replace('<', '&lt;', $HTMLtag);
+}
+
+function isSecure() {
+	/**
+	 * function returns true for secured SSL Connection i.e. URLs with https
+	 **/
+	return ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443);
+}
+
+function getAbsoluteURL($url){
+	/**
+	 * The function converts relative URL to absolute url
+	 **/
+	$parsed_url =  parse_url($url);
+	if(empty($parse_url['scheme'])){
+		$parsed_url['scheme'] = isSecure()?'https':'http';
 	}
-	return $HTMLtag;
+	if(empty($parse_url['host'])){
+		$parsed_url['host'] = $_SERVER['SERVER_NAME'];
+	}
+	return http_build_url($parsed_url);
+}
+
+if(!function_exists('http_build_url')){
+	// Define constants
+	define('HTTP_URL_REPLACE',			0x0001);	// Replace every part of the first URL when there's one of the second URL
+	define('HTTP_URL_JOIN_PATH',		0x0002);	// Join relative paths
+	define('HTTP_URL_JOIN_QUERY', 		0x0004);	// Join query strings
+	define('HTTP_URL_STRIP_USER', 		0x0008);	// Strip any user authentication information
+	define('HTTP_URL_STRIP_PASS',		0x0010);	// Strip any password authentication information
+	define('HTTP_URL_STRIP_PORT',		0x0020);	// Strip explicit port numbers
+	define('HTTP_URL_STRIP_PATH',		0x0040);	// Strip complete path
+	define('HTTP_URL_STRIP_QUERY',		0x0080);	// Strip query string
+	define('HTTP_URL_STRIP_FRAGMENT',	0x0100);	// Strip any fragments (#identifier)
+
+	// Combination constants
+	define('HTTP_URL_STRIP_AUTH',		HTTP_URL_STRIP_USER | HTTP_URL_STRIP_PASS);
+	define('HTTP_URL_STRIP_ALL', 		HTTP_URL_STRIP_AUTH | HTTP_URL_STRIP_PORT | HTTP_URL_STRIP_QUERY | HTTP_URL_STRIP_FRAGMENT);
+
+	/**
+	 * HTTP Build URL
+	 * Combines arrays in the form of parse_url() into a new string based on specific options
+	 * @name http_build_url
+	 * @param string|array $url		The existing URL as a string or result from parse_url
+	 * @param string|array $parts	Same as $url
+	 * @param int $flags			URLs are combined based on these
+	 * @param array &$new_url		If set, filled with array version of new url
+	 * @return string
+	 **/
+	function http_build_url(/*string|array*/ $url, /*string|array*/ $parts = array(), /*int*/ $flags = HTTP_URL_REPLACE, /*array*/ &$new_url = false){
+		// If the $url is a string
+		if(is_string($url)){
+			$url = parse_url($url);
+		}
+
+		// If the $parts is a string
+		if(is_string($parts)){
+			$parts	= parse_url($parts);
+		}
+
+		// Scheme and Host are always replaced
+		if(isset($parts['scheme']))	$url['scheme']	= $parts['scheme'];
+		if(isset($parts['host']))	$url['host']	= $parts['host'];
+
+		// (If applicable) Replace the original URL with it's new parts
+		if(HTTP_URL_REPLACE & $flags)
+		{
+			// Go through each possible key
+			foreach(array('user','pass','port','path','query','fragment') as $key)
+			{
+				// If it's set in $parts, replace it in $url
+				if(isset($parts[$key]))	$url[$key]	= $parts[$key];
+			}
+		}
+		else
+		{
+			// Join the original URL path with the new path
+			if(isset($parts['path']) && (HTTP_URL_JOIN_PATH & $flags))
+			{
+				if(isset($url['path']) && $url['path'] != '')
+				{
+					// If the URL doesn't start with a slash, we need to merge
+					if($url['path'][0] != '/')
+					{
+						// If the path ends with a slash, store as is
+						if('/' == $parts['path'][strlen($parts['path'])-1])
+						{
+							$sBasePath	= $parts['path'];
+						}
+						// Else trim off the file
+						else
+						{
+							// Get just the base directory
+							$sBasePath	= dirname($parts['path']);
+						}
+
+						// If it's empty
+						if('' == $sBasePath)	$sBasePath	= '/';
+
+						// Add the two together
+						$url['path']	= $sBasePath . $url['path'];
+
+						// Free memory
+						unset($sBasePath);
+					}
+
+					if(false !== strpos($url['path'], './'))
+					{
+						// Remove any '../' and their directories
+						while(preg_match('/\w+\/\.\.\//', $url['path'])){
+							$url['path']	= preg_replace('/\w+\/\.\.\//', '', $url['path']);
+						}
+
+						// Remove any './'
+						$url['path']	= str_replace('./', '', $url['path']);
+					}
+				}
+				else
+				{
+					$url['path']	= $parts['path'];
+				}
+			}
+
+			// Join the original query string with the new query string
+			if(isset($parts['query']) && (HTTP_URL_JOIN_QUERY & $flags))
+			{
+				if (isset($url['query']))	$url['query']	.= '&' . $parts['query'];
+				else						$url['query']	= $parts['query'];
+			}
+		}
+
+		// Strips all the applicable sections of the URL
+		if(HTTP_URL_STRIP_USER & $flags)		unset($url['user']);
+		if(HTTP_URL_STRIP_PASS & $flags)		unset($url['pass']);
+		if(HTTP_URL_STRIP_PORT & $flags)		unset($url['port']);
+		if(HTTP_URL_STRIP_PATH & $flags)		unset($url['path']);
+		if(HTTP_URL_STRIP_QUERY & $flags)		unset($url['query']);
+		if(HTTP_URL_STRIP_FRAGMENT & $flags)	unset($url['fragment']);
+
+		// Store the new associative array in $new_url
+		$new_url	= $url;
+
+		// Combine the new elements into a string and return it
+		return
+			 ((isset($url['scheme'])) ? $url['scheme'] . '://' : '')
+			.((isset($url['user'])) ? $url['user'] . ((isset($url['pass'])) ? ':' . $url['pass'] : '') .'@' : '')
+			.((isset($url['host'])) ? $url['host'] : '')
+			.((isset($url['port'])) ? ':' . $url['port'] : '')
+			.((isset($url['path'])) ? $url['path'] : '')
+			.((isset($url['query'])) ? '?' . $url['query'] : '')
+			.((isset($url['fragment'])) ? '#' . $url['fragment'] : '')
+		;
+	}
 }
 
 function sqlsrv_error(){
 	return '';
+}
+
+function setCreditKey($params,$titleKey){
+	$featureArray = array();
+	if (is_array($params)) {
+		foreach ($params as $key => $value) {
+			$featureArray[$key] = array(
+				'name' => ($titleKey == '') ? $value :  $value[$titleKey],
+				'credit' => array('creditsToDeduct' => 0,'deductionInterval' => 0)
+			);
+		}
+	}
+	return $featureArray;
+}
+
+
+function checkEnabledFeature($coreFeature,$roleFeature){
+	if (is_array($coreFeature) && is_array($roleFeature)) {
+		foreach ($coreFeature as $key => $value) {
+			if ($roleFeature[$key]['inactive']) {
+				unset($roleFeature[$key]);
+			}
+		}
+	}
+	return $roleFeature;
+}
+
+function getBytes($bytes) {
+	/**
+	 * The function returns the number bytes by removing unit prefix like k(ilo), m(ega), g(iga), etc.
+	 **/
+    $unitprefix = strtolower(substr($bytes, -1));
+    $bytes = filter_var($bytes, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    switch($unitprefix){
+    	case 'y': $bytes *= 1024;
+    	case 'z': $bytes *= 1024;
+    	case 'e': $bytes *= 1024;
+    	case 't': $bytes *= 1024;
+        case 'g': $bytes *= 1024;
+        case 'm': $bytes *= 1024;
+        case 'k': $bytes *= 1024;
+    }
+    return $bytes;
+}
+
+function getMaxFileUploadSize() {
+	/**
+	 * The max file upload size is minimum of 'upload_max_filesize', 'post_max_size' and 'memory_limit'
+	 **/
+    return min(getBytes(ini_get('memory_limit')), getBytes(ini_get('post_max_size')), getBytes(ini_get('upload_max_filesize')));
+}
+
+function defineFromRequest($param){
+	/**
+	 * The function defines the global variables by using request parameters.
+	 **/
+	foreach ($param as $key => $value) {
+		global $$key;
+		$$key = $value[0];
+		$superGlobal = ${'_REQUEST'};
+		if(!empty($value[2])){
+			$superGlobal = $value[2];
+		}
+		foreach ($value[1] as $req_param) {
+			if(!empty($superGlobal[$req_param])){
+				$$key = $superGlobal[$req_param];
+			}else{
+				$superGlobal = ${'_REQUEST'};
+				if(!empty($superGlobal[$req_param])){
+					$$key = $superGlobal[$req_param];
+				}
+			}
+		}
+	}
 }

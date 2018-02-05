@@ -13,7 +13,6 @@ $showOnlineTab = setConfigValue('showOnlineTab', '1');
 $showModules = setConfigValue('showModules', '1');
 $chatboxHeight = setConfigValue('chatboxHeight', '350');
 $chatboxWidth = setConfigValue('chatboxWidth', '230');
-$dockedChatBoxAvatar = setConfigValue('dockedChatBoxAvatar', '0');
 
 if($chatboxHeight < '350'){
 	$chatboxHeight = '350';

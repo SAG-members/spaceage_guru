@@ -42,7 +42,7 @@ class Rss_feed_subscription_model extends CI_Model
 	{
 		$response = array();
 		
-		$sql = 'select p.page_title, p.category_id, r.unsubscribe, r.id from rss_feed_subscription r';
+		$sql = 'select p.page_title, p.category_id, r.unsubscribe, r.id, r.date_created from rss_feed_subscription r';
 		$sql .=' JOIN page p ON p.id = r.item_id';
 		$sql .=' WHERE r.user_id = '.$userId;
 		$sql .=' AND r.unsubscribe = 0';

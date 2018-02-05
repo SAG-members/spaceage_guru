@@ -10,24 +10,24 @@ License: https://www.cometchat.com/legal/license
 if (!defined('CCADMIN')) { echo "NO DICE"; exit; }
 
 $options = array(
-    "hideBar"						=> array('choice','Hide bar for non-logged in users?'),
-    "autoPopupChatbox"				=> array('choice','Auto-open chatbox when a new message arrives:'),
-    "messageBeep"					=> array('choice','Beep on arrival of message from new user?'),
-    "beepOnAllMessages"				=> array('choice','Beep on arrival of all messages?'),
-    "notificationTime"				=> array('textbox','The number of milliseconds for which a notification will be displayed:'),
-    "announcementTime"				=> array('textbox','The number of milliseconds for which an announcement will be displayed:'),
-	/*"scrollTime"					=> array('textbox','Can be set to 800 for smooth scrolling when moving from one chatbox to another'),*/
-    "armyTime"						=> array('choice','If set to yes, time will be shown in 24-hour clock format:'),
-    "startOffline"					=> array('choice','Load CometChat in offline mode for all first time users?'),
-/*    "fixFlash"						=> array('choice','Set to yes, if Adobe Flash animations/ads are appearing on top of the bar (experimental):'),*/
-    /*"lightboxWindows"				=> array('choice','Set to yes, if you want to use the lightbox style popups:'),*/
-    /*"sleekScroller"					=> array('choice','Set to yes, if you want to use the new sleek scroller'),*/
-    "desktopNotifications"			=> array('choice','Enable Desktop Notifications:'),
-    "windowTitleNotify"				=> array('choice','If yes, notify new incoming messages by changing the browser title:'),
-    "floodControl"					=> array('textbox','Chat spam control in milliseconds (Disabled if set to 0):'),
-    "windowFavicon"					=> array('choice','If yes, Update favicon with number of messages (Supported on Chrome, Firefox, Opera):'),
-    "blockpluginmode"				=> array('choice','If set to yes, show blocked users in Who\'s Online list:'),
-    "lastseen"                   	=> array('choice','If set to yes, users last seen will be shown:'),
+    'hideBar'				=> array('choice', 'Hide bar for non-logged in users?'),
+    'autoPopupChatbox'		=> array('choice', 'Auto-open chatbox when a new message arrives:'),
+    'messageBeep'			=> array('choice', 'Beep on arrival of message from new user?'),
+    'beepOnAllMessages'		=> array('choice', 'Beep on arrival of all messages?'),
+    'notificationTime'		=> array('textbox', 'The number of milliseconds for which a notification will be displayed:'),
+    'announcementTime'		=> array('textbox', 'The number of milliseconds for which an announcement will be displayed:'),
+	/*'scrollTime'			=> array('textbox', 'Can be set to 800 for smooth scrolling when moving from one chatbox to another'),*/
+    'armyTime'				=> array('choice', 'If set to yes, time will be shown in 24-hour clock format:'),
+    'startOffline'			=> array('choice', 'Load CometChat in offline mode for all first time users?'),
+    /*'fixFlash'			=> array('choice', 'Set to yes, if Adobe Flash animations/ads are appearing on top of the bar (experimental):'),*/
+    /*'lightboxWindows'		=> array('choice', 'Set to yes, if you want to use the lightbox style popups:'),*/
+    /*'sleekScroller'		=> array('choice', 'Set to yes, if you want to use the new sleek scroller'),*/
+    'desktopNotifications'	=> array('choice', 'Enable Desktop Notifications:'),
+    'windowTitleNotify'		=> array('choice', 'If yes, notify new incoming messages by changing the browser title:'),
+    'floodControl'			=> array('textbox', 'Chat spam control in milliseconds (Disabled if set to 0):'),
+    'windowFavicon'			=> array('choice', 'If yes, Update favicon with number of messages (Supported on Chrome, Firefox, Opera):'),
+    'blockpluginmode'		=> array('choice', 'If set to yes, show blocked users in Who\'s Online list:'),
+    'lastseen'              => array('choice', 'If set to yes, users last seen will be shown:'),
 );
 
 if(empty($apikey) && empty($client)){
@@ -36,7 +36,7 @@ if(empty($apikey) && empty($client)){
 	configeditor($apisave);
 }
 if(!empty($client)) {
-	$excludesettings = array('minHeartbeat','maxHeartbeat');
+	$excludesettings = array('minHeartbeat', 'maxHeartbeat');
 	foreach ($excludesettings as $value) {
 		unset($options[$value]);
 	}
@@ -93,13 +93,15 @@ function generalsettings() {
 	global $ts, $body, $client, $botsStatus, $clearcache_interface;
 	$advance_interface = $licensekey_interface = $changeuserpass_interface = $storage_interface = $caching_interface = $customsettings_interface = '';
 	$options = array(
-	    "minHeartbeat"					=> array('textbox','Minimum poll-time in milliseconds (1 second = 1000 milliseconds):'),
-	    "maxHeartbeat"					=> array('textbox','Maximum poll-time in milliseconds'),
-	    "typingTimeout"					=> array('textbox','The number of milliseconds after which typing to will timeout:'),
-	    "idleTimeout"					=> array('textbox','The number of seconds after which user will be considered as idle:')
+	    'minHeartbeat'	 	=> array('textbox', 'Minimum poll-time in milliseconds (1 second = 1000 milliseconds):'),
+	    'maxHeartbeat'	 	=> array('textbox', 'Maximum poll-time in milliseconds'),
+	    'typingTimeout'	 	=> array('textbox', 'The number of milliseconds after which typing to will timeout:'),
+	    'REFRESH_BUDDYLIST'	=> array('textbox', 'The number of seconds after which the Contacts tab is refreshed:',REFRESH_BUDDYLIST),
+	    'ONLINE_TIMEOUT' 	=> array('textbox', 'The number of seconds after which a user is considered offline:',ONLINE_TIMEOUT),
+	    'idleTimeout'	 	=> array('textbox', 'The number of seconds after which user will be considered as idle:')
 	);
 	if(!empty($client)) {
-		$excludesettings = array('minHeartbeat','maxHeartbeat');
+		$excludesettings = array('minHeartbeat', 'maxHeartbeat');
 		foreach ($excludesettings as $value) {
 			unset($options[$value]);
 		}
@@ -205,7 +207,7 @@ EOD;
 function apikey() {
 	global $ts, $body, $client, $apikey;
 	$options = array(
-	    "apikey"						=> array('display','API key:'),
+	    "apikey"						=> array('display', 'API key:'),
 	);
 	$form = showSettingsUI($options);
 	$body = <<<EOD
@@ -336,12 +338,12 @@ $caching_interface .= <<<EOD
 	$(function(){
 
 		if($("#MC_NAME option:selected").val() == 'memcache' || $("#MC_NAME option:selected").val() == 'memcached') {
-			$('.memcache').css('display','block');
+			$('.memcache').css('display', 'block');
 			$('.memcachier').hide();
 		} else if($("#MC_NAME option:selected").val() == 'memcachier') {
-			$('.memcache').css('display','block');
+			$('.memcache').css('display', 'block');
 			$('.memcachier').show();
-			$('#MC_USERNAME,#MC_PASSWORD').attr('required','true');
+			$('#MC_USERNAME,#MC_PASSWORD').attr('required', 'true');
 		}
 	});
 
@@ -349,14 +351,14 @@ $caching_interface .= <<<EOD
 	$('select[id^=MC_NAME]').change(function() {
 		$('#MC_USERNAME,#MC_PASSWORD').removeAttr('required');
 		if($("#MC_NAME option:selected").index() == 1 || $("#MC_NAME option:selected").index() == 7) {
-		   $('.memcache').css('display','block');
+		   $('.memcache').css('display', 'block');
 		   $('.memcachier').hide();
 		} else if ($("#MC_NAME option:selected").index() == 3){
-		   $('#MC_USERNAME,#MC_PASSWORD').attr('required','true');
-		   $('.memcache').css('display','block');
+		   $('#MC_USERNAME,#MC_PASSWORD').attr('required', 'true');
+		   $('.memcache').css('display', 'block');
 		   $('.memcachier').show();
 		} else {
-		   $('.memcache').css('display','none');
+		   $('.memcache').css('display', 'none');
 		   $('.memcachier').hide();
 		}
 	});
@@ -420,7 +422,7 @@ function updatecaching(){
 						$server = array(array($_POST['MC_SERVER'],$_POST['MC_PORT'],1));
 						$memcache->option('server', $server);
 					}
-					$memcache->set('auth','ok',30);
+					$memcache->set('auth', 'ok',30);
 					if (!$conn = $memcache->get('auth')){
 						$errorCode = 1;
 					}
@@ -455,7 +457,7 @@ function baseUrlsettings() {
 	global $body, $client, $form, $ts;
 	if (!empty($client)) {return '';}
 	$options = array(
-	    "BASE_URL"				=> array('textbox','Base URL:',BASE_URL)
+	    "BASE_URL"				=> array('textbox', 'Base URL:',BASE_URL)
 	);
 	$form = showSettingsUI($options);
 
@@ -484,8 +486,8 @@ EOD;
 function recentsettings() {
 	global $body, $client, $form, $ts;
 	$options = array(
-	    "disableRecentTab"				=> array('choice','Disable Recent Chats?'),
-	    "recentListLimit"				=> array('textbox','The number of user will displayed in recent tab:'),
+	    'disableRecentTab'				=> array('choice', 'Disable Recent Chats?'),
+	    'recentListLimit'				=> array('textbox', 'The number of user will displayed in recent tab:'),
 	);
 	$form = showSettingsUI($options);
 
@@ -527,14 +529,14 @@ EOD;
 function oneoneonsettings() {
 	global $body, $client, $ts;
 	$options = array(
-	    "disableContactsTab"			=> array('choice','Disable Contacts Chats?'),
-	    "hideOffline"					=> array('choice','Hide offline users in Contacts Chats?'),
-	    "DISPLAY_ALL_USERS"					=> array('choice','Show all online users (Including Non-friends)', DISPLAY_ALL_USERS),
-	    "displayOfflineNotification"	=> array('choice','If yes, user offline notification will be displayed:'),
-    "displayBusyNotification"		=> array('choice','If yes, user busy notification will be displayed:'),
-    "displayOnlineNotification"		=> array('choice','If yes, user online notification will be displayed:'),
-    "thumbnailDisplayNumber"		=> array('textbox','The number of users in Contacts list after which thumbnails will be hidden:'),
-    "searchDisplayNumber"			=> array('textbox','The number of users in Contacts list after which search bar will be displayed:')
+	    'disableContactsTab'			=> array('choice', 'Disable Contacts Chats?'),
+	    'hideOffline'					=> array('choice', 'Hide offline users in Contacts Chats?'),
+	    'DISPLAY_ALL_USERS'				=> array('choice', 'Show all online users (Including Non-friends)', DISPLAY_ALL_USERS),
+	    'displayOfflineNotification'	=> array('choice', 'If yes, user offline notification will be displayed:'),
+    	'displayBusyNotification'		=> array('choice', 'If yes, user busy notification will be displayed:'),
+    	'displayOnlineNotification'		=> array('choice', 'If yes, user online notification will be displayed:'),
+    	'thumbnailDisplayNumber'		=> array('textbox', 'The number of users in Contacts list after which thumbnails will be hidden:'),
+    	'searchDisplayNumber'			=> array('textbox', 'The number of users in Contacts list after which search bar will be displayed:')
 	);
 
 	if(!empty($client)) {
@@ -573,20 +575,20 @@ EOD;
 function groupsettings() {
 	global $body, $client, $ts;
 	$options = array(
-		"disableGroupTab"				=> array('choice','Disable Groups Chats?'),
-	    "showchatbutton"				=> array('choice','Show private chat for friends only'),
-	    "allowUsers"				=> array('choice','If yes, users can create groups:'),
-	    "allowGuests"				=> array('choice','If yes, guests can create groups:'),
-	    "allowDelete"				=> array('choice','If yes, users can delete his own message in groups:'),
-	    "allowAvatar"				=> array('choice','If yes, user avatars will be displayed in groups:'),
-	    "crguestsMode"				=> array('choice','If yes, guests can access groups (Guest chat needs to be enabled)'),
-	    "showChatroomUsers"			=> array('choice','If yes, show total number of participants in groups'),
-	    "messageBeep"				=> array('choice','Beep on new messages:'),
-	    "newMessageIndicator"		=> array('choice','Show indicator on new messages:'),
-	    "showUsername"				=> array('choice','Show username in groups:'),
-	    "showGroupsOnlineUsers"				=> array('choice','Show only online users in groups:'),
-	    "chatroomTimeout"				=> array('textbox','The number of seconds after which a user created group will be removed if no activity:'),
-	    "lastMessages"				=> array('textbox','Number of messages that are fetched when load earlier messages is clicked:'),
+		'disableGroupTab'		=> array('choice', 'Disable Groups Chats?'),
+	    'showchatbutton'		=> array('choice', 'Show private chat for friends only'),
+	    'allowUsers'			=> array('choice', 'If yes, users can create groups:'),
+	    'allowGuests'			=> array('choice', 'If yes, guests can create groups:'),
+	    'allowDelete'			=> array('choice', 'If yes, users can delete his own message in groups:'),
+	    'allowAvatar'			=> array('choice', 'If yes, user avatars will be displayed in groups:'),
+	    'crguestsMode'			=> array('choice', 'If yes, guests can access groups (Guest chat needs to be enabled)'),
+	    'showChatroomUsers'		=> array('choice', 'If yes, show total number of participants in groups'),
+	    'messageBeep'			=> array('choice', 'Beep on new messages:'),
+	    'newMessageIndicator'	=> array('choice', 'Show indicator on new messages:'),
+	    'showUsername'			=> array('choice', 'Show username in groups:'),
+	    'showGroupsOnlineUsers'	=> array('choice', 'Show only online users in groups:'),
+	    'chatroomTimeout'		=> array('textbox', 'The number of seconds after which a user created group will be removed if no activity:'),
+	    'lastMessages'			=> array('textbox', 'Number of messages that are fetched when load earlier messages is clicked:'),
 	);
 
 	if (!empty($client)) {
@@ -650,7 +652,7 @@ function updateccinboxsync(){
 function devsettings() {
 	global $body, $firstguestID, $ts;
 	$dmo = $dmof = $elo = $elof = $cdo = $cdof = $recentTy = $recentTn = $contactTy = $contactTn = $groupTy = $groupTn =
-	$usecslegacyn = $usecslegacyy = $showSiteUrl = $baseurl = $avoidcby = $avoidcbn = "";
+	$usecslegacyn = $usecslegacyy = $showSiteUrl = $baseurl = $avoidcby = $avoidcbn = $gzipyes = $gzipno = "";
 
 	if (DEV_MODE == 1) {
 		$dmo = "checked";
@@ -704,9 +706,9 @@ function devsettings() {
 	}
 
 	if(defined('GZIP_ENABLED') && GZIP_ENABLED == 1){
-		$gzipeyes = "checked";
+		$gzipyes = "checked";
 	}else{
-		$gzipeno = "checked";
+		$gzipno = "checked";
 	}
 
 	if (empty($GLOBALS['client']) && !empty($_REQUEST['dev'])) {
@@ -752,7 +754,7 @@ function devsettings() {
 								<div class="form-group row">
 									<div class="col-md-12">
 							      	<label class="form-control-label">Enable GZIP?:</label>
-							      		<div class=""><label class=""><div style="position:relative;top:4px;"><input style="position: absolute;" type="radio" name="GZIP_ENABLED" value="1" $gzipeyes ></div><span style="padding-left:25px;">Yes</span></label><label class=""><div style="position:relative;top:4px;"><input style="position: absolute;left:8px;" type="radio" name="GZIP_ENABLED" value="0" $gzipeno></div><span style="padding-left:36px;">No</span></label></div>
+							      		<div class=""><label class=""><div style="position:relative;top:4px;"><input style="position: absolute;" type="radio" name="GZIP_ENABLED" value="1" $gzipyes ></div><span style="padding-left:25px;">Yes</span></label><label class=""><div style="position:relative;top:4px;"><input style="position: absolute;left:8px;" type="radio" name="GZIP_ENABLED" value="0" $gzipno></div><span style="padding-left:36px;">No</span></label></div>
 									</div>
 								</div>
 
@@ -877,7 +879,10 @@ function updatedevsetting(){
     global $ts;
 	configeditor($_POST);
 
-	if (!empty($_REQUEST['firstguestID']) && $_REQUEST['firstguestID'] != '') {
+	$query = sql_query('getTblDetails',array('table'=>'cometchat_guests', 'key' => 'id', 'value' => $_REQUEST['firstguestID']));
+	$row = sql_fetch_assoc($query);
+
+	if (count($row) && !empty($_REQUEST['firstguestID']) && $_REQUEST['firstguestID'] != '') {
 		$result = sql_query('insertFirstGuestID',array('id'=>$_REQUEST['firstguestID']));
 	}
 
@@ -962,14 +967,14 @@ function banuser() {
 	global $body,$navigation,$bannedUserIDs,$bannedUserIPs,$bannedMessage,$bannedWords,$ts;
 	$bannedids = $bannedips = '';
 	foreach ($bannedUserIDs as $b) {
-		$bannedids .= $b.',';
+		$bannedids .= $b.', ';
 	}
 	foreach ($bannedUserIPs as $b) {
-		$bannedips .= $b.',';
+		$bannedips .= $b.', ';
 	}
 	$bannedw = '';
 	foreach ($bannedWords as $b) {
-		$bannedw .= "'".$b.'\',';
+		$bannedw .= "'".$b.'\', ';
 	}
 $body = <<<EOD
 <div class="col-sm-12 col-lg-12">
@@ -1026,7 +1031,7 @@ $body = <<<EOD
 		$(".searchuser").click(function(){
 			$("#adminModellink").trigger('click');
 			$("#admin-modal-title").text('Find User ID');
-			$("#admin-modal-body").css('height','200px');
+			$("#admin-modal-body").css('height', '200px');
 			var form ='<div class="form-group row">';
 				form +='<div class="col-md-12">';
 				form +='<label class="form-control-label">Username:</label>';
@@ -1050,7 +1055,7 @@ $body = <<<EOD
 						data: {susername: user},
 						success: function(data) {
 							$("#admin-modal-title").text('Search Result');
-							$("#admin-modal-body").css('height','520px');
+							$("#admin-modal-body").css('height', '520px');
 							$("#admin-modal-body").html(data);
 							$('[data-toggle="tooltip"]').tooltip();
 			            }
@@ -1069,23 +1074,23 @@ function banuserprocess() {
     global $ts;
 	if (!empty($_POST['bannedMessage'])) {
 		if(!empty($_POST['bannedUserIDs'])){
-			$_POST['bannedUserIDs'] = rtrim($_POST['bannedUserIDs'], ',');
-    		$_POST['bannedUserIDs'] = explode(',', $_POST['bannedUserIDs']);
+			$_POST['bannedUserIDs'] = rtrim($_POST['bannedUserIDs'], ', ');
+    		$_POST['bannedUserIDs'] = explode(', ', $_POST['bannedUserIDs']);
 		}else{
 			$_POST['bannedUserIDs'] = array();
 		}
 
 		if(!empty($_POST['bannedWords'])){
-			$_POST['bannedWords'] = rtrim($_POST['bannedWords'], ',');
+			$_POST['bannedWords'] = rtrim($_POST['bannedWords'], ', ');
 			$_POST['bannedWords'] = str_replace("'", "", $_POST['bannedWords']);
-    		$_POST['bannedWords'] = explode(',', $_POST['bannedWords']);
+    		$_POST['bannedWords'] = explode(', ', $_POST['bannedWords']);
 		}else{
 			$_POST['bannedWords'] = array();
 		}
 
 		if(!empty($_POST['bannedUserIPs'])){
-			$_POST['bannedUserIPs'] = rtrim($_POST['bannedUserIPs'], ',');
-    		$_POST['bannedUserIPs'] = explode(',', $_POST['bannedUserIPs']);
+			$_POST['bannedUserIPs'] = rtrim($_POST['bannedUserIPs'], ', ');
+    		$_POST['bannedUserIPs'] = explode(', ', $_POST['bannedUserIPs']);
 		}else{
 			$_POST['bannedUserIPs'] = array();
 		}
@@ -1102,7 +1107,9 @@ function dockedsettings() {
 	global $body,$navigation,$ts;
 
 	$options = array(
-	    "dockedChatBoxAvatar" => array('choice','Show Avatar in ChatBox'),
+	    "dockedChatBoxAvatar" => array('choice', 'Show Avatar in ChatBox'),
+	    "dockedAlignToLeft" => array('choice', 'Align Docked Layout to the left?'),
+	    "dockedChatListAudioCall" => array('choice', 'Show Audio Call button in Contacts list?'),
 	);
 	$UI = showSettingsUI($options);
 $body = <<<EOD
@@ -1238,7 +1245,7 @@ function updatebaseurl() {
     global $ts;
 	if (!empty($_POST['BASE_URL'])) {
 
-		$baseurl = str_replace('\\','/',$_POST['BASE_URL']);
+		$baseurl = str_replace('\\', '/',$_POST['BASE_URL']);
 
 		if ($baseurl[0] != '/' && strpos($baseurl,'http://')===false && strpos($baseurl,'https://')===false) {
 			$baseurl = '/'.$baseurl;
@@ -1330,7 +1337,7 @@ function comet() {
 			<script>
 			jQuery('#error_div').before('<div class="col-sm-12 col-lg-12" id="overlaymain" style="position:relative"></div>');
 				var overlay = $('<div></div>')
-					.attr('id','overlay')
+					.attr('id', 'overlay')
 					.css({
 						'position':'absolute',
 						'height':$('#error_div').innerHeight(),
@@ -1485,14 +1492,14 @@ $body .= <<<EOD
 			if(selfhostedenabled == 1){
 				$('.serverurl_text').show();
 				$('.cometkeys').removeAttr('required');
-				$('input:text[name=cs_domain_name]').attr('required','true');
-				$('input:text[name=cs_http_port]').attr('required','true');
-				$('input:text[name=cs_https_port]').attr('required','true');
+				$('input:text[name=cs_domain_name]').attr('required', 'true');
+				$('input:text[name=cs_http_port]').attr('required', 'true');
+				$('input:text[name=cs_https_port]').attr('required', 'true');
 				$('.cckeys').hide();
 			} else {
 				$('.serverurl_text').hide();
 				$('.cckeys').show();
-				$('.cometkeys').attr('required','true');
+				$('.cometkeys').attr('required', 'true');
 				$('input:text[name=cs_domain_name]').removeAttr('required');
 				$('input:text[name=cs_http_port]').removeAttr('required');
 				$('input:text[name=cs_https_port]').removeAttr('required');
@@ -1521,16 +1528,16 @@ function updatecomet() {
 		$transport = 'cometservice';
 	}
 	$data = array('USE_COMET' => $_POST['dou'],
-				'KEY_A' => $_POST['keya'],
-				'KEY_B' => $_POST['keyb'],
-				'KEY_C' => $_POST['keyc'],
+				'KEY_A' => trim($_POST['keya']),
+				'KEY_B' => trim($_POST['keyb']),
+				'KEY_C' => trim($_POST['keyc']),
 				'IS_TYPING' => $_POST['typ'],
 				'MESSAGE_RECEIPT' => $_POST['rec'],
 				'CS_MESSAGE_SYNC' => $_POST['cs_sync'],
 				'TRANSPORT' => $transport,
-				'CS_DOMAIN_NAME' => $_POST['cs_domain_name'],
-				'CS_HTTP_PORT' => $_POST['cs_http_port'],
-				'CS_HTTPS_PORT' => $_POST['cs_https_port'],
+				'CS_DOMAIN_NAME' => trim($_POST['cs_domain_name']),
+				'CS_HTTP_PORT' => trim($_POST['cs_http_port']),
+				'CS_HTTPS_PORT' => trim($_POST['cs_https_port']),
 				);
 	configeditor($data);
 	header("Location:?module=settings&action=comet&ts={$ts}");
@@ -1624,21 +1631,21 @@ $body .= <<<EOD
                 <div id ="individualcat">
                 <table class="table">
                     <tr>
-                        <td width="5%"><input id="plugins" type="checkbox" name="cron[plugins]" value="1"  class="title_class" onclick="check_all('plugins','sub_plugins','{$auth}')"></td>
+                        <td width="5%"><input id="plugins" type="checkbox" name="cron[plugins]" value="1"  class="title_class" onclick="check_all('plugins', 'sub_plugins', '{$auth}')"></td>
                         <td colspan="2" onclick="javascript:$('.sub_plugins').toggle('slow')" style="cursor: pointer;"> Clean Up All Media & files</td>
-                        <td><a data-toggle="tooltip" title="Clean Up URL Code" href="javascript:void(0)" style="float: right;" onclick="javascript:cron_auth_link('{$baseurl}','plugins','{$auth}')"><i class="fa fa-lg fa-code"></i></a></td>
+                        <td><a data-toggle="tooltip" title="Clean Up URL Code" href="javascript:void(0)" style="float: right;" onclick="javascript:cron_auth_link('{$baseurl}', 'plugins', '{$auth}')"><i class="fa fa-lg fa-code"></i></a></td>
                     </tr>
 
                     <tr>
-                        <td><input id="core" type="checkbox" name="cron[core]" value="1" class="title_class" onclick="check_all('core','sub_core','{$auth}')"></td>
+                        <td><input id="core" type="checkbox" name="cron[core]" value="1" class="title_class" onclick="check_all('core', 'sub_core', '{$auth}')"></td>
                         <td colspan="2" onclick="javascript:$('.sub_core').toggle('slow')" style="cursor: pointer;"> Clean Up Old Messages And Inactive Guest Entries</td>
-                        <td><a data-toggle="tooltip" title="Clean Up URL Code" onclick="javascript:cron_auth_link('{$baseurl}','core','{$auth}')" href="javascript:void(0)" style="float: right;"><i class="fa fa-lg fa-code"></i></a></td>
+                        <td><a data-toggle="tooltip" title="Clean Up URL Code" onclick="javascript:cron_auth_link('{$baseurl}', 'core', '{$auth}')" href="javascript:void(0)" style="float: right;"><i class="fa fa-lg fa-code"></i></a></td>
                     </tr>
 
                     <tr>
-                        <td><input id="modules" type="checkbox" name="cron[modules]" value="1" class="title_class" onclick="check_all('modules','sub_modules','{$auth}')"></td>
+                        <td><input id="modules" type="checkbox" name="cron[modules]" value="1" class="title_class" onclick="check_all('modules', 'sub_modules', '{$auth}')"></td>
                         <td colspan="2"  onclick="javascript:$('.sub_modules').toggle('slow')" style="cursor: pointer;"> Clean Up Inactive Groups</td>
-                        <td><a data-toggle="tooltip" title="Clean Up URL Code" href="javascript:void(0)" style="float: right;"  onclick="javascript:cron_auth_link('{$baseurl}','modules','{$auth}')"><i class="fa fa-lg fa-code"></i></a></td>
+                        <td><a data-toggle="tooltip" title="Clean Up URL Code" href="javascript:void(0)" style="float: right;"  onclick="javascript:cron_auth_link('{$baseurl}', 'modules', '{$auth}')"><i class="fa fa-lg fa-code"></i></a></td>
                     </tr>
                 </table>
                 </div>
@@ -1673,8 +1680,8 @@ function processcron() {
 
 function ccauth() {
 	global $body, $ccactiveauth, $guestsMode, $guestsList, $guestsUsersList, $guestnamePrefix, $ts, $client,$firebaseAPIKey, $firebaseAuthDomain, $firebaseProjectID;
-	$ccauthoptions = array('Facebook','Google','Twitter');
-	$ccauthicons   = array('fa-facebook','fa-google','fa-twitter');
+	$ccauthoptions = array('Facebook', 'Google', 'Twitter');
+	$ccauthicons   = array('fa-facebook', 'fa-google', 'fa-twitter');
 	if(checkAuthMode('social')){
 		$ccauthshow = '';
 		$siteauthshow = 'style="display:none"';
@@ -1981,11 +1988,11 @@ $body = <<<EOD
 			}
 			$('#default_radio').click(function(){
 				$('#aws_keys').hide();
-				$('#aws_keys input').attr('required','');
+				$('#aws_keys input').attr('required', '');
 			});
 			$('#aws_radio').click(function(){
 				$('#aws_keys').show();
-				$('#aws_keys input').attr('required','required');
+				$('#aws_keys input').attr('required', 'required');
 			});
 		});
 	</script>
@@ -2111,7 +2118,7 @@ function updatelicensekey(){
 	/*
 	* Process Updated License
 	*/
-	if(checkLicenseVersion()){
+	if(substr($_POST['licensekey'],0,10) == "COMETCHAT-"){
 	  	$CometChatResponse=checkCometChatResponse($_POST['licensekey']);
 	  	if($CometChatResponse['success'] == 1){
 	  		configeditor(array('licensekey' => $_POST['licensekey'],'api_response' => '') );

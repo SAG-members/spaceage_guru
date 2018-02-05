@@ -4058,7 +4058,7 @@ header.navbar a.navbar-brand {
     height: 55px;
     padding: 0.5rem 1rem;
     background-color: #fff;
-    background-image: url("admin/image/logo.png");
+    background-image: url("<?php echo STATIC_CDN_URL; ?>admin/images/logo.png");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 70px auto;
@@ -9925,7 +9925,7 @@ h4 {
     font-size: 18px
 }
 header.navbar a.navbar-brand {
-    background-image: url("admin/images/adminlogo.png");
+    background-image: url("<?php echo STATIC_CDN_URL; ?>admin/images/adminlogo.png");
     border-bottom: 1px solid #e6e6e6;
     background-size: 180px auto;
     width: 200px

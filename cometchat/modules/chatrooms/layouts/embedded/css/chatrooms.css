@@ -738,11 +738,11 @@ span.cometchat_chatboxmessagecontent {
 	<?php endif;?>
 	padding: 13px;
 	margin-top: 16px;
-	background: url(layouts/<?php echo $layout;?>/images/add.svg) no-repeat top left;
+	background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/add.svg) no-repeat top left;
 }
 #inviteusersicon:hover{
 	cursor: pointer;
-	background: url(layouts/<?php echo $layout;?>/images/addhover.svg) no-repeat top left;
+	background: url(<?php echo STATIC_CDN_URL; ?>layouts/<?php echo $layout;?>/images/addhover.svg) no-repeat top left;
 }
 span.cometchat_cr_other_avatar {
     position: absolute !important;

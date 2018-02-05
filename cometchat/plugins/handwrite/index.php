@@ -49,10 +49,10 @@ if(!empty($_REQUEST['cc_layout'])){
   $cc_layout = $_REQUEST['cc_layout'];
 }
 
-$jQuerytag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery','callbakcfn' => $callbakcfn, 'ext' => 'js'));
+$jQuerytag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery','callbakcfn' => $embed, 'ext' => 'js'));
 $jstag = getDynamicScriptAndLinkTags(array('type' => "plugin",'name' => 'handwrite', 'ext' => 'js'));
 $csstag = getDynamicScriptAndLinkTags(array('type' => "plugin",'name' => 'handwrite','layout' => $cc_layout,'ext' => 'css'));
-
+$staticCDNUrl = STATIC_CDN_URL;
 echo <<<EOD
 <!DOCTYPE html>
 <html>
@@ -86,7 +86,7 @@ $csstag
     <param name="bgcolor" value="#ffffff" />
     <param name="FlashVars" value="tid={$toId}" />
     <param name="scale" value="exactFit" />
-    <embed src="handwriting.swf"
+    <embed src="{$staticCDNUrl}plugins/handwrite/handwriting.swf"
            width="100%"
            height="250"
            autostart="false"
@@ -115,8 +115,8 @@ $csstag
             <div val="red" class="color-opt red"></div>
         </div>
         <div id="footer">
-            <div class="handwrite-btn pencil-btn"><img src="images/pencil.png"></div>
-            <div class="handwrite-btn eraser-btn"><img src="images/eraser.png"></div>
+            <div class="handwrite-btn pencil-btn"><img src="{$staticCDNUrl}plugins/handwrite/images/pencil.png"></div>
+            <div class="handwrite-btn eraser-btn"><img src="{$staticCDNUrl}plugins/handwrite/images/eraser.png"></div>
             <div class="width-btn" >
                 <span>WIDTH</span>
                 <span class="width-select onepx selected" val="1"></span>
@@ -124,9 +124,9 @@ $csstag
                 <span class="width-select threepx" val="3" ></span>
                 <span class="width-select fourpx" val="5" ></span>
             </div>
-            <div class="handwrite-btn color-btn" ><img src="images/pencil.png"></div>
-            <div class="handwrite-btn clear-btn"><img src="images/clear.png"></div>
-            <div class="send-btn" onclick="javascript:send()"><img title="Send" src="images/send.svg"></div>
+            <div class="handwrite-btn color-btn" ><img src="{$staticCDNUrl}plugins/handwrite/images/pencil.png"></div>
+            <div class="handwrite-btn clear-btn"><img src="{$staticCDNUrl}plugins/handwrite/images/clear.png"></div>
+            <div class="send-btn" onclick="javascript:send()"><img title="Send" src="{$staticCDNUrl}plugins/handwrite/images/send.svg"></div>
         </div>
 </div>
 <input id="sendername" type="hidden" name="sendername" value="{$sendername}">

@@ -46,7 +46,7 @@
 				}else if(image.indexOf('http://')==-1 && image.indexOf('https://')==-1){
 				     image=window.location.protocol+'//'+window.location.host+image;
 				}
-				var controlparameters = {"type":"extensions", "name":"desktop", "method":"notification", "params":{"icon": image,"uname": uname, "message":message, "mid": msgid, "host_name": location.hostname, "host_protocol":location.protocol}};
+				var controlparameters = {"type":"extensions", "name":"desktop", "method":"notification", "params":{"icon": image,"uname": uname, "message":message, "mid": msgid, "host_name": location.hostname, "host_protocol":location.protocol, "title":jqcc.cometchat.getLanguage('new_message_from')}};
 				controlparameters = JSON.stringify(controlparameters);
 				parent.postMessage('CC^CONTROL_'+controlparameters,'*');
 			}

@@ -91,17 +91,18 @@ EOD;
 }
 if (empty($_GET['process'])) {
 	$firebaseauthserverkey = ($firebaseauthserverkey == "AIzaSyCCqPdNExgQdIQgaxJ0P1fV5fUcaH99CO4") ? '' : $firebaseauthserverkey;
+	$jqueryjstag =  getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery', 'ext' => 'js'));
 	echo <<<EOD
 <!DOCTYPE html>
 <html>
 	<head>
-	<script src="../js.php?type=core&name=jquery"></script>
+	{$jqueryjstag}
 	<script type="text/javascript">
 		$ = jQuery = jqcc;
 	</script>
 
-	<link href="{$base_url}/css.php?admin=1" rel="stylesheet">
-	<script src="{$base_url}/js.php?admin=1" type="text/javascript"></script>
+	{$GLOBALS['adminjstag']}
+    {$GLOBALS['admincsstag']}
 	<script type="text/javascript">
 		$(function() {
 			$('input:radio').change(function(){
@@ -250,14 +251,20 @@ if (empty($_GET['process'])) {
 				<div class="form-group row col-md-12 whiteappdetails" style="$hiddenwhitelabapp">
 					<div class="col-md-12" style="padding-top:7px;">App Bundle id:</div>
 					<div class="col-md-12">
-						<input type="text" class="form-control" name="mobileappBundleid" value="$mobileappBundleid" />
+						<div class="input-group">
+							<span class="input-group-addon">https://</span>
+							<input type="text" class="form-control" name="mobileappBundleid" value="$mobileappBundleid" />
+						</div>
 					</div>
 				</div>
 
 				<div class="form-group row col-md-12 whiteappdetails" style="$hiddenwhitelabapp">
 					<div class="col-md-12" style="padding-top:7px;">Playstore URL:</div>
 					<div class="col-md-12">
-						<input type="text" class="form-control" name="mobileappPlaystore" value="$mobileappPlaystore">
+						<div class="input-group">
+							<span class="input-group-addon">https://</span>
+							<input type="text" class="form-control" name="mobileappPlaystore" value="$mobileappPlaystore">
+						</div>
 					</div>
 				</div>
 

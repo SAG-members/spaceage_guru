@@ -49,13 +49,7 @@ $extra = "";
 if (!empty($userid)) {
 	$extra = sql_getQuery('announcement_datifyextra',array('userid'=>$userid));
 }
-
-$limit = " limit ".$noOfAnnouncements;
-if(!empty($_REQUEST['callbackfn']) && $_REQUEST['callbackfn']=='mobileapp')
-{
-	$limit = '';
-}
-$query = sql_query('announcement_datify',array('extra'=>$extra, 'limit'=>$limit, 'top'=>$noOfAnnouncements));
+$query = sql_query('announcement_datify',array('extra'=>$extra, 'limitClause'=>$noOfAnnouncements));
 
 if (defined('DEV_MODE') && DEV_MODE == '1') { echo sql_error($GLOBALS['dbh']); }
 
@@ -83,7 +77,7 @@ while ($announcement = sql_fetch_assoc($query)) {
         $announcement['announcement']
     );
 	$announcementdata .= <<<EOD
-	<li class="announcement"><span class="{$class}">{$announcement['announcement']}</span><br/><small class="chattime" timestamp="{$timehover['0']}" timehover="{$timehover['1']}"></small><br/></li>
+	<li class="announcement"><span class="{$class}">{$announcement['announcement']}</span><div><small class="chattime" timestamp="{$timehover['0']}" timehover="{$timehover['1']}"></small></div><br/></li>
 EOD;
 
 }
@@ -101,7 +95,7 @@ if(empty($_REQUEST['callbackfn']) || $_REQUEST['callbackfn']<>'mobileapp')
 {
 
 	$jQuerytag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery', 'ext' => 'js'));
-	$jstag = getDynamicScriptAndLinkTags(array('type' => "module",'name' => 'announcement', 'ext' => 'js'));
+	$jstag = getDynamicScriptAndLinkTags(array('type' => "module",'name' => 'announcements', 'ext' => 'js'));
 	$css = getDynamicScriptAndLinkTags(array('type' => "module",'name' => 'announcements','ext' => 'css'));
 
 	if($layout == 'embedded'){

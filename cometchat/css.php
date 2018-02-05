@@ -167,12 +167,8 @@ if(!empty($_REQUEST['admin'])){
 	$etag = md5_file($cssfile);
 }
 
-if(phpversion()>='4.0.4pl1'&&(strstr($useragent,'compatible')||strstr($useragent,'Gecko'))){
-	if(extension_loaded('zlib')&&GZIP_ENABLED==1){
-		ob_start('ob_gzhandler');
-	}else{
-		ob_start();
-	}
+if(phpversion()>='4.0.4pl1' && extension_loaded('zlib') && GZIP_ENABLED==1 && (strstr($GLOBALS['useragent'],'compatible') || strstr($GLOBALS['useragent'],'Gecko'))){
+	ob_start('ob_gzhandler');
 }else{
 	ob_start();
 }

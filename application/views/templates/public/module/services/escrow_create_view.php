@@ -273,8 +273,20 @@ if(isset($escrowDetails) && !empty($escrowDetails))
                 <input type="hidden" name="invoice_currency" value="eur">
                 <input type="hidden" name="invoice_amount" value="<?php echo $price; ?>" data-type="number">
         		<input type="hidden" name="language" value="en">
+        		<input type="hidden" name="success_url" value="<?php echo base_url('escrow/payment/success');?>">
+				<input type="hidden" name="failed_url" value="<?php echo base_url('escrow/payment/failure'); ?>">
         		<input type="submit" name="btn_cryptonaror_submit" class="btn btn-primary" value="Make Payment">
-            	</form>
+        	</form>
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		
     			       		
        		</div>
        	</div>

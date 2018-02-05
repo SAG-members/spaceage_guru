@@ -113,6 +113,18 @@ class Webservice_controller extends CI_Controller
 	const SERVICE_MEMBERSHIP_PURCHASE = 16000;
 	
 	
+	const SERVICE_LIKE_PAGE_DATA = 17000;
+	const SERVICE_UNLIKE_PAGE_DATE = 17001;
+	const SERVICE_LOVE_IT_PAGE_DATE = 17002;
+	const SERVICE_HATE_IT_PAGE_DATE = 17003;
+	
+	
+	
+	const SERVICE_PPQ_FOR_ISO = 'ios_ppq';
+	const SERVICE_RPQ_FOR_ISO = 'ios_rpq';
+	const SERVICE_WPQ_FOR_ISO = 'ios_wpq';
+	
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -148,7 +160,7 @@ class Webservice_controller extends CI_Controller
 			case self::SERVICE_USER_INVITE : $response = $this->user_invite($payload); break;
 			case self::SERVICE_GET_USER_TOUS : $response = $this->get_user_tous($payload); break;
 			case self::SERVICE_USER_RPQ_DETAIL : $response = $this->user_rpq_detail($payload); break;
-			case self::SERVICE_USER_WPQ_DETAIL : $response = $this->user_rpq_detail($payload); break;
+			case self::SERVICE_USER_WPQ_DETAIL : $response = $this->user_wpq_detail($payload); break;
 			case self::SERVICE_USER_UPDATE_RPQ_DETAIL : $response = $this->user_update_rpq_detail($payload); break;
 			case self::SERVICE_USER_UPDATE_WPQ_DETAIL : $response = $this->user_update_wpq_detail($payload); break;
 			
@@ -231,6 +243,18 @@ class Webservice_controller extends CI_Controller
 			case self::SERVICE_SET_CALENDAR_COMMENT : $response = $this->set_calendar_comment($payload); break;
 			
 			case self::SERVICE_MEMBERSHIP_PURCHASE : $response = $this->membership_purchase($payload); break;
+			
+			
+			case self::SERVICE_LIKE_PAGE_DATA : $response = $this->like_page_data($payload); break;
+			case self::SERVICE_UNLIKE_PAGE_DATE : $response = $this->unlike_page_data($payload); break;
+			case self::SERVICE_LOVE_IT_PAGE_DATE : $response = $this->love_it_page_data($payload); break;
+			case self::SERVICE_HATE_IT_PAGE_DATE : $response = $this->hate_it_page_data($payload); break;
+			
+			
+			case self::SERVICE_PPQ_FOR_ISO : $response = $this->ppq_for_ios($payload); break;
+			case self::SERVICE_RPQ_FOR_ISO : $response = $this->rpq_for_ios($payload); break;
+			case self::SERVICE_WPQ_FOR_ISO : $response = $this->wpq_for_ios($payload); break;
+			
 		}
 		
 		echo json_encode($response);
@@ -281,7 +305,7 @@ class Webservice_controller extends CI_Controller
 	    
 	    $this->load->model('cms');
 	    
-	    $result = $this->cms->get_by_slug('club-rules');
+	    $result = $this->cms->get_by_slug('club-laws');
 	    
 	    $response = array('flag'=>1,'result'=>$result);
 	    
@@ -933,9 +957,9 @@ class Webservice_controller extends CI_Controller
 		{
 			# Load RSS Feed subscription model
 			$this->load->model('rss_feed_subscription_model','rss');
-			
+			$this->load->model('page');
 			$result = $this->rss->get_rss_feed_subscription_by_user_id($this->input->post('user_id'));
-			
+// 			pre($result);
 			# Load Page Model for PSS
 			$this->load->model('page');
 			
@@ -946,29 +970,11 @@ class Webservice_controller extends CI_Controller
 				
 				foreach ($result as $r)
 				{
-					switch ($r->{Rss_feed_subscription_model::_CATEGORY_ID})
-					{
-						case 1: $subscriptionType = 'Service'; $subscribedItem = $this->page->get_by_id($r->{Rss_feed_subscription_model::_ITEM_ID})->{Page::_PAGE_TITLE}; break;
-						case 2: $subscriptionType = 'Product'; $subscribedItem = $this->page->get_by_id($r->{Rss_feed_subscription_model::_ITEM_ID})->{Page::_PAGE_TITLE};  break;
-						case 3: break;
-						case 4: break;
-						case 5: break;
-						case 6: break;
-						case 7: break;
-						case 8: $subscriptionType = 'Sensation'; $subscribedItem = $this->page->get_by_id($r->{Rss_feed_subscription_model::_ITEM_ID})->{Page::_PAGE_TITLE}; break;
-						case 9: break;
-						case 10: break;
-						case 11: break;
-						case 12: break;
-						case 13: break;
-						case 14: break;
-						case 15: break;
-					}
 					
 					$output = array();
 					$output['id'] = $r->{Rss_feed_subscription_model::_ID};
-					$output['subscription_type'] = $subscriptionType;
-					$output['subscribed_item'] = $subscribedItem ;
+					$output['subscription_type'] = $this->page->get_category($r->category_id);
+					$output['subscribed_item'] = $r->page_title ;
 					$results[] = $output;
 				}
 				$response = array('flag'=>1, 'result'=>$results);
@@ -2693,10 +2699,84 @@ class Webservice_controller extends CI_Controller
 			$this->load->model('page_submodility','submoditlity');
 			$this->load->model('data_document_model','data_document');
 			$this->load->model('page_like_dislike_model','pld');
+			$this->load->model('country');
 			
 			$res = array();
 			
-			$res['page'] = $this->page->get_by_id($this->input->post('data_id'));
+			$dataDetails = $this->page->get_by_id($this->input->post('data_id'));
+			
+			if(empty($dataDetails))
+			{
+			    $response = array('flag'=>0, 'message'=>'Invalid Data Id');
+			    return $response;
+			}		
+			
+			/*===================================== Getting Country Available In ================================*/
+			$countryAvailableInArr = array();
+			
+			$countryAvailableIn = explode(',',$dataDetails->country_available_in);
+			
+			if(!empty($countryAvailableIn))
+			{   
+			    foreach ($countryAvailableIn as $available)
+			    {
+			        $a = $this->country->get_by_id($available);
+			        
+			        array_push($countryAvailableInArr, $this->country->get_by_id($available)->{Country::_COUNTRY_NAME});
+			    }
+			}
+			$dataDetails->country_available_in = implode(',', $countryAvailableInArr);
+			/*===================================== Getting Country Available In ================================*/
+			
+			
+			
+			
+			
+			/*===================================== Getting Country Legal In =====================================*/
+			
+			$countryLegalInArr = array();
+			
+			$countryLegalIn = explode(',',$dataDetails->country_legal_in);
+			
+			if(!empty($countryLegalIn))
+			{
+			    foreach ($countryLegalIn as $available)
+			    {
+			        $a = $this->country->get_by_id($available);
+			        
+			        array_push($countryLegalInArr, $this->country->get_by_id($available)->{Country::_COUNTRY_NAME});
+			    }
+			}
+			$dataDetails->country_legal_in = implode(',', $countryLegalInArr);
+			
+			
+			/*===================================== Getting Country Legal In =====================================*/
+			
+			
+			
+			
+			
+			/*===================================== Getting Country Allowed In =====================================*/
+			
+			$countryAllowedInArr = array();
+			
+			$countryAllowedIn = explode(',',$dataDetails->country_allowed_in);
+			
+			if(!empty($countryAllowedIn))
+			{
+			    foreach ($countryAllowedIn as $available)
+			    {
+			        $a = $this->country->get_by_id($available);
+			        
+			        array_push($countryAllowedInArr, $this->country->get_by_id($available)->{Country::_COUNTRY_NAME});
+			    }
+			}
+			$dataDetails->country_allowed_in = implode(',', $countryAllowedInArr);
+			
+			
+			/*===================================== Getting Country Allowed In =====================================*/
+			
+			$res['page'] = $dataDetails;
 			$res['submodilities'] = $this->submoditlity->get_submodility_by_page_id($res['page']->{Page::_ID});
 			$res['files'] = $this->data_document->get_data_document($res['page']->{Page::_ID});
 			$res['like_dislike'] = $this->pld->get_count_like_dislike($res['page']->{Page::_ID});
@@ -3150,5 +3230,249 @@ class Webservice_controller extends CI_Controller
 	    else $response = array('flag'=>0, 'message'=>'Unable to update subscription');
 	    
 	    return $response;
+	}
+	
+	public function like_page_data($payload)
+	{
+	    $response = array();
+	    
+	    if(!$this->input->post('user_id'))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login First');
+	        return $response;
+	    }
+	    	    
+	    if($this->input->post('data_id'))
+	    {
+	        $pageId = $this->input->post('data_id');
+	        $userId = $this->input->post('user_id');
+	        
+	        # Load page like unlike model
+	        $this->load->model('page_like_dislike_model', 'pld');
+	        
+	        # First step is to check if we have already liked the page
+	        $result = $this->pld->get_data($pageId, $userId);
+	        
+	        if($result)
+	        {
+	            if($result->{Page_like_dislike_model::_PAGE_LIKE}){
+	                $response = array('flag'=>0, 'message'=>'You have already liked this data');
+	                return $response;
+	            }
+	        }
+	        
+	        $result = $this->pld->like_data($pageId, $userId);
+	        $result = $this->pld->get_count_like_dislike($pageId);
+	        
+	        if($result) $response = array('flag'=>1, 'message'=>'You have liked this data','likecount'=>$result->likecount, 'dislikecount'=>$result->dislikecount);
+	        else $response = array('flag'=>1, 'message'=>'Error occured while liking');
+	        
+	    }
+	    else $response = array('flag'=>1, 'message'=>'Unable to like data');
+	    
+	    return $response;
+	}
+	
+	public function unlike_page_data($payload)
+	{
+	    $response = array();
+	    
+	    if(!$this->input->post('user_id'))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login First');
+	        return $response;
+	    }
+	    
+	    if($this->input->post('data_id'))
+	    {
+	        $pageId = $this->input->post('data_id');
+	        $userId = $this->input->post('user_id');
+	        
+	        # Load page like unlike model
+	        $this->load->model('page_like_dislike_model', 'pld');
+	        
+	        # First step is to check if we have already liked the page
+	        $result = $this->pld->get_data($pageId, $userId);
+	        
+	        if($result)
+	        {
+	            if($result->{Page_like_dislike_model::_PAGE_DISLIKE}){
+	                $response = array('flag'=>0, 'message'=>'You have already disliked this data');
+	                return $response;
+	            }
+	        }
+	        
+	        $result = $this->pld->dislike_data($pageId, $userId);
+	        $result = $this->pld->get_count_like_dislike($pageId);
+	        
+	        if($result) $response = array('flag'=>1, 'message'=>'You have disliked this data', 'likecount'=>$result->likecount, 'dislikecount'=>$result->dislikecount);
+	        else $response = array('flag'=>1, 'message'=>'Error occured while disliking');
+	        
+	    }
+	    else
+	    {
+	        $response = array('flag'=>1, 'message'=>'Unable to like data');
+	    }
+	    
+	    return $response;
+	    
+	}
+	
+	public function love_it_page_data($payload)
+	{
+	    $response = array();
+	    
+	    if(!$this->input->post('user_id'))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login First');
+	        return $response;
+	    }
+	    
+	    if($this->input->post('data_id'))
+	    {
+	        $pageId = $this->input->post('data_id');
+	        $userId = $this->input->post('user_id');
+	        
+	        # Load page like unlike model
+	        $this->load->model('page_like_dislike_model', 'pld');
+	        
+	        # First step is to check if we have already liked the page
+	        $result = $this->pld->get_data($pageId, $userId);
+	        
+	        if($result)
+	        {
+	            if($result->{Page_like_dislike_model::_PAGE_LOVE_IT}){
+	                $response = array('flag'=>0, 'message'=>'You have already loved this data');
+	                return $response;
+	            }
+	        }
+	        
+	        $result = $this->pld->love_data($pageId, $userId);
+	        $result = $this->pld->get_count_like_dislike($pageId);
+	        
+	        if($result) $response = array('flag'=>1, 'message'=>'You have loved this data', 'lovecount'=>$result->loveitcount, 'hatecount'=>$result->hateitcount);
+	        else $response = array('flag'=>1, 'message'=>'Error occured while loving it');
+	        
+	    }
+	    else
+	    {
+	        $response = array('flag'=>1, 'message'=>'Unable to like data');
+	    }
+	    
+	    return $response;
+	    
+	}
+	
+	public function hate_it_page_data($payload)
+	{
+	    $response = array();
+	    
+	    if(!$this->input->post('user_id'))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login First');
+	        return $response;
+	    }
+	    
+	    if($this->input->post('data_id'))
+	    {
+	        $pageId = $this->input->post('data_id');
+	        $userId = $this->input->post('user_id');
+	        
+	        # Load page like unlike model
+	        $this->load->model('page_like_dislike_model', 'pld');
+	        
+	        # First step is to check if we have already liked the page
+	        $result = $this->pld->get_data($pageId, $userId);
+	        
+	        if($result)
+	        {
+	            if($result->{Page_like_dislike_model::_PAGE_HATE_IT}){
+	                $response = array('flag'=>0, 'message'=>'You have already hated this data');
+	                return $response;
+	            }
+	        }
+	        
+	        $result = $this->pld->hate_data($pageId, $userId);
+	        $result = $this->pld->get_count_like_dislike($pageId);
+	        
+	        // 			print_r($result);
+	        
+	        if($result) $response = array('flag'=>1, 'message'=>'You have hated this data', 'lovecount'=>$result->loveitcount, 'hatecount'=>$result->hateitcount);
+	        else $response = array('flag'=>1, 'message'=>'Error occured while hating');
+	        
+	    }
+	    else
+	    {
+	        $response = array('flag'=>1, 'message'=>'Unable to like data');
+	    }
+	    
+	    return $response;
+	    
+	}
+	
+	
+	
+	public function ppq_for_ios()
+	{
+	    $response = array();
+	    
+	    if(!$this->input->get('user-id'))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login First');
+	        echo json_encode($response);
+	    }
+	    
+	    $this->load->model('user_questionnaire','ques');
+	    
+	    $data = array();
+	    
+        $data['questionnaire'] = $this->ques->get_user_questionnaire($this->input->get('user-id'));
+        $data['userId'] = $this->input->get('user-id');
+        
+        $this->load->view("templates/public/module/ios/ios_ppq", $data);  
+
+	}
+	
+	public function rpq_for_ios()
+	{
+	    $response = array();
+	    
+	    if(!$this->input->get('user-id'))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login First');
+	        echo json_encode($response);
+	        
+	    }
+	    
+	    $this->load->model('user_questionnaire','ques');
+	   
+	    $data = array(); 
+	    
+	    $data['rpq'] = $this->ques->get_user_rpq($this->input->get('user-id'));	 
+	    
+	    $data['userId'] = $this->input->get('user-id');
+	    
+	    $this->load->view('templates/public/module/ios/ios_rpq', $data);
+	}
+	
+	public function wpq_for_ios()
+	{
+	    $response = array();
+	    
+	    if(!$this->input->get('user-id'))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login First');
+	        echo json_encode($response);
+	    }
+	    	    
+	    $this->load->model('user_questionnaire','ques');	    
+	    
+	    $data = array();
+	    
+	    
+	    $data['wpq'] = $this->ques->get_user_wpq($this->input->get('user-id'));
+	    
+	    $data['userId'] = $this->input->get('user-id');
+	    $this->load->view('templates/public/module/ios/ios_wpq', $data);
 	}
 }

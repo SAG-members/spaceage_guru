@@ -26,6 +26,7 @@ if(!empty($_REQUEST['callbackfn']) && $_REQUEST['callbackfn'] == 'mobileapp') {
 	        setcookie($name, '', time()-3600, '/');
 	    }
 	}
+	session_destroy($client.md5($_REQUEST['basedata']));
 	echo json_encode(1);
 }else{
     echo "Nothing to look here";

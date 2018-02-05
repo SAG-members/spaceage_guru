@@ -45,7 +45,7 @@ function index() {
 		$url = '?module=editor&customjs=1&ts='.$ts;
 		$enableoptiion = "enablecustomjs";
 		$filename = 'Custom JavaScript';
-		$title = 'Editer - JavaScript';
+		$title = 'Editor - JavaScript';
 		$op2 = 'selected';
 		$active_id = 'editor_extrajs';
 		$hiddenfield = '<input type="hidden" name="hiddenfield" value="customjs"/>';
@@ -59,7 +59,7 @@ function index() {
 		$url = '?module=editor&customcss=1&ts='.$ts;
 		$enableoptiion = "enablecustomcss";
 		$filename = 'Custom - CSS';
-		$title = 'Editer CSS';
+		$title = 'Editor CSS';
 		$active_id = 'editor_extracss';
 		$op3 = 'selected';
 		$hiddenfield = '<input type="hidden" name="hiddenfield" value="customcss"/>';
@@ -74,7 +74,7 @@ function index() {
 
 		$url = '?module=editor&ts='.$ts;
 		$filename = 'Integration File';
-		$title = 'Editer - Integration';
+		$title = 'Editor - Integration';
 		$active_id = 'editor_integration';
 		$op1 = 'selected';
 		$hiddenfield = '<input type="hidden" name="hiddenfield" value="integration"/> ';
@@ -82,7 +82,7 @@ function index() {
 					      <button style="float:right;margin-right:5px;" class="btn btn-primary" id="backupbtn">Backup this copy</button>';
 		$warning = <<<EOD
       	<div class="note note-success">
-            If post makeing changes CometChat dosen't load then, You can use below URL to restore the integration file to last saved backup.<br>
+            If post making changes CometChat doesn't load, then you can use below URL to restore the integration file to last saved backup.<br>
             <input type="text" name="restoreurl" value="$restoreurl" disabled style="padding:3px;width:450px;">
         </div>
 EOD;

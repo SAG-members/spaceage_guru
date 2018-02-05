@@ -14,11 +14,13 @@ if (file_exists(dirname(__FILE__).DIRECTORY_SEPARATOR."lang.php")) {
 	include_once(dirname(__FILE__).DIRECTORY_SEPARATOR."lang.php");
 }
 
-$extrajs = '';
+$scrolljstag = '';
 
 if ($sleekScroller == 1) {
-    $extrajs = '<script src="../../js.php?type=core&name=scroll"></script>';
+    $scrolljstag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'scroll', 'ext' => 'js'));
 }
+$jqueryjstag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery', 'ext' => 'js'));
+$translatecsstag = getDynamicScriptAndLinkTags(array('type' => "plugin",'name' => 'translate', 'ext' => 'css'));
 
 echo <<<EOD
 <!DOCTYPE html>
@@ -28,12 +30,12 @@ echo <<<EOD
 		<meta http-equiv="pragma" content="no-cache">
 		<meta http-equiv="expires" content="-1">
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-		<link type="text/css" rel="stylesheet" media="all" href="../../css.php?type=module&name=translate" />
-		<script src="../../js.php?type=core&name=jquery"></script>
+		{$translatecsstag}
+		{$jqueryjstag}
 		<script>
 			$ = jQuery = jqcc;
 		</script>
-		{$extrajs}
+		{$scrolljstag}
 		<script type="text/javascript">
 		jQuery.cookie = function (key, value, options) {
 

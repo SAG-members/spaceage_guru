@@ -47,5 +47,12 @@ class Service extends Application
 		
 		$this->template->render('single', $data);
 	}
+	
+	public function timeline()
+	{
+	    $data = array();
+	    $this->template->title("Timeline");
+	    $this->template->render('services/timeline', $data);
+	}
 		
 }

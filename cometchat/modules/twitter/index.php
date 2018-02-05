@@ -58,10 +58,10 @@ $cc_layout = 'docked';
 if(!empty($_REQUEST['cc_layout'])){
   $cc_layout = $_REQUEST['cc_layout'];
 }
-$jQuerytag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery', 'ext' => 'js'));
-$jstag = getDynamicScriptAndLinkTags(array('type' => "module",'name' => 'twitter', 'ext' => 'js'));
-$css = getDynamicScriptAndLinkTags(array('type' => "module",'name' => 'translate','ext' => 'css'));
-
+$jquerytag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery', 'ext' => 'js'));
+$twitterjstag = getDynamicScriptAndLinkTags(array('type' => "module",'name' => 'twitter', 'ext' => 'js'));
+$twittercsstag = getDynamicScriptAndLinkTags(array('type' => "module",'name' => 'twitter','ext' => 'css'));
+$staticCDNUrl = STATIC_CDN_URL;
 echo <<<EOD
 <!DOCTYPE html>
 <html>
@@ -72,10 +72,10 @@ echo <<<EOD
 		<meta http-equiv="pragma" content="no-cache">
 		<meta http-equiv="expires" content="-1">
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-		$css
-		$jQuerytag
+		{$twittercsstag}
+		{$jquerytag}
 		<script>$ = jQuery = jqcc;</script>
-		$jstag
+		{$twitterjstag}
 		{$extrajs}
 		<script>
 		$(function() {
@@ -98,7 +98,7 @@ echo <<<EOD
 		<div style="width:100%;margin:0 auto;margin-top: 0px;height: 100%;">
 			<div class="cometchat_wrapper">
 				<div class="followme">
-					<a target="_blank" href="http://www.twitter.com/{$twitteruser}"><img src="layouts/{$layout}/images/follow.png"></a><br>
+					<a target="_blank" href="http://www.twitter.com/{$twitteruser}"><img src="{$staticCDNUrl}modules/twitter/layouts/{$layout}/images/follow.png"></a><br>
 					<div id="followers">{$followersHTML}</div>
 				</div>
 				<div id="tweets_wrapper" style="width: 324px;height:300px;overflow:auto">

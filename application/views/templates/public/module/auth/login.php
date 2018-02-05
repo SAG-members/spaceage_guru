@@ -1,5 +1,5 @@
 <div style="width: 120px; margin: 0px auto;">
-	<img src="<?php echo base_url('assets/img/spaceage_guru_logo.jpg')?>" class="img-responsive">
+	<img src="<?php echo base_url('assets/img/rainbow_couple.jpg')?>" class="img-responsive">
 </div>
 
 <div style="width: 320px; margin: 0px auto;">

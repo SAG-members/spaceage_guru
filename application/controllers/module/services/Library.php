@@ -81,7 +81,7 @@ class Library extends Application
 		
 		$this->template->setTemplate('public_master_template.php');
 		$this->template->setLeftSideBar('library_left_menu',$this->data);
-		$this->template->setRightSideBar('library_right_menu', $this->data);
+		#$this->template->setRightSideBar('right_sidebar', $this->data);
 		
 		
 		$data = array();
@@ -232,7 +232,7 @@ class Library extends Application
 			if($lastId) {$this->message->setFlashMessage(Message::DATA_CREATE_SUCCESS, array('id'=>'1'));}
 			else {$this->message->setFlashMessage(Message::DATA_CREATE_FAILURE);}
 
-			redirect(base_url('user/add/data'));
+			redirect(base_url('profile'));
 		}
 				
 		$additionalScripts = array('plugin/summernote/summernote.js','summernote.js', 'plugin/dropzone/dropzone.min.js', 'plugin/taginputs/jquery.tagsinput.js', 'plugin/select2/select2.full.min.js');

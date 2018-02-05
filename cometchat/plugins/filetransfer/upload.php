@@ -118,9 +118,9 @@ if (!empty($isImage) && $isImage) {
 
 	$imgtag = '<img class="file_image" type="image" src="'.$linkToFile.'" style="max-height:'.$imgHeight.';"/>';
 } else if (!empty($isVideo) && $isVideo) {
-	$imgtag = '<div class="cometchat_filevideo">('.$filename.')</div><img class="file_video" type="video" src="'.BASE_URL.'images/videoicon.png"/>';
+	$imgtag = '<div class="cometchat_filevideo">('.$filename.')</div><img class="file_video" type="video" src="'.STATIC_CDN_URL.'images/videoicon.png"/>';
 } else if (!empty($isAudio) && $isAudio) {
-	$imgtag = '<div class="cometchat_fileaudio">('.$filename.')</div><img class="file_audio" type="audio" src="'.BASE_URL.'images/audioicon.png"/>';
+	$imgtag = '<div class="cometchat_fileaudio">('.$filename.')</div><img class="file_audio" type="audio" src="'.STATIC_CDN_URL.'images/audioicon.png"/>';
 }
 $pluginpath = "/plugins/filetransfer/";
 if (empty($errormessage)) {
@@ -176,35 +176,4 @@ if (!empty($_GET['embed']) && $_GET['embed'] == 'web') {
 }
 if (!empty($_REQUEST['callbackfn']) && $_REQUEST['callbackfn'] == 'mobileapp') {
 	echo $mediauploaded;
-} else {
-/*echo <<<EOD
-	<!DOCTYPE html>
-	<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<title>{$filetransfer_language[0]} (closing)</title>
-		<link type="text/css" rel="stylesheet" media="all" href="../../css.php?type=plugin&name=filetransfer" />
-		<script type="text/javascript">
-			function closePopup(){
-				var controlparameters = {'type':'plugins', 'name':'filetransfer', 'method':'closeCCPopup', 'params':{'name':'filetransfer'}};
-				controlparameters = JSON.stringify(controlparameters);
-				if(typeof(parent) != 'undefined' && parent != null && parent != self){
-					parent.postMessage('CC^CONTROL_'+controlparameters,'*');
-				} else {
-					window.close();
-				}
-			}
-		</script>
-	</head>
-	<body onload={$close}>
-		<div class="cometchat_wrapper">
-			<div class="container_title {$embedcss}">{$filetransfer_language[1]}</div>
-			<div class="container_body {$embedcss}">
-				<div>{$errormessage}</div>
-				<div style="clear:both"></div>
-			</div>
-		</div>
-	</body>
-	</html>
-EOD;*/
 }

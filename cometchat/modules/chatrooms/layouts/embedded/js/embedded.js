@@ -24,6 +24,7 @@ var enableType = 0;
     settings = jqcc.cometchat.getcrAllVariables();
     var calleeAPI = jqcc.cometchat.getChatroomVars('calleeAPI');
     var baseUrl = jqcc.cometchat.getBaseUrl();
+    var staticCDNUrl = '<?php echo STATIC_CDN_URL; ?>';
     var tabWidth = 'width: 50%;right: 0;';
     var chromeReorderFix = '_';
     var newmess;
@@ -56,7 +57,7 @@ var enableType = 0;
                     }
 
                     selectlang = '<select id="selectlanguage" class="selectlanguage"></select>';
-                    var currentroom = '<div class="content_div" id="currentroom" ><div id="currentroom_left" class="content_div cometchat_tabpopup"><div class="cometchat_userchatarea"><div class="cometchat_tabsubtitle"><div id="cometchat_pluginsonheader" class="cometchat_chatboxMenuOptions"></div><div class="cometchat_chatboxLeftDetails"><div class="cometchat_chatroomimage"><img src="'+baseUrl+'layouts/embedded/images/group.svg" class="cometchat_chatroomavatarimage" /></div><div class="cometchat_chatboxDisplayDetails"><div class="cometchat_chatroomdisplayname" style="margin-left: 20px;position:absolute;"></div></div></div></div><div class="cometchat_messageElement" id="cc_cr"></div><div class="cometchat_prependMessages_container"></div><div id="currentroom_convo"><div id="currentroom_convotext" class="cometchat_message_container"></div><div style="clear:both"></div>'+selectlang+'</div><div id="cometchat_tabinputcontainer"></div></div></div>';
+                    var currentroom = '<div class="content_div" id="currentroom" ><div id="currentroom_left" class="content_div cometchat_tabpopup"><div class="cometchat_userchatarea"><div class="cometchat_tabsubtitle"><div id="cometchat_pluginsonheader" class="cometchat_chatboxMenuOptions"></div><div class="cometchat_chatboxLeftDetails"><div class="cometchat_chatroomimage"><img src="'+staticCDNUrl+'layouts/embedded/images/group.svg" class="cometchat_chatroomavatarimage" /></div><div class="cometchat_chatboxDisplayDetails"><div class="cometchat_chatroomdisplayname" style="margin-left: 20px;position:absolute;"></div></div></div></div><div class="cometchat_messageElement" id="cc_cr"></div><div class="cometchat_prependMessages_container"></div><div id="currentroom_convo"><div id="currentroom_convotext" class="cometchat_message_container"></div><div style="clear:both"></div>'+selectlang+'</div><div id="cometchat_tabinputcontainer"></div></div></div>';
                     var chatroomusers = '<div id="chatroomuser_container_hidden" style="display:none;"></div>';
                     jqcc("#cometchat_righttab").append(chatroomusers);
                     if($('#cometchat_userstab').length > 0) {
@@ -407,7 +408,7 @@ var enableType = 0;
                                 var avatar = jqcc.cometchat.getThemeArray('buddylistAvatar', fromid);
                                 if(typeof avatar=="undefined"){
                                     avatarstofetch[fromid]=1;
-                                    avatar = jqcc.cometchat.getBaseUrl()+'images/noavatar.png';
+                                    avatar = staticCDNUrl+'images/noavatar.png';
                                 }
                                 var fromavatar = '<a id="cometchat_usersavatar_'+incomingid+'" href="javascript:void(0)" onclick="javascript:parent.jqcc.cometchat.chatWith(\''+fromid+'\');" class="cometchat_float_l"><span class="cometchat_cr_other_avatar"><img class="cometchat_userscontentavatarsmall cometchat_avatar_'+fromid+'" title="'+fromname+'" src="'+avatar+'"></span></a>';
                                 var usernamecontent = '';
@@ -452,9 +453,9 @@ var enableType = 0;
                                 $("#cometchat_chatboxseen_"+incomingid).addClass('cometchat_offlinemessage');
                             }
                         }
-                        if(jqcc.cometchat.getChatroomVars('owner')|| jqcc.cometchat.getChatroomVars('isModerator') || (jqcc.cometchat.getChatroomVars('allowDelete') == 1 && incomingself)) {
+                        if(jqcc.cometchat.getChatroomVars('owner')|| jqcc.cometchat.checkModerator(chatroomid) || (jqcc.cometchat.getChatroomVars('allowDelete') == 1 && incomingself)) {
                             if($("#cometchat_messagebox_"+incomingid).find(".delete_msg").length < 1) {
-                                jqcc('#cometchat_messagebox_'+incomingid).append('<span class="delete_msg '+marginclass+'" style="'+deleteiconcss+deleteiconcssself+'" onclick="javascript:jqcc.cometchat.confirmDelete(\''+incomingid+'\');"><img class="hoverbraces" src="'+baseUrl+'modules/chatrooms/bin.svg"></span>');
+                                jqcc('#cometchat_messagebox_'+incomingid).append('<span class="delete_msg '+marginclass+'" style="'+deleteiconcss+deleteiconcssself+'" onclick="javascript:jqcc.cometchat.confirmDelete(\''+incomingid+'\');"><img class="hoverbraces" src="'+staticCDNUrl+'modules/chatrooms/bin.svg"></span>');
                             }
                             $(".cometchat_messagebox").live("mouseover",function() {
                                 $(this).find(".delete_msg").css('display','inline-block');
@@ -610,10 +611,10 @@ var enableType = 0;
                         }else if(chatboxtextarea.scrollHeight - difference>20){
                             $(chatboxtextarea).height(chatboxtextarea.scrollHeight - difference);
                         }
-                        if($('#cometchat_container_smilies').length != 1 && $('#cometchat_container_stickers').length != 1 && $('#cometchat_container_transliterate').length != 1){
+                        if($('#cometchat_container_smilies').length != 1 && $('#cometchat_container_stickers').length != 1 && $('#cometchat_container_transliterate').length != 1 && $('#cometchat_container_voicenote').length != 1){
                             $[calleeAPI].chatroomWindowResize();
                         }
-                        if($('#cometchat_container_smilies').length == 1 || $('#cometchat_container_stickers').length == 1 || $('#cometchat_container_transliterate').length == 1){
+                        if($('#cometchat_container_smilies').length == 1 || $('#cometchat_container_stickers').length == 1 || $('#cometchat_container_transliterate').length == 1 || $('#cometchat_container_voicenote').length == 1){
                             $('.cometchat_container').css('bottom',$('#currentroom').find('#cometchat_tabinputcontainer').outerHeight(true)+1);
                         }
                         var newcontainerheight = $('#currentroom').find('#cometchat_tabinputcontainer').outerHeight();
@@ -674,7 +675,7 @@ var enableType = 0;
                         crUnreadMessages[roomno] = 0;
                         jqcc.cometchat.setChatroomVars('crUnreadMessages',crUnreadMessages);
                         var moderatorcontainer = '';
-                        if(jqcc.cometchat.getChatroomVars('isModerator')==1){
+                        if(jqcc.cometchat.checkModerator(roomno)){
                            moderatorcontainer += '<div class="cometchat_float_outer"><div id="float_unbanchatroomusers" class="unbanChatroomUserembedded float_list list_up" title="<?php echo $chatrooms_language[39];?>" chatroommode="1"><?php echo $chatrooms_language[39];?></div></div>';
                         }
                         if(mobileDevice){
@@ -725,13 +726,11 @@ var enableType = 0;
                                     }
                                 }else if(settings.plugins[i]=='smilies'){
 
-                                    smilieshtml = '<div id="smileyicon" class="ccplugins cometchat_smilies" title="'+$[name].getTitle()+'" name="'+name+'" to="'+roomno+'" chatroommode="1" ><img src="layouts/<?php echo $layout;?>/images/smileyicon.svg"></div>';
-                                    }else if(settings.plugins[i]=='filetransfer'){
-                                    filetransferhtml='<div id="cometchat_attachements"><img src="'+baseUrl+'layouts/'+calleeAPI+'/images/attach.svg" class="ccplugins" title="'+$[name].getTitle()+'" name="'+name+'" to="'+roomno+'" chatroommode="1"/></div>';
-                                }else if(settings.plugins[i]=='voicenote'){
-                                    /*voicenotehtml = '<div id="cometchat_recorder"><img src="'+baseUrl+'layouts/'+calleeAPI+'/images/recorder.svg" class="ccplugins" title="'+$[name].getTitle()+'" name="'+name+'" to="'+roomno+'" chatroommode="1"/></div>';*/
+                                    smilieshtml = '<div id="smileyicon" class="ccplugins cometchat_smilies" title="'+$[name].getTitle()+'" name="'+name+'" to="'+roomno+'" chatroommode="1" ><img src="'+staticCDNUrl+'layouts/<?php echo $layout;?>/images/smileyicon.svg"></div>';
+                                }else if(settings.plugins[i]=='filetransfer'){
+                                    filetransferhtml='<div id="cometchat_attachements"><img src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/attach.svg" class="ccplugins" title="'+$[name].getTitle()+'" name="'+name+'" to="'+roomno+'" chatroommode="1"/></div>';
                                 }else if(typeof($[name]) == 'object') {
-                                    if(name == 'ccstickers' || name == 'cchandwrite' || name == 'ccscreenshare' || name == 'ccwhiteboard' || name == 'ccwriteboard' || name == 'ccbroadcast' || name == 'cctransliterate' || name == 'ccaudiochat' || name == 'ccavchat'){
+                                    if(name == 'ccstickers' || name == 'cchandwrite' || name == 'ccscreenshare' || name == 'ccwhiteboard' || name == 'ccwriteboard' || name == 'ccbroadcast' || name == 'cctransliterate' || name == 'ccaudiochat' || name == 'ccavchat' || name == 'ccvoicenote'){
                                         if($(window).width() < 300 && name == 'ccaudiochat'){
                                             pluginsdownhtml += '<div class="cometchat_float_outer"><div id="cometchat_float_'+settings.plugins[i]+'" class="ccplugins cometchat_'+settings.plugins[i]+' float_list list_down" title="'+$[name].getTitle()+'" name="'+name+'" to="'+roomno+'" chatroommode="1">'+$[name].getTitle()+'</div></div>';
                                         }else if($(window).width() < 250 && name == 'ccavchat'){
@@ -751,9 +750,9 @@ var enableType = 0;
                         }
                         pluginsuphtml += '</div>';
                         pluginsdownhtml += '</div>';
-                        var headerplugin = avchathtml+audiochat+'<div class="inviteChatroomUsers" id="inviteusersicon" title="<?php echo $chatrooms_language[22]; ?>"></div><div id="vline"><img src="layouts/<?php echo $layout;?>/images/vline.svg"/ style="margin-top:12px;"></div> <div  class="cometchat_user_closebox"><img src="layouts/<?php echo $layout;?>/images/remove.svg"/></div>';
+                        var headerplugin = avchathtml+audiochat+'<div class="inviteChatroomUsers" id="inviteusersicon" title="<?php echo $chatrooms_language[22]; ?>"></div><div id="vline"><img src="'+staticCDNUrl+'layouts/<?php echo $layout;?>/images/vline.svg"/ style="margin-top:12px;"></div> <div  class="cometchat_user_closebox"><img src="'+staticCDNUrl+'layouts/<?php echo $layout;?>/images/remove.svg"/></div>';
                         pluginshtml = pluginsuphtml+pluginsdownhtml;
-                        var inputcontainer = '<div id="downplugins"><div id="cometchat_group_pluginuparrow_'+roomno+'" class="cometchat_pluginuparrow"><img class="cometchat_pluginuparrowimage" src="layouts/'+calleeAPI+'/images/circledown.svg"/></div><textarea id="cometchat_textarea_'+roomno+'" class="cometchat_textarea" style="overflow-y: hidden;"  placeholder="<?php echo $chatrooms_language[64]; ?>"></textarea>'+smilieshtml+filetransferhtml+pluginshtml+'</div>';
+                        var inputcontainer = '<div id="downplugins"><div id="cometchat_group_pluginuparrow_'+roomno+'" class="cometchat_pluginuparrow"><img class="cometchat_pluginuparrowimage" src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/circledown.svg"/></div><textarea id="cometchat_textarea_'+roomno+'" class="cometchat_textarea" style="overflow-y: hidden;"  placeholder="<?php echo $chatrooms_language[64]; ?>"></textarea>'+smilieshtml+filetransferhtml+pluginshtml+'</div>';
                         if($('#currentroom_left .cometchat_avchatOption').length > 0){
                             $('#currentroom_left .cometchat_avchatOption').remove();
                         }
@@ -809,10 +808,10 @@ var enableType = 0;
                     $('#currentroom').find('.cometchat_textarea').keyup(function(event){
                         var textvalue = $('#currentroom').find("textarea.cometchat_textarea").val();
                         if(mobileDevice && textvalue != '' && $('#currentroom').find('#cometchat_send').length == 0 ){
-                            var sendicon = '<div id="cometchat_send"><img src="'+baseUrl+'layouts/'+calleeAPI+'/images/send.svg" class="cometchat_tabcontentsubmit" /></div>';
+                            var sendicon = '<div id="cometchat_send"><img src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/send.svg" class="cometchat_tabcontentsubmit" /></div>';
                             $('#currentroom').find('#cometchat_attachements').replaceWith(sendicon);
                         }else if(mobileDevice && textvalue == '' && $('#currentroom').find('#cometchat_send').length == 1){
-                            var attachicon = '<div id="cometchat_attachements"><img src="'+baseUrl+'layouts/'+calleeAPI+'/images/attach.svg" class="ccplugins" title="'+$['ccfiletransfer'].getTitle()+'" name="ccfiletransfer" to="'+roomno+'" chatroommode="0"/></div>';
+                            var attachicon = '<div id="cometchat_attachements"><img src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/attach.svg" class="ccplugins" title="'+$['ccfiletransfer'].getTitle()+'" name="ccfiletransfer" to="'+roomno+'" chatroommode="0"/></div>';
                             $('#currentroom').find('#cometchat_send').replaceWith(attachicon);
                         }
                         $[calleeAPI].crtextboxresize(event,this,roomno);
@@ -834,7 +833,7 @@ var enableType = 0;
                     $('#currentroom').find('.cometchat_textarea').blur(function(event){
                         var textvalue = $('#currentroom').find("textarea.cometchat_textarea").val();
                         if(textvalue == '' && mobileDevice){
-                            var attachicon = '<div id="cometchat_attachements"><img src="'+baseUrl+'layouts/'+calleeAPI+'/images/attach.svg" class="ccplugins" title="'+$['ccfiletransfer'].getTitle()+'" name="ccfiletransfer" to="'+roomno+'" chatroommode="1"/></div>';
+                            var attachicon = '<div id="cometchat_attachements"><img src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/attach.svg" class="ccplugins" title="'+$['ccfiletransfer'].getTitle()+'" name="ccfiletransfer" to="'+roomno+'" chatroommode="1"/></div>';
                             $('#currentroom').find('#cometchat_send').replaceWith(attachicon);
                         }
                     });
@@ -842,10 +841,10 @@ var enableType = 0;
                         setTimeout(function(){
                             var textvalue = $('#currentroom').find("textarea.cometchat_textarea").val();
                             if(mobileDevice && textvalue != ''){
-                                var sendicon = '<div id="cometchat_send"><img src="'+baseUrl+'layouts/'+calleeAPI+'/images/send.svg" class="cometchat_tabcontentsubmit" /></div>';
+                                var sendicon = '<div id="cometchat_send"><img src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/send.svg" class="cometchat_tabcontentsubmit" /></div>';
                                 $('#currentroom').find('#cometchat_attachements').replaceWith(sendicon);
                             }else if(mobileDevice && textvalue == ''){
-                                var attachicon = '<div id="cometchat_attachements"><img src="'+baseUrl+'layouts/'+calleeAPI+'/images/attach.svg" class="ccplugins" title="'+$['ccfiletransfer'].getTitle()+'" name="ccfiletransfer" to="'+id+'" chatroommode="0"/></div>';
+                                var attachicon = '<div id="cometchat_attachements"><img src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/attach.svg" class="ccplugins" title="'+$['ccfiletransfer'].getTitle()+'" name="ccfiletransfer" to="'+id+'" chatroommode="0"/></div>';
                                 $('#currentroom').find('#cometchat_send').replaceWith(attachicon);
                                 $('#currentroom').find("textarea.cometchat_textarea").height(20);
                             }
@@ -897,7 +896,7 @@ var enableType = 0;
                             var controlparameters = {"to":to, "chatroommode":chatroommode, "roomname":roomname, "roomid":roomid, "caller":caller};
                             jqcc[name].init(controlparameters);
                         }
-                        if(name != 'ccstickers' && name != 'cctransliterate' && name != 'ccsmilies') {
+                        if(name != 'ccstickers' && name != 'cctransliterate' && name != 'ccsmilies' && name != 'ccvoicenote') {
                             $('.cometchat_pluginuparrow').removeClass('rotated').css({'transform' :'rotate(0deg)'});
                         }
                     });
@@ -1193,27 +1192,19 @@ var enableType = 0;
                             selected = ' cometchat_chatroomselected';
                         }
                         var roomtype = '';
-                        var roomowner = '';
                         var deleteroom = '';
                         var renameChatroom = '';
                         var crUnreadMessages = jqcc.cometchat.getChatroomVars('crUnreadMessages');
 
                         if(room.type == 1) {
-                            roomtype = '<img src="'+baseUrl+'layouts/'+calleeAPI+'/images/lock.png" />';
+                            roomtype = '<span class="lobby_room_3"><img src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/lock.png" /></span>';
                         }
 
-                        if(room.s == 1) {
-                            roomowner = '<img src="'+baseUrl+'layouts/'+calleeAPI+'/images/user.png" />';
+                        if(room.owner == true){
+                            deleteroom = '<span class="lobby_room_4" title="<?php echo $chatrooms_language[58];?>" onclick="javascript:jqcc.cometchat.deleteChatroom(event,\''+room.id+'\');"><img class="hoverbraces" src="'+staticCDNUrl+'layouts/docked/images/bin.svg"></span>';
+                            renameChatroom = '<span class="lobby_room_6" title="<?php echo $chatrooms_language[80];?>" onclick="javascript:jqcc.'+[calleeAPI]+'.renameChatroom(event,\''+room.id+'\');"><img src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/pencil_buddylist.png" /></span>';
                         }
-
-                        if(room.s == 2) {
-                            room.s = 1;
-                        }
-                        if((room.s == 1 || jqcc.cometchat.checkModerator() == 1) && room.createdby != 0){
-                            deleteroom = '<img class="hoverbraces" src="'+baseUrl+'layouts/docked/images/bin.svg">';
-                            renameChatroom = '<img src="'+baseUrl+'layouts/'+calleeAPI+'/images/pencil_buddylist.png" />';
-                        }
-                        var temp = '<div id="cometchat_chatroomlist_'+room.id+'" class="lobby_room'+selected+'" onmouseover="jqcc(this).addClass(\'cometchat_userlist_hover\');" onmouseout="jqcc(this).removeClass(\'cometchat_userlist_hover\');" onclick="javascript:jqcc.cometchat.chatroom(\''+room.id+'\',\''+urlencode(shortname)+'\',\''+room.type+'\',\''+room.i+'\',\''+room.s+'\',\'1\',\'1\');" style="display:block !important;"><span class="lobby_room_3">'+roomtype+'</span><span class="lobby_room_4" title="<?php echo $chatrooms_language[58];?>" onclick="javascript:jqcc.cometchat.deleteChatroom(event,\''+room.id+'\');">'+deleteroom+'</span><span class="lobby_room_5" style="display:none;">'+roomowner+'</span><span class="lobby_room_6" title="<?php echo $chatrooms_language[80];?>" onclick="javascript:jqcc.'+[calleeAPI]+'.renameChatroom(event,\''+room.id+'\');">'+renameChatroom+'</span><div><span class="cometchat_chatroomimage"><img src="layouts/<?php echo $layout;?>/images/group.svg"></span><span class="lobby_room_1" title="'+longname+'"><span class="currentroomname">'+longname+'</span><br/> <span class="lobby_room_2" '+userCountCss+' title="'+room.online+' <?php echo $chatrooms_language[34];?>"><?php echo  $chatrooms_language["participants"]; ?>:&nbsp;'+room.online+'</span></span></div></span></div>';
+                        var temp = '<div id="cometchat_chatroomlist_'+room.id+'" class="lobby_room'+selected+'" onmouseover="jqcc(this).addClass(\'cometchat_userlist_hover\');" onmouseout="jqcc(this).removeClass(\'cometchat_userlist_hover\');" onclick="javascript:jqcc.cometchat.chatroom(\''+room.id+'\',\''+cc_urlencode(shortname)+'\',\''+room.type+'\',\''+room.i+'\',\''+room.s+'\',\'1\',\'1\');" style="display:block !important;">'+roomtype+''+deleteroom+'<span class="lobby_room_5" style="display:none;"></span>'+renameChatroom+'<div><span class="cometchat_chatroomimage"><img src="'+staticCDNUrl+'layouts/<?php echo $layout;?>/images/group.svg"></span><span class="lobby_room_1" title="'+longname+'"><span class="currentroomname">'+longname+'</span><br/> <span class="lobby_room_2" '+userCountCss+' title="'+room.online+' <?php echo $chatrooms_language[34];?>"><?php echo  $chatrooms_language["participants"]; ?>:&nbsp;'+room.online+'</span></span></div></span></div>';
                         if(room.id == jqcc.cometchat.getChatroomVars('currentroom')){
                             $('#currentroom').find('.cometchat_chatroomusercount').html('<?php echo  $chatrooms_language["participants"]; ?>:&nbsp;'+room.online);
                         }
@@ -1451,7 +1442,7 @@ var enableType = 0;
                                         var avatar = jqcc.cometchat.getThemeArray('buddylistAvatar', incoming.fromid);
                                         if(typeof avatar=="undefined"){
                                             avatarstofetch[incoming.fromid]=1;
-                                            avatar = jqcc.cometchat.getBaseUrl()+'images/noavatar.png';
+                                            avatar = staticCDNUrl+'images/noavatar.png';
                                         }
                                         var fromavatar = '<a id="cometchat_usersavatar_'+incoming.id+'" href="javascript:void(0)" onclick="javascript:parent.jqcc.cometchat.chatWith(\''+incoming.fromid+'\');" class="cometchat_float_l"><span class="cometchat_cr_other_avatar"><img class="cometchat_userscontentavatarsmall cometchat_avatar_'+incoming.fromid+'" title="'+fromname+'" src="'+avatar+'"></span></a>';
                                         var usernamecontent = '';
@@ -1482,9 +1473,9 @@ var enableType = 0;
                                 }
 
                                 $('#currentroom_convotext').append(temp);
-                                if(jqcc.cometchat.getChatroomVars('owner') || jqcc.cometchat.getChatroomVars('isModerator') || (incomingself && jqcc.cometchat.getChatroomVars('allowDelete') == 1)) {
+                                if(jqcc.cometchat.getChatroomVars('owner') || jqcc.cometchat.checkModerator(incoming.chatroomid) || (incomingself && jqcc.cometchat.getChatroomVars('allowDelete') == 1)) {
                                     if($("#cometchat_messagebox_"+incoming.id).find(".delete_msg").length < 1) {
-                                        jqcc('#cometchat_messagebox_'+incoming.id).append('<span class="delete_msg '+marginclass+'" '+deletemessagecss  +' onclick="javascript:jqcc.cometchat.confirmDelete(\''+incoming.id+'\');"><img class="hoverbraces" src="'+baseUrl+'modules/chatrooms/bin.svg"></span>');
+                                        jqcc('#cometchat_messagebox_'+incoming.id).append('<span class="delete_msg '+marginclass+'" '+deletemessagecss  +' onclick="javascript:jqcc.cometchat.confirmDelete(\''+incoming.id+'\');"><img class="hoverbraces" src="'+staticCDNUrl+'modules/chatrooms/bin.svg"></span>');
                                     }
                                     $(".cometchat_messagebox").live("mouseover",function() {
                                         $(this).find(".delete_msg").css('display','block');
@@ -1758,11 +1749,6 @@ var enableType = 0;
                             w.focus();
                         }
                     },
-                    inviteUsertab: function(){
-                       var chatroomPro = $('#cometchat_trayicon_loadChatroomPro_iframe');
-                       $('.cometchat_container_title').css('display','none');
-                       chatroomPro.css({'border':'solid grey 3px','border-radius':'5px','height':(chatroomPro.height()-5),'width':(chatroomPro.width()-17)});
-                   },
                     prependCrMessagesInit: function(id){
                         var messages = jqcc('#currentroom_convotext').find('.cometchat_chatboxmessage');
                         jqcc('.cometchat_prependCrMessages').attr('onclick','');
@@ -1957,13 +1943,13 @@ var enableType = 0;
                                 }
 
                                 if (!incomingself) {
-                                    if (jqcc.cometchat.getChatroomVars('owner') || jqcc.cometchat.getChatroomVars('isModerator') || (incomingself && jqcc.cometchat.getChatroomVars('allowDelete') == 1)) {
-                                        deleteMessage = '<span class="delete_msg" onclick="javascript:jqcc.cometchat.confirmDelete(\''+messagewrapperid+'\');"><img class="hoverbraces" src="'+baseUrl+'modules/chatrooms/bin.svg"></span>';
+                                    if (jqcc.cometchat.getChatroomVars('owner') || jqcc.cometchat.checkModerator(incoming.roomid) || (incomingself && jqcc.cometchat.getChatroomVars('allowDelete') == 1)) {
+                                        deleteMessage = '<span class="delete_msg" onclick="javascript:jqcc.cometchat.confirmDelete(\''+messagewrapperid+'\');"><img class="hoverbraces" src="'+staticCDNUrl+'modules/chatrooms/bin.svg"></span>';
                                     }
                                     var avatar = jqcc.cometchat.getThemeArray('buddylistAvatar', incoming.fromid);
                                     if(typeof avatar=="undefined"){
                                         avatarstofetch[incoming.fromid]=1;
-                                        avatar = jqcc.cometchat.getBaseUrl()+'images/noavatar.png';
+                                        avatar = staticCDNUrl+'images/noavatar.png';
                                     }
                                     var fromavatar = '<a id="cometchat_usersavatar_'+messagewrapperid+'" href="javascript:void(0)" class="cometchat_float_l"><span class="cometchat_cr_other_avatar"><img class="cometchat_userscontentavatarsmall cometchat_avatar_'+incoming.fromid+'" title="'+fromname+'" src="'+avatar+'"></span></a>';
                                     var usernamecontent = '';
@@ -1979,8 +1965,8 @@ var enableType = 0;
                                     temp += ('<div class="cometchat_time cometchat_time_'+msg_date_class+' '+date_class+'" msg_format="'+msg_date_format+'">'+msg_date+'</div><div style="clear:both;"></div><div class="cometchat_messagebox" id="cometchat_messagebox_'+messagewrapperid+'">'+fromavatar+'<div class="'+add_bg+'" id="cometchat_groupmessage_'+messagewrapperid+'"><div class="cometchat_messagearrow"></div>');
                                     temp += (usernamecontent+'<span class="cometchat_chatboxmessagecontent" style="'+imagemsg_rightcss+'">'+message+'</span></div>'+$[calleeAPI].getTimeDisplay(ts,incoming.from,0)+''+deleteMessage+'</div><div style="clear:both;"></div>');
                                 } else {
-                                    if (jqcc.cometchat.getChatroomVars('owner') || jqcc.cometchat.getChatroomVars('isModerator') || (incomingself && jqcc.cometchat.getChatroomVars('allowDelete') == 1)) {
-                                        deleteMessage = '<span class="delete_msg cometchat_margin_left" style="'+deleteiconcssself+deleteiconcss+'" onclick="javascript:jqcc.cometchat.confirmDelete(\''+messagewrapperid+'\');"><img class="hoverbraces" src="'+baseUrl+'modules/chatrooms/bin.svg"></span>';
+                                    if (jqcc.cometchat.getChatroomVars('owner') || jqcc.cometchat.checkModerator(incoming.roomid) || (incomingself && jqcc.cometchat.getChatroomVars('allowDelete') == 1)) {
+                                        deleteMessage = '<span class="delete_msg cometchat_margin_left" style="'+deleteiconcssself+deleteiconcss+'" onclick="javascript:jqcc.cometchat.confirmDelete(\''+messagewrapperid+'\');"><img class="hoverbraces" src="'+staticCDNUrl+'modules/chatrooms/bin.svg"></span>';
                                     }
                                     temp += ('<div class="cometchat_time cometchat_time_'+msg_date_class+' '+date_class+'" msg_format="'+msg_date_format+'">'+msg_date+'</div><div style="clear:both;"></div><div class="cometchat_messagebox cometchat_messagebox_self" id="cometchat_messagebox_'+messagewrapperid+'"><div class="'+add_bg+add_bg_self+'" id="cometchat_groupmessage_'+messagewrapperid+'"><span class="cometchat_chatboxmessagecontent" style="'+imagemsg_rightcss+'">'+message+'</span></div>'+$[calleeAPI].getTimeDisplay(ts,incoming.from,1)+''+deleteMessage+'</div><div style="clear:both;"></div>');
                                 }
@@ -2069,27 +2055,18 @@ var enableType = 0;
                                 $('#currentroom').find('.cometchat_chatroomusercount').html("<?php echo  $chatrooms_language['participants']; ?>:&nbsp;"+room.online);
                             }
                             var roomtype = '';
-                            var roomowner = '';
                             var deleteroom = '';
                             var renameChatroom = '';
 
                             if (room.type == 1) {
-                                roomtype = '<img src="'+baseUrl+'layouts/'+calleeAPI+'/images/lock.png" />';
+                                roomtype = '<span class="lobby_room_3"><img src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/lock.png" /></span>';
                             }
 
-                            if (room.s == 1) {
-                                roomowner = '<img src="'+baseUrl+'layouts/'+calleeAPI+'/images/user.png" />';
+                            if(room.owner == true){
+                                deleteroom = '<span class="lobby_room_4" title="<?php echo $chatrooms_language[58];?>" onclick="javascript:jqcc.cometchat.deleteChatroom(event,\''+room.id+'\');"><img src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/remove.png" /></span>';
+                                renameChatroom = '<span class="lobby_room_6" title="<?php echo $chatrooms_language[80];?>" onclick="javascript:jqcc.'+[calleeAPI]+'.renameChatroom(event,\''+room.id+'\');"><img src="'+staticCDNUrl+'layouts/'+calleeAPI+'/images/pencil_buddylist.png" /></span>';
                             }
-
-                            if((room.s == 1 || jqcc.cometchat.checkModerator() == 1) && room.createdby != 0){
-                                deleteroom = '<img src="'+baseUrl+'layouts/'+calleeAPI+'/images/remove.png" />';
-                                renameChatroom = '<img src="'+baseUrl+'layouts/'+calleeAPI+'/images/pencil_buddylist.png" />';
-                            }
-
-                            if (room.s == 2) {
-                                room.s = 1;
-                            }
-                            temp += '<div id="cometchat_chatroomlist_'+room.id+'" class="lobby_room'+selected+'" onmouseover="jqcc(this).addClass(\'cometchat_userlist_hover\');" onmouseout="jqcc(this).removeClass(\'cometchat_userlist_hover\');" onclick="javascript:jqcc.cometchat.chatroom(\''+room.id+'\',\''+urlencode(shortname)+'\',\''+room.type+'\',\''+room.i+'\',\''+room.s+'\',\'1\',\'1\');" style="display:block !important;"><span class="lobby_room_3">'+roomtype+'</span><span class="lobby_room_4" title="<?php echo $chatrooms_language[58];?>" onclick="javascript:jqcc.cometchat.deleteChatroom(event,\''+room.id+'\');">'+deleteroom+'</span><span class="lobby_room_5" style="display:none;">'+roomowner+'</span><span class="lobby_room_6" title="<?php echo $chatrooms_language[80];?>" onclick="javascript:jqcc.'+[calleeAPI]+'.renameChatroom(event,\''+room.id+'\');">'+renameChatroom+'</span><div><span class="cometchat_chatroomimage"><img src="layouts/<?php echo $layout;?>/images/group.svg"></span><span class="lobby_room_1" title="'+longname+'"><span class="currentroomname">'+longname+'</span><br/><span class="lobby_room_2" '+userCountCss+' title="'+room.online+' <?php echo $chatrooms_language[34];?>"><?php echo  $chatrooms_language["participants"]; ?>:&nbsp;'+room.online+'</span></span></div></span></div>';
+                            temp += '<div id="cometchat_chatroomlist_'+room.id+'" class="lobby_room'+selected+'" onmouseover="jqcc(this).addClass(\'cometchat_userlist_hover\');" onmouseout="jqcc(this).removeClass(\'cometchat_userlist_hover\');" onclick="javascript:jqcc.cometchat.chatroom(\''+room.id+'\',\''+cc_urlencode(shortname)+'\',\''+room.type+'\',\''+room.i+'\',\''+room.owner+'\',\'1\',\'1\');" style="display:block !important;">'+roomtype+''+deleteroom+'<span class="lobby_room_5" style="display:none;"></span>'+renameChatroom+'<div><span class="cometchat_chatroomimage"><img src="'+staticCDNUrl+'layouts/<?php echo $layout;?>/images/group.svg"></span><span class="lobby_room_1" title="'+longname+'"><span class="currentroomname">'+longname+'</span><br/><span class="lobby_room_2" '+userCountCss+' title="'+room.online+' <?php echo $chatrooms_language[34];?>"><?php echo  $chatrooms_language["participants"]; ?>:&nbsp;'+room.online+'</span></span></div></span></div>';
 
                         });
                         return temp;
@@ -2183,10 +2160,10 @@ var enableType = 0;
                     chatScroll: function(id){
                         var baseUrl = settings.baseUrl;
                         if($('#scrolltop_'+id).length == 0){
-                            $("#currentroom_convo").prepend('<div id="scrolltop_'+id+'" class="cometchat_scrollup"><img src="'+baseUrl+'images/arrowtop.svg" class="cometchat_scrollimg" /></div>');
+                            $("#currentroom_convo").prepend('<div id="scrolltop_'+id+'" class="cometchat_scrollup"><img src="'+staticCDNUrl+'images/arrowtop.svg" class="cometchat_scrollimg" /></div>');
                         }
                         if($('#scrolldown_'+id).length == 0){
-                            $("#currentroom_convo").append('<div id="scrolldown_'+id+'" class="cometchat_scrolldown"><img src="'+baseUrl+'images/arrowbottom.svg" class="cometchat_scrollimg" /></div>');
+                            $("#currentroom_convo").append('<div id="scrolldown_'+id+'" class="cometchat_scrolldown"><img src="'+staticCDNUrl+'images/arrowbottom.svg" class="cometchat_scrollimg" /></div>');
                         }
                         $('#currentroom_convo').unbind('wheel');
                         $('#currentroom_convo').on('wheel',function(event){
@@ -2257,7 +2234,7 @@ jqcc(document).ready(function(){
         var basedata = jqcc.cometchat.getBaseData();
         var roomid = jqcc.cometchat.getChatroomVars('currentroom');
         var roompass = jqcc.cometchat.getChatroomVars('currentp');
-        var roomname = urlencode(jqcc.cometchat.getChatroomVars('currentroomname'));
+        var roomname = cc_urlencode(jqcc.cometchat.getChatroomVars('currentroomname'));
         var popoutmode = jqcc.cometchat.getChatroomVars('popoutmode');
         var lang = "<?php echo $chatrooms_language['invite_users_title'];?>";
         var caller = 'cometchat_embedded_iframe';
@@ -2300,7 +2277,13 @@ jqcc('.cometchat_chatroomusers').live('click',function(){
             jqcc('#cometchat_righttab').append(chatroomusers);
         }
         jqcc("#cometchat_righttab").find('#chatroomuser_container').html(htmlcontent);
-        jqcc("#cometchat_righttab").find('#chatroomuser_container').slimScroll({scroll:'1',height:jqcc(window).height() - jqcc('#cometchat_header').outerHeight(true) - jqcc('.cometchat_container_title').outerHeight(true)});
+
+        if(jqcc.cometchat.getCcvariable().mobileDevice){
+            jqcc("#cometchat_righttab").find('#chatroomuser_container').css({'overflow-y':'auto','height':jqcc(window).height() - jqcc('#cometchat_header').outerHeight(true) - jqcc('.cometchat_container_title').outerHeight(true)});
+        }else if(jqcc().slimScroll){
+            jqcc("#cometchat_righttab").find('#chatroomuser_container').slimScroll({scroll:'1',height:jqcc(window).height() - jqcc('#cometchat_header').outerHeight(true) - jqcc('.cometchat_container_title').outerHeight(true)});
+        }
+
         var cometchat_container = $('#cometchat_container_chatroomusers');
         $('#cometchat_container_'+name).css('width',width);
         if($('.cometchat_windows').hasClass('visible')){
@@ -2453,7 +2436,7 @@ jqcc('.cometchat_chatroomusers').live('click',function(){
         var basedata = jqcc.cometchat.getBaseData();
         var roomid = jqcc.cometchat.getChatroomVars('currentroom');
         var roompass = jqcc.cometchat.getChatroomVars('currentp');
-        var roomname = urlencode(jqcc.cometchat.getChatroomVars('currentroomname'));
+        var roomname = cc_urlencode(jqcc.cometchat.getChatroomVars('currentroomname'));
         var popoutmode = jqcc.cometchat.getChatroomVars('popoutmode');
         var theme = "<?php echo $layout; ?>";
         var caller = 'cometchat_embedded_iframe';

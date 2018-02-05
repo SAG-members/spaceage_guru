@@ -2,11 +2,11 @@
 
 class Cometchat_engine
 {
-    const API_KEY = 'c1643e81968324d2058a4afc5b1c1f5a';
-    
+//     const API_KEY = 'c1643e81968324d2058a4afc5b1c1f5a';
+    const API_KEY = '943b5f7ebe8a924d1f31277a38da888a';
     public function process($fields)
 	{
-	    $url = "http://localhost/spaceage_guru/cometchat/api/index.php";
+	    $url = base_url('cometchat/api/index.php');
 	      
 	    $fields_string = '';
 	    

@@ -60,10 +60,6 @@ class CCAuth{
 		if (!empty($_SESSION['cometchat']['userid']) && !empty($_SESSION['cometchat']['ccauth'])){
 			$userid = $_SESSION['cometchat']['userid'];
 		}
-		
-		if (!empty($_SESSION['id'])) {
-		    $userid = $_SESSION['id'];
-		} 
 
 		return $userid;
 	}

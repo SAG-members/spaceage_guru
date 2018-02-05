@@ -100,8 +100,8 @@ echo <<<EOD
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="shortcut icon" href="images/favicon.ico">
   <title>Setting</title>
-  <link href="{$base_url}/css.php?admin=1" rel="stylesheet">
-  <script src="{$base_url}/js.php?admin=1"></script>
+	{$GLOBALS['adminjstag']}
+	{$GLOBALS['admincsstag']}
 </head>
  <body class="navbar-fixed sidebar-nav fixed-nav" style="background-color: white;overflow-y:hidden;">
  <div class="col-sm-12 col-lg-12">
@@ -167,8 +167,8 @@ echo <<<EOD
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="shortcut icon" href="images/favicon.ico">
   <title>Setting</title>
-  <link href="{$base_url}/css.php?admin=1" rel="stylesheet">
-  <script src="{$base_url}/js.php?admin=1"></script>
+ {$GLOBALS['adminjstag']}
+ {$GLOBALS['admincsstag']}
 </head>
  <body class="navbar-fixed sidebar-nav fixed-nav" style="background-color: white;overflow-y:hidden;">
  <div class="col-sm-12 col-lg-12">
@@ -245,8 +245,8 @@ echo <<<EOD
 	  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	  <link rel="shortcut icon" href="images/favicon.ico">
 	  <title>Setting</title>
-	  <link href="{$base_url}/css.php?admin=1" rel="stylesheet">
-	  <script src="{$base_url}/js.php?admin=1"></script>
+		{$GLOBALS['adminjstag']}
+		{$GLOBALS['admincsstag']}
 	</head>
 	 <body class="navbar-fixed sidebar-nav fixed-nav" style="background-color: white;overflow-y:hidden;">
 	 <div class="col-sm-12 col-lg-12">

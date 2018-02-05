@@ -19,8 +19,9 @@ class Cms_page_controller extends Base
 		$data['pageTitle'] = $result->{Cms::_TITLE};
 		$data['pageDescription'] = $result->{Cms::_CONTENT};
 
-		$this->template->title('Registered with Spaceage Guru');
+		$this->template->title('Sparring humankind to space age');
 		$this->template->render('cms/single.php', $data);
 	}
+	
 		
 }

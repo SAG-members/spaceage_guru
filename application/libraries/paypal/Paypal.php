@@ -101,7 +101,7 @@ class Paypal
 		$businessEmail = $this->businessEmail;
 		
 		$this->add_field('business',$businessEmail);
-		$this->add_field('rm','2');			  // Return method = POST
+		$this->add_field('rm','1');			  // Return method = POST
 		$this->add_field('cmd','_xclick');
 
 		$this->add_field('currency_code', $this->CI->config->item('paypal_lib_currency_code'));

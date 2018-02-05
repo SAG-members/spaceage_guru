@@ -102,7 +102,7 @@ function data() {
 			$message = json_decode($message);
 			$category = $message->params->category;
 			$key = $message->params->key;
-			$image = '<img class="cometchat_stickerImage" type="image" src="'.BASE_URL.'/plugins/stickers/images/'.$category.'/'.$key.'.png">';
+			$image = '<img class="cometchat_stickerImage" type="image" src="'.STATIC_CDN_URL.'/plugins/stickers/images/'.$category.'/'.$key.'.png">';
 			array_unshift($messages,  array('id' => $chat['id'], 'from' => $chat['from'], 'to' => $chat['to'], 'fromu' => $chat['fromu'], 'tou' => $chat['tou'], 'message' => $image, 'time' => $time));
 		}
 

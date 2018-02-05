@@ -4,7 +4,7 @@ include_once(dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR.'cometchat_
 if(!empty($client)&&!empty($_REQUEST['ccactiveauth'])){
 	$ccactiveauth = explode(',', $_REQUEST['ccactiveauth']);
 }
-$baseurl = BASE_URL;
+$staticCDNUrl = STATIC_CDN_URL;
 
 if(!empty($firebaseAPIKey)){
 	$authHTML = '';
@@ -12,14 +12,16 @@ if(!empty($firebaseAPIKey)){
 	$valueinlowercase = strtolower($value);
 	$socialAuthHTML .= <<<EOD
 	<div class="auth_options {$valueinlowercase}_auth_options" onclick="javascript:cometchat_socialauth_login({'AuthProvider':'{$value}'})" ;>
-		<img src="{$baseurl}layouts/docked/images/login{$valueinlowercase}.svg">
+		<img src="{$staticCDNUrl}layouts/docked/images/login{$valueinlowercase}.svg">
 		<span>{$value}</span>
 	</div>
 EOD;
 	}
+	$firebaseauthjstag =  getDynamicScriptAndLinkTags(array('type'=>'core','name'=>'firebaseauth','ext'=>'js'));
+	$firebaseapijstag =  getDynamicScriptAndLinkTags(array('type'=>'core','name'=>'firebaseapi','ext'=>'js'));
 	$socialAuthHead = <<<EOD
-	<script type="text/javascript" src="{$baseurl}js.php?type=core&name=firebaseauth"></script>
-	<script type="text/javascript" src="{$baseurl}js.php?type=core&name=firebaseapi"></script>
+	{$firebaseauthjstag}
+	{$firebaseapijstag}
 	<style type="text/css">
 		.auth_options {
 			height: 38px;

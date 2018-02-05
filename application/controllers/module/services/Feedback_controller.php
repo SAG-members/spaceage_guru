@@ -2,12 +2,12 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Feedback_controller extends Application 
+class Feedback_controller extends Base 
 {
 	public function __construct()
 	{
 		parent::__construct();
-		if(!$this->isLoggedIn()) { redirect($this->redirectToLogin()); }
+// 		if(!$this->isLoggedIn()) { redirect($this->redirectToLogin()); }
 		
 		$this->load->model('feedback');
 	}
@@ -29,7 +29,14 @@ class Feedback_controller extends Application
 		$this->template->title("Feedback");
 		$this->template->render('services/feedback'); 
 	}
+		
 	
+	public function timeline()
+	{
+	    $data = array();
+	    $this->template->title("Timeline");
+	    $this->template->render('services/timeline', $data);
+	}
 	
 	
 }

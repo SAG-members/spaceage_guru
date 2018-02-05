@@ -30,6 +30,28 @@ class Base extends CI_Controller
 		}
 		else 
 		{
+		    # First step is to get the ip address of the user
+		    $ipAddress = get_ip_address();
+// 		    echo $ipAddress;
+		    # Now once we have the Ip we will check for the IP in database
+		    $this->db->select('ip_address');
+		    $this->db->from('virgin_users');
+		    $this->db->where('ip_address', $ipAddress);
+		    $result = $this->db->get()->row();
+// 		    echo $this->db->last_query();
+		    
+		    if(empty($result))
+		    {
+		        $this->data['playVideo'] = true;
+		        
+		        # Now once we have set the video to play, let's input the ip address to database
+		        $data = array('ip_address'=>$ipAddress);
+		        $this->db->insert('virgin_users', $data);
+		    }
+		    
+		   
+		    		    
+		    
 			# Initialize template and set values for header/footer/left side bar and right side bar
 			
 			$this->template->setSiteLayout(Template::_PUBLIC_TEMPLATE_DIR, Template::_PUBLIC_LAYOUT_DIR, Template::_PUBLIC_MODULE_DIR);

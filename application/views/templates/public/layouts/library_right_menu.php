@@ -15,9 +15,14 @@
 			alt="View My Product"><i class="fa fa-plus"></i> </a>
 		<?php endif;?>
 		</li>
-		<?php if($rightSideData['tasks']): foreach ($rightSideData['tasks'] as $t):?>
-		<li><?php echo "<a style='cursor:pointer'><i class='fa fa-minus'></i> ". $t->{Tasks_goals::_CONTENT} . " </a>"?></li>
-		<?php endforeach; endif;?>
+		
+		<?php if($rightSideData['tasks']): ?>
+			<ul>
+    		<?php foreach ($rightSideData['tasks'] as $t):?>
+    			<li><?php echo "<a style='cursor:pointer'><i class='fa fa-minus'></i> ". $t->{Tasks_goals::_CONTENT} . " </a>"?></li>
+    		<?php endforeach; ?>
+    		</ul>
+		<?php endif;?>
 	</ul>
 
 	<div class="tasks_holder" style="min-height: 250px;"></div>
@@ -57,7 +62,7 @@
 		    {
 		        if(! $this->escrow->get_offer_count_status($c->id, $this->session->userdata('id'), $c->user_id, $this->session->userdata('membershipLevel'))) continue;
 		        $escrowDetails = $this->escrow->get_offer_status($c->id, $this->session->userdata('id'));
-		        // 			pre($escrowDetails);
+		       
 		        if(!empty($escrowDetails))
 		        {
 		            if($escrowDetails->status == 1) continue;
@@ -88,7 +93,7 @@
     			
     			
     			$escrowDetails = $this->escrow->get_offer_status($c->id, $this->session->userdata('id'));
-    // 			pre($escrowDetails);
+    			
     			if(!empty($escrowDetails))
     			{
     				if($escrowDetails->status == 1) continue;
@@ -100,17 +105,7 @@
     				if($escrowDetails->status==5 && $escrowDetails->escrow_buyer_id == $this->session->userdata('id')) continue;
     			}
 		    }
-			
-// 			if($escrowDetails->status == 1) continue;
-// 			$status = '';
-// 			if(!empty($escrowDetails)){ $status = $escrowDetails->status; }
-						
-// 			
-// // 			$escrowDetails = $this->escrow->get_offer_status($c->id, $this->session->userdata('id'));
-// // 			print_r($escrowDetails);
-// 			if(!empty($escrowDetails) && $escrowDetails->status == 2) continue;
-// 			if(!empty($escrowDetails) && $escrowDetails->status == 1) continue;
-			
+
 		?>
 			<div class="col-md-12 col-xs-12 widget widget_tally_box">
 			<div class="x_panel ui-ribbon-container fixed_height_390">

@@ -458,7 +458,7 @@ $(document).on('click', 'button[type="button"][name="update_comment"]', function
 						</div>
 						<div class="form-group">
 							<div class="col-md-6">
-								<label style="color: #FFF;">Price that I am willing to pay or get</label> 
+								<label style="color: #FFF;">Target Price</label> 
 								<input type="text" name="price" class="form-control">
 							</div>
 							<div class="col-md-6">
@@ -563,11 +563,14 @@ $(document).on('click', 'button[type="button"][name="update_comment"]', function
 <!-- Event Edit Modal End -->
 
 <script type="text/javascript"
-	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBEhsWhrYpbiuyOi2czg7P49ZW27Uow51c&libraries=places"></script>
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEhsWhrYpbiuyOi2czg7P49ZW27Uow51c&libraries=places"></script>
 
 <script>
 	$(function(){
-		$('input[type="text"][name="escrow_date_time"]').datetimepicker();
+		$('input[type="text"][name="escrow_date_time"]').datetimepicker({
+			format: 'd-m-Y HH:mm',
+			 
+		});
 		$('[data-toggle="tooltip"]').tooltip() ;
 // 		$('.bootstrap-datetimepicker-widget').show();
 	});

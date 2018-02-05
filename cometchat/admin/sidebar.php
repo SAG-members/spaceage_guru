@@ -124,7 +124,7 @@ if (method_exists($GLOBALS['integration'], 'checkBuddyPressActive') && $GLOBALS[
 	$nav['Settings']['suboption']['Inbox Sync'] = array('type' => 'nav-item','icon' => '','id' => 'ccinboxsync','link' => '?module=settings&action=ccinboxsync&ts='.$ts);
 }
 if ((defined('ROLE_BASE_ACCESS') && ROLE_BASE_ACCESS == 1)) {
-	$nav['Settings']['suboption']['Membership Level'] = array('type' => 'nav-item','icon' => '','id' => '','link' => '?module=membership&ts='.$ts);
+	$nav['Settings']['suboption']['Role Based Access'] = array('type' => 'nav-item','icon' => '','id' => '','link' => '?module=membership&ts='.$ts);
 }
 if(!empty($client)) {
   unset($nav['Settings']['suboption']['CometService']);

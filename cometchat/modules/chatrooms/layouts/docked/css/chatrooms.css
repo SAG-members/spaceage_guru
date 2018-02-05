@@ -2,7 +2,6 @@
  * CometChat
  * Copyright (c) 2016 Inscripts - support@cometchat.com | http://www.cometchat.com | http://www.inscripts.com
 */
-
 .cometchat_grouplist .cometchat_groupscontentname {
 	text-overflow: ellipsis;
 	max-width: 95px;
@@ -16,6 +15,24 @@
     font-size: 12px;
 }
 
+.invitebutton {
+	background-color: <?php echo $layoutSettings['primary_color'];?>;
+	color: <?php echo $layoutSettings['color_white'];?>;
+	font-size: <?php echo $layoutSettings['font_size_small'];?>;
+	cursor: pointer;
+	font-family: <?php echo $layoutSettings['font_family'];?>;
+	font-weight: bold;
+	padding: 5px;
+	border-radius: 5px;
+}
+
+.invitebutton:disabled {
+ 	background: none;
+ 	background-color: #CCCCCC !important;
+	border: 1px outset;
+ 	text-shadow: none;
+ 	color: #949494 !important;
+}
 .cometchat_grouplist_hover {
 	background-color: <?php echo $layoutSettings['hover_color'];?> !important;
 	border-color: <?php echo $layoutSettings['border_color'];?>;
@@ -212,6 +229,7 @@
 #chatroomPass{
 	width: 95% !important;
 	margin:6px;
+	border: 1px solid <?php echo $layoutSettings['border_color'];?>;
 }
 /*.container_body {
 	border-left: 1px solid <?php echo $layoutSettings['border_color'];?>;

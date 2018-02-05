@@ -27,6 +27,8 @@ if ($userid == 0 || in_array($userid,$bannedUserIDs) || in_array($_SERVER['REMOT
 	if(checkAuthMode('social')){
 		$loggedOut .= ' <a href="javascript:void(0);" class="socialLogin">'.$chatrooms_language[65].'</a> '.$chatrooms_language[66];
 	}
+	$groupcsstag = getDynamicScriptAndLinkTags(array('type' => 'module','name' => 'chatrooms' 'ext' => 'css'));
+	$jqueryjstag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery', 'ext' => 'js'));
 	echo <<<EOD
 	<!DOCTYPE html>
 	<html>
@@ -37,8 +39,8 @@ if ($userid == 0 || in_array($userid,$bannedUserIDs) || in_array($_SERVER['REMOT
 			<meta http-equiv="expires" content="-1">
 			<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
 			<meta name="viewport" content="user-scalable=0,width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0" />
-			<link type="text/css" rel="stylesheet" media="all" href="../../css.php?type=module&name=chatrooms" />
-			<script src="../../js.php?type=core&name=jquery"></script>
+			{$groupcsstag}
+			{$jqueryjstag}
 			<script type="text/javascript">
 				$ = jQuery = jqcc;
 				$('.socialLogin').live('click',function(){
@@ -130,6 +132,11 @@ EOD;
 		}
 	}
 
+	$groupcsstag = getDynamicScriptAndLinkTags(array('type' => 'module','name' => 'chatrooms' 'ext' => 'css'));
+	$jqueryjstag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery', 'ext' => 'js'));
+	$jstoragejstag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'storage', 'ext' => 'js'));
+	$scrolljstag = getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'scroll', 'ext' => 'js'));
+	$groupjsstag = getDynamicScriptAndLinkTags(array('type' => "module",'name' => 'chatrooms', 'ext' => 'jss'));
 	echo <<<EOD
 	<!DOCTYPE html>
 		<html>
@@ -141,11 +148,11 @@ EOD;
 				<meta http-equiv="expires" content="-1">
 				<meta charset="UTF-8">
 				<meta http-equiv="content-type" content="text/html; charset="utf-8"/>
-				<link type="text/css" rel="stylesheet" media="all" href="../../css.php?type=module&name=chatrooms" />
-				<script src="../../js.php?type=core&name=jquery"></script>
-				<script src="../../js.php?type=module&name=chatrooms&basedata={$_REQUEST['basedata']}"></script>
-				<script src="../../js.php?type=core&name=jstorage"></script>
-				<script src="../../js.php?type=core&name=scroll"></script>
+				{$groupcsstag}
+				{$jqueryjstag}
+				{$jstoragejstag}
+				{$scrolljstag}
+				{$groupjsstag}
 				<script type="text/javascript">
 					$ = jQuery = jqcc;
 					{$loadjs}
@@ -162,6 +169,7 @@ EOD;
 		            $(document).ready(function(){
 			            var auth_logout = $("div#cometchat_authlogout");
 			            var baseUrl = jqcc.cometchat.getBaseUrl();
+			            var staticCDNUrl = jqcc.cometchat.getStaticCDNUrl();
 			            auth_logout.mouseenter(function(){
 		                    auth_logout.css('opacity','1');
 		                });
@@ -171,12 +179,12 @@ EOD;
 	                    auth_logout.click(function(event){
 	                    	auth_logout.unbind('click');
 	                        event.stopPropagation();
-	                        auth_logout.css('background','url('+baseUrl+'layouts/docked/images/loading.gif) no-repeat top left');
+	                        auth_logout.css('background','url('+staticCDNUrl+'layouts/docked/images/loading.gif) no-repeat top left');
 	                        jqcc.ajax({
 	                            url: baseUrl+'functions/login/logout.php',
 	                            dataType: 'jsonp',
 	                            success: function(){
-	                            	auth_logout.css('background','url('+baseUrl+'layouts/docked/images/logout.png) no-repeat top left');
+	                            	auth_logout.css('background','url('+staticCDNUrl+'layouts/docked/images/logout.png) no-repeat top left');
 	                            	if(typeof(jqcc.cometchat.getThemeVariable) != 'undefined') {
 		                                $("#cometchat_user_"+jqcc.cometchat.getThemeVariable('openChatboxId')).find('.cometchat_closebox_bottom').click();
 		                                jqcc.cometchat.setSessionVariable('openChatboxId', '');

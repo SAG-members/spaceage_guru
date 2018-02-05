@@ -1,5 +1,5 @@
-importScripts('js/libmp3lame.min.js');
-	self.onmessage = function(e) {
+<?php include_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'libmp3lame.js'); ?>
+	self.onmessage = function(e){
 	switch (e.data.cmd) {
 	case 'init':
 		if (!e.data.config) {

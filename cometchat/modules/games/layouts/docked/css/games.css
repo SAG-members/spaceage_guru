@@ -145,7 +145,7 @@ html, body {
     right: 5px;
     top: 50%;
     margin-top: -3px;
-    background: url(layouts/docked/images/arrowright.svg) no-repeat;
+    background: url(<?php echo STATIC_CDN_URL; ?>layouts/docked/images/arrowright.svg) no-repeat;
     height: 12px;
     width: 12px;
     opacity: 0.7;

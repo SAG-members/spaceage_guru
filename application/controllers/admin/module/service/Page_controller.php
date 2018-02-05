@@ -336,17 +336,17 @@ class Page_controller extends Application {
 				case page::_CATEGORY_PRODUCT : 
 					$successMessage = Message::PRODUCT_PUBLISH_SUCCESS; 
 					$failureMessage = Message::PRODUCT_PUBLISH_FAILURE;
-					$redirectView = 'admin/products';
+					$redirectView = 'admin/data';
 					break;
 				case page::_CATEGORY_SERVICE : 
 					$successMessage = Message::SERVICE_PUBLISH_SUCCESS;
 					$failureMessage = Message::SERVICE_PUBLISH_FAILURE;
-					$redirectView = 'admin/services';
+					$redirectView = 'admin/data';
 					break;
 				case page::_CATEGORY_SENSES : 
 					$successMessage = Message::SENSATION_PUBLISH_SUCCESS;
 					$failureMessage = Message::SENSATION_PUBLISH_FAILURE;
-					$redirectView = 'admin/sensations';
+					$redirectView = 'admin/data';
 					break;
 			}
 			
@@ -360,29 +360,30 @@ class Page_controller extends Application {
 	
 	public function unpublish()
 	{
-		if($this->input->post('ids') && $this->input->post('category'))
+	    if($this->input->post('ids') && $this->input->post('category'))
 		{
 			$serviceIds = $this->input->post('ids');
+			
 			$category = $this->input->post('category');
 				
 			$result = $this->page->unpublish_page($category, $serviceIds);
-			
+// 			echo $this->db->last_query(); die;
 			switch ($category)
 			{
 				case page::_CATEGORY_PRODUCT :
 					$successMessage = Message::PRODUCT_UNPUBLISH_SUCCESS;
 					$failureMessage = Message::PRODUCT_UNPUBLISH_FAILURE;
-					$redirectView = 'admin/products';
+					$redirectView = 'admin/data';
 					break;
 				case page::_CATEGORY_SERVICE :
 					$successMessage = Message::SERVICE_UNPUBLISH_SUCCESS;
 					$failureMessage = Message::SERVICE_UNPUBLISH_FAILURE;
-					$redirectView = 'admin/services';
+					$redirectView = 'admin/data';
 					break;
 				case page::_CATEGORY_SENSES :
 					$successMessage = Message::SENSATION_UNPUBLISH_SUCCESS;
 					$failureMessage = Message::SENSATION_UNPUBLISH_FAILURE;
-					$redirectView = 'admin/sensations';
+					$redirectView = 'admin/data';
 					break;
 			}
 			

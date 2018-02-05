@@ -182,7 +182,7 @@ class Dashboard extends Application
 			if($response) {$this->message->setFlashMessage(Message::DATA_UPDATE_SUCCESS, array('id'=>'1'));}
 			else {$this->message->setFlashMessage(Message::DATA_UPDATE_FAILURE);}
 
-			redirect(base_url('user/edit/data/'.$datas->{Page::_PAGE_SLUG}));
+			redirect(base_url('user/edit/data/'.create_slug($this->input->post('title'))));
 		}
 				
 	}

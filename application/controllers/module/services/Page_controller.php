@@ -331,4 +331,25 @@ class Page_controller extends Application {
 	    
 	    redirect(base_url('escrow'));	    
 	}
+	
+	public function escrow_success()
+	{
+	    $response = array();
+	    
+	    $this->template->title('Escrow Success');
+	    $this->template->render('cryptonator-success', $response);
+	}
+	
+	public function escrow_failure()
+	{
+	    $response = array();
+	    
+	    $this->template->title('Escrow Failure');
+	    $this->template->render('cryptonator-oops', $response);
+	}
+	
+	public function escrow_callback()
+	{
+	    print_r($_REQUEST);
+	}
 }

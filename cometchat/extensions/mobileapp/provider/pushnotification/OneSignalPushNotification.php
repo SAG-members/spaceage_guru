@@ -13,7 +13,7 @@ class OneSignalPushNotification {
 		$this->title = !empty($settings['app_title']) ? $settings['app_title'] : 'CometChat';
 	}
 
-	public function sendNotification($channel, $messageData, $isChatroom = '0', $isAnnouncement = '0',$isWRTC = '0') {
+	public function sendNotification($channel, $messageData, $isChatroom = '0', $isAnnouncement = '0',$isWebRTC = '0') {
 		if(empty($this->appId) || empty($this->APIKey)){
 			return 'Empty OneSignal appId or APIKey';
 		}
@@ -38,14 +38,14 @@ class OneSignalPushNotification {
 				if($isChatroom == '1') {
 					$messageType = "C";
 					$notificationData['isCR'] = $isChatroom;
-				} elseif($isWRTC != '0'){
+				} elseif($isWebRTC != '0'){
 					$soundfile = 'avpushsound.wav';
 					$messageDataSplit = explode('_#wrtcgrp_',$messageData['m']);
 					$notificationData['grp'] = $messageDataSplit[0];
 					$messageData['m'] = $messageDataSplit[1];
-					if($isWRTC == 'AC'){
+					if($isWebRTC == 'AC'){
 						$messageType = "O_AC";
-					}elseif($isWRTC == 'AVC'){
+					}elseif($isWebRTC == 'AVC'){
 						$messageType = "O_AVC";
 					}
 				}

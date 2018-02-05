@@ -1,0 +1,23 @@
+@media (max-width:768px)
+
+{
+	
+.fullheight [class*="fullcol"] {
+    display:list-item;
+    float:left;
+    vertical-align: top;
+}
+	
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  text-align: justify;
+}
+
+#midmain .midmain { float:none; display:inline-block;}	
+.blogmain img { width:100% !important;}
+.midmain img { width:100% !important;}
+
+.cometchat_embed_synergy_container { width:100% !important;}
+	
+	}

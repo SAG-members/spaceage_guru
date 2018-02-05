@@ -70,7 +70,7 @@ class Login extends Base
 					$redirectURL = str_replace('/satan/', '', $redirectURL); 
 					redirect(base_url($redirectURL));
 				}
-				else redirect(base_url('profile'));
+				else redirect(base_url('user/data/introduction-to-spageage-guru'));
 			}
 			else
 			{

@@ -101,9 +101,17 @@ if(defined('USE_COMET') && USE_COMET == '1'){
     $response_config['TRANSPORT'] = TRANSPORT;
     $response_config['COMET_CHATROOMS'] = COMET_CHATROOMS;
     $response_config['CS2_TEXTCHAT_SERVER'] = CS2_TEXTCHAT_SERVER;
-}
-if(defined('USE_COMET') && USE_COMET == '1' && defined('CS_TEXTCHAT_SERVER')){
-    $response['websync_server'] = preg_replace('/\s+/', '', CS_TEXTCHAT_SERVER);
+    if(defined('CS_TEXTCHAT_SERVER')){
+        /* START: Backward Compatibility 16-Oct-2017 CometChat v6.8.12 */
+        $response['websync_server'] = preg_replace('/\s+/', '', CS_TEXTCHAT_SERVER);
+        /* END: Backward Compatibility 16-Oct-2017 CometChat v6.8.12 */
+        $response['CS_TEXTCHAT_SERVER'] = preg_replace('/\s+/', '', CS_TEXTCHAT_SERVER);
+        $response_config['CS_HTTP_PORT']    = CS_HTTP_PORT;
+        $response_config['CS_HTTPS_PORT']   = CS_HTTPS_PORT;
+        $response_config['CS_RELAY_PORT']   = CS_RELAY_PORT;
+        $response_config['CS_DOMAIN_NAME']  = CS_DOMAIN_NAME;
+        $response_config['CS_URL_PATH']     = CS_URL_PATH;
+    }
 }
 
 /* ROLE BASE ACCESS CONTROL RESPONSE START */
@@ -425,7 +433,10 @@ $new_mobile_lang['invite_sms']['sms_hint'] = $mobileapp_language[143];
 $new_mobile_lang['invite_sms']['sms_android'] = $mobileapp_language[77];
 $new_mobile_lang['invite_sms']['sms_ios'] = $mobileapp_language[76];
 
+/*FIXME: variables/keys should not be named like this*/
 $response['new_mobile'] = $new_mobile_lang;
+
+$response['upload_max_filesize'] = getMaxFileUploadSize();
 
 $response['mobile_config']['logout_enabled']  = $response['mobile_config']['phone_number_enabled'] == '1' ? '0' : '1';
 $useragent = (!empty($_SERVER["HTTP_USER_AGENT"])) ? $_SERVER["HTTP_USER_AGENT"] : '';

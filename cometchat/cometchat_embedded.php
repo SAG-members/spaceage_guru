@@ -17,7 +17,11 @@ if(!empty($_REQUEST['basedata'])) {
 	include_once(dirname(__FILE__).DIRECTORY_SEPARATOR.'config.php');
 }
 
-$callbackfn = $_REQUEST['callbackfn'];
+$callbackfn ='';
+
+if(!empty($_REQUEST['callbackfn'])){
+	$callbackfn = $_REQUEST['callbackfn'];
+}
 
 $id = 0;
 if(!empty($_REQUEST['user'])){
@@ -46,27 +50,26 @@ if(!empty($_REQUEST['crid'])) {
 	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
 	<title><?php echo $language['title'];?></title>
 	<script type="text/javascript">
-		var embeddedchatroomid = <?php echo (!empty($_REQUEST['crid']) ? $_REQUEST['crid'] : '0').';'; ?>
+		var embeddedchatroomid = <?php echo (!empty($_REQUEST['crid']) ? intval($_REQUEST['crid']) : '0').';'; ?>
 		var chatroomsonly = <?php echo (!empty($_REQUEST['chatroomsonly']) ? '1' : '0').';'; ?>
 	</script>
 	<?php
-		echo getDynamicScriptAndLinkTags(array('layout'=> 'embedded','callbackfn'=> $callbackfn,'type'=> 'core','name'=> 'default','ext'=> 'css','grouponly'=> 0));
-		echo getDynamicScriptAndLinkTags(array('layout'=> 'embedded','callbackfn'=> $callbackfn,'type'=> 'core','name'=> 'default','ext'=> 'js'));
+		echo getDynamicScriptAndLinkTags(array('layout'=> 'embedded','callbackfn'=> $callbackfn,'ext'=> 'css','grouponly'=> 0));
+		echo getDynamicScriptAndLinkTags(array('layout'=> 'embedded','callbackfn'=> $callbackfn,'ext'=> 'js'));
 		echo getDynamicScriptAndLinkTags(array('type'=> 'plugin','name'=> 'transliterate','ext'=> 'js'));
+		echo getDynamicScriptAndLinkTags(array('type'=> 'core','name'=> 'jquery','ext'=> 'js'));
 	?>
-	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<script type="text/javascript">
 		function initializeEmbeddedLayout(){
-			var embeddedchatroomid = <?php echo (!empty($_REQUEST['crid']) ? $_REQUEST['crid'] : '0').';'; ?>
+			var embeddedchatroomid = <?php echo (!empty($_REQUEST['crid']) ?  intval($_REQUEST['crid']) : '0').';'; ?>
 			var cookiePrefix = '<?php echo (!empty($cookiePrefix) ? $cookiePrefix : 'cc_') ?>';
 			var chatroomsonly = <?php echo (!empty($_REQUEST['chatroomsonly']) ? '1' : '0').';'; ?>
 			jqcc(document).ready(function(){
-				if (embeddedchatroomid != 0 && embeddedchatroomid !='null' && typeof(embeddedchatroomid) != "undefined" && typeof(jqcc.cometchat.chatroomHeartbeat) == "function") {
+				if (embeddedchatroomid != 0 && embeddedchatroomid !='null' && typeof(embeddedchatroomid) != 'undefined' && typeof(jqcc.cometchat.chatroomHeartbeat) == 'function') {
 					jqcc.cometchat.checkChatroomPass(embeddedchatroomid,'',0,'',1,0,0,0);
 				}
-				google.load("elements", "1", {
-					packages: "transliteration"
+				google.load('elements', '1', {
+					packages: 'transliteration'
 				});
 				<?php if(!empty($ccbasedata)){ ?>
 
@@ -77,21 +80,33 @@ if(!empty($_REQUEST['crid'])) {
 
 				<?php } ?>
 
-				document.addEventListener("dragover",function(e){
+				document.addEventListener('dragover',function(e){
 					e = e || event;
 					e.preventDefault();
 				},false);
 
-				document.addEventListener("drop",function(e){
+				document.addEventListener('drop',function(e){
 					e = e || event;
 					e.preventDefault();
 				},false);
 
 				var uid = '<?php echo $id; ?>';
 				if(uid > 0){
-					var controlparameters = {"type":"core", "name":"cometchat", "method":"chatWith", "params":{"uid":uid, "embedded":"1"}};
+					var controlparameters = {
+						type: 'core',
+						name: 'cometchat',
+						method: 'chatWith',
+						params: {
+							uid: uid,
+							embedded: 1
+						}
+					};
+					console.log("USERID: "+uid);
 					controlparameters = JSON.stringify(controlparameters);
-					parent.postMessage('CC^CONTROL_'+controlparameters,'*');
+					setTimeout(function(){
+						parent.postMessage('CC^CONTROL_'+controlparameters,'*');
+					},500);
+
 				}
 			});
 		}

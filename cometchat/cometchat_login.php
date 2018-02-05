@@ -67,11 +67,11 @@ if(!empty($_REQUEST['socialLogin'])){
 				if (empty($platformType)) {
 					$platformType = 'web';
 				}
-				$getRoleId = getRoleId($userid);
-				if ($GLOBALS[$getRoleId."_disabled".$platformType] == 1) {
+				$getRole = getRole($userid);
+				if ($GLOBALS[$getRole."_disabled".$platformType] == 1) {
 					$response = array("basedata"=>"0","error_msg"=>$language['membership_msg']);
 				}
-				if ($GLOBALS[$getRoleId."_disabledcc"] == 1) {
+				if ($GLOBALS[$getRole."_disabledcc"] == 1) {
 					$response = array("basedata"=>"0","error_msg"=>$language['membership_msg']);
 				}
 			}
@@ -103,7 +103,7 @@ if(!empty($_REQUEST['socialLogin'])){
 	if($branded){
 		$logo_url = "https://chat.phpchatsoftware.com/cometchat/extensions/desktop/images/logo_login.png";
 	}else{
-		$logo_url = BASE_URL."writable/images/logo/logo_login.png";
+		$logo_url = STATIC_CDN_URL."writable/images/logo/logo_login.png";
 	}
 	if($guestsMode){
 		$guest_mode = "<div id='clear'></div>
@@ -119,7 +119,7 @@ if(!empty($_REQUEST['socialLogin'])){
 			</script>";
 	}else{
 		$container='<div id="companyLogoDiv"  unselectable="on">
-					<div id="companyLogoSpan" unselectable="on"><img style="display:none;" id="comapanyImage" src="'.$logo_url.'" width="150px" heigth="100px" alt="Company Logo" oncontextmenu="return false;" unselectable="on"/>
+					<div id="companyLogoSpan" unselectable="on"><img id="comapanyImage" src="'.$logo_url.'" width="150px" heigth="100px" alt="Company Logo" oncontextmenu="return false;" unselectable="on"/>
 					</div>
 				</div>
 				<div id="loginInfoContainer">
@@ -154,21 +154,22 @@ if(!empty($_REQUEST['socialLogin'])){
 					</div>
 					'.$forgot_link.'
 					<div id="loadingDiv" class="divBox">
-						<img id="loading" src="'.BASE_URL.'extensions/desktop/images/loading.gif" alt="loading"/>
+						<img id="loading" src="'.STATIC_CDN_URL.'extensions/desktop/images/loading.gif" alt="loading"/>
 					</div>
 					<div id="back">
-						<img src="'.BASE_URL.'extensions/desktop/images/back.png" height="25px" width="30px">
+						<img src="'.STATIC_CDN_URL.'extensions/desktop/images/back.png" height="25px" width="30px">
 					</div>
 					'.$signUp_link.'
 				</div>';
 	}
+
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>CometChat Messenger</title>
-	<script src="js.php?type=core&name=jquery" type="text/javascript"></script>
+	<?php echo getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery', 'ext' => 'js')); ?>
 	<style>
 		body{
 			height:100%;
@@ -419,6 +420,7 @@ if(!empty($_REQUEST['socialLogin'])){
 	</script>
 	<script>
 	var basepath = '<?php echo BASE_URL; ?>';
+	var staticCDNUrl = '<?php echo STATIC_CDN_URL; ?>';
 	jqcc(function() {
 	    jqcc(window).on('resize', function resize()  {
 	        jqcc(window).off('resize', resize);
@@ -527,7 +529,7 @@ if(!empty($_REQUEST['socialLogin'])){
 				},3000);
 			}else{
 				if(jqcc('#main_error').length==0){
-					jqcc('#guestNameBox').append('<div id="main_error" style="display:inline"><div id="error" style="float:right; display:inline-block;height:16px;width:16px;"><img src="'+basepath+'extensions/desktop/images/error.png" height="16px" width="16px"></img></div><div class="arrow-up" style="width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid red;position: relative; float: right;right: 3px;"><hr style="border-color: red;border-style: inset;border-width: 1px;margin: 0px;width: 142px;float: right;position: relative;top: 6px;right:-8px;"><div id="error" style="float:right; display:inline-block;position: relative;height: auto;width: 138px;color: #fff;background-color: #000;z-index: 10000;padding:3px;top:6px;right:-8px;"><?php echo $desktop_language[12];?></div></div>');
+					jqcc('#guestNameBox').append('<div id="main_error" style="display:inline"><div id="error" style="float:right; display:inline-block;height:16px;width:16px;"><img src="'+staticCDNUrl+'extensions/desktop/images/error.png" height="16px" width="16px"></img></div><div class="arrow-up" style="width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid red;position: relative; float: right;right: 3px;"><hr style="border-color: red;border-style: inset;border-width: 1px;margin: 0px;width: 142px;float: right;position: relative;top: 6px;right:-8px;"><div id="error" style="float:right; display:inline-block;position: relative;height: auto;width: 138px;color: #fff;background-color: #000;z-index: 10000;padding:3px;top:6px;right:-8px;"><?php echo $desktop_language[12];?></div></div>');
 				}
 			}
 		}else{
@@ -536,11 +538,11 @@ if(!empty($_REQUEST['socialLogin'])){
 			if(uName!="" && password==""){
 				jqcc('#password').val('');
 				if(jqcc('#main_error').length==0){
-					jqcc('#passwordBox').append('<div id="main_error" style="display:inline"><div id="error" style="float:right; display:inline-block;height:16px;width:16px;"><img src="'+basepath+'extensions/desktop/images/error.png" height="16px" width="16px"></img></div><div class="arrow-up" style="width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid red;position: relative; float: right;right: 3px;"><hr style="border-color: red;border-style: inset;border-width: 1px;margin: 0px;width: 132px;float: right;position: relative;top: 6px;right:-8px;"><div id="error" style="float:right; display:inline-block;position: relative;height: auto;width: 128px;color: #fff;background-color: #000;z-index: 10000;padding:3px;top:6px;right:-8px;"><?php echo $desktop_language[9];?></div></div>');
+					jqcc('#passwordBox').append('<div id="main_error" style="display:inline"><div id="error" style="float:right; display:inline-block;height:16px;width:16px;"><img src="'+staticCDNUrl+'extensions/desktop/images/error.png" height="16px" width="16px"></img></div><div class="arrow-up" style="width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid red;position: relative; float: right;right: 3px;"><hr style="border-color: red;border-style: inset;border-width: 1px;margin: 0px;width: 132px;float: right;position: relative;top: 6px;right:-8px;"><div id="error" style="float:right; display:inline-block;position: relative;height: auto;width: 128px;color: #fff;background-color: #000;z-index: 10000;padding:3px;top:6px;right:-8px;"><?php echo $desktop_language[9];?></div></div>');
 				}
 			}else if(uName=="" && password!=""){
 				if(jqcc('#main_error').length==0){
-					jqcc('#userNameBox').append('<div id="main_error" style="display:inline"><div id="error" style="float:right; display:inline-block;height:16px;width:16px;"><img src="'+basepath+'extensions/desktop/images/error.png" height="16px" width="16px"></img></div><div class="arrow-up" style="width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid red;position: relative; float: right;right: 3px;"><hr style="border-color: red;border-style: inset;border-width: 1px;margin: 0px;width: 136px;float: right;position: relative;top: 6px;right:-8px;"><div id="error" style="float:right; display:inline-block;position: relative;height: auto;width: 132px;color: #fff;background-color: #000;z-index: 10000;padding:3px;top:6px;right:-8px;"><?php echo $desktop_language[10];?></div></div>');
+					jqcc('#userNameBox').append('<div id="main_error" style="display:inline"><div id="error" style="float:right; display:inline-block;height:16px;width:16px;"><img src="'+staticCDNUrl+'extensions/desktop/images/error.png" height="16px" width="16px"></img></div><div class="arrow-up" style="width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid red;position: relative; float: right;right: 3px;"><hr style="border-color: red;border-style: inset;border-width: 1px;margin: 0px;width: 136px;float: right;position: relative;top: 6px;right:-8px;"><div id="error" style="float:right; display:inline-block;position: relative;height: auto;width: 132px;color: #fff;background-color: #000;z-index: 10000;padding:3px;top:6px;right:-8px;"><?php echo $desktop_language[10];?></div></div>');
 				}
 			}else if(uName!="" && password!=""){
 				jqcc("#loadingDiv").css('visibility','visible');
@@ -566,7 +568,7 @@ if(!empty($_REQUEST['socialLogin'])){
 								jqcc('#username').val('');
 								jqcc('#password').val('');
 								if(jqcc('#main_error').length==0){
-								jqcc('#userNameBox').append('<div id="main_error" style="display:inline"><div id="error" style="float:right; display:inline-block;height:16px;width:16px;"><img src="'+basepath+'extensions/desktop/images/error.png" height="16px" width="16px"></img></div><div class="arrow-up" style="width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid red;position: relative; float: right;right: 3px;"><hr style="border-color: red;border-style: inset;border-width: 1px;margin: 0px;width: 134px;float: right;position: relative;top: 6px;right:-8px;"><div id="error" style="float:right; display:inline-block;position: relative;height: auto;width: 130px;color: #fff;background-color: #000;z-index: 10000;padding:3px;top:6px;right:-8px;"><?php echo $desktop_language[8];?></div></div>');
+								jqcc('#userNameBox').append('<div id="main_error" style="display:inline"><div id="error" style="float:right; display:inline-block;height:16px;width:16px;"><img src="'+staticCDNUrl+'extensions/desktop/images/error.png" height="16px" width="16px"></img></div><div class="arrow-up" style="width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid red;position: relative; float: right;right: 3px;"><hr style="border-color: red;border-style: inset;border-width: 1px;margin: 0px;width: 134px;float: right;position: relative;top: 6px;right:-8px;"><div id="error" style="float:right; display:inline-block;position: relative;height: auto;width: 130px;color: #fff;background-color: #000;z-index: 10000;padding:3px;top:6px;right:-8px;"><?php echo $desktop_language[8];?></div></div>');
 								}
 							}
 						}
@@ -576,7 +578,7 @@ if(!empty($_REQUEST['socialLogin'])){
 				jqcc('#username').val('');
 				jqcc('#password').val('');
 				if(jqcc('#main_error').length==0){
-				jqcc('#userNameBox').append('<div id="main_error" style="display:inline"><div id="error" style="float:right; display:inline-block;height:16px;width:16px;"><img src="'+basepath+'extensions/desktop/images/error.png" height="16px" width="16px"></img></div><div class="arrow-up" style="width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid red;position: relative; float: right;right: 3px;"><hr style="border-color: red;border-style: inset;border-width: 1px;margin: 0px;width: 132px;float: right;position: relative;top: 6px;right:-8px;"><div id="error" style="float:right; display:inline-block;position: relative;height: auto;width: 128px;color: #fff;background-color: #000;z-index: 10000;padding:3px;top:6px;right:-8px;"><?php echo $desktop_language[11];?></div></div>');
+				jqcc('#userNameBox').append('<div id="main_error" style="display:inline"><div id="error" style="float:right; display:inline-block;height:16px;width:16px;"><img src="'+staticCDNUrl+'extensions/desktop/images/error.png" height="16px" width="16px"></img></div><div class="arrow-up" style="width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid red;position: relative; float: right;right: 3px;"><hr style="border-color: red;border-style: inset;border-width: 1px;margin: 0px;width: 132px;float: right;position: relative;top: 6px;right:-8px;"><div id="error" style="float:right; display:inline-block;position: relative;height: auto;width: 128px;color: #fff;background-color: #000;z-index: 10000;padding:3px;top:6px;right:-8px;"><?php echo $desktop_language[11];?></div></div>');
 				}
 			}
 		}

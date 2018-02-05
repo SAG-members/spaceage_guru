@@ -75,7 +75,8 @@ $route['intro'] = 'cms_page_controller';
 $route['lean-canvas-spaceage-guru'] = 'cms_page_controller';
 $route['club-laws'] = 'cms_page_controller';
 $route['whitepaper'] = 'cms_page_controller';
-$route['timeline'] = 'cms_page_controller';
+// $route['timeline'] = 'cms_page_controller';
+#$route['introduction-to-spageage-guru'] = 'cms_page_controller';
 
 # Membership Routes 
 $route['faq'] = 'module/services/faq';
@@ -187,6 +188,14 @@ $route['escrow/create'] = 'module/services/page_controller/create_escrow_page';
 $route['escrow/create/(:num)'] = 'module/services/page_controller/create_escrow_page';
 $route['escrow/delete/(:num)'] = 'module/services/page_controller/delete_escrow';
 
+
+# Escrow Success / Failure
+
+$route['escrow/payment/success'] = 'module/services/page_controller/escrow_success';
+$route['escrow/payment/failure'] = 'module/services/page_controller/escrow_failure';
+$route['escrow/payment/callback'] = 'module/services/page_controller/escrow_callback';
+
+
 # User Dashboard Routes
 $route['user/dashboard'] = 'module/user/dashboard';
 
@@ -197,12 +206,27 @@ $route['user-invite/(:any)'] = 'module/auth/user_invite_controller';
 
 $route['shop'] = 'module/services/shop_controller';
 
+# TimeLine
+$route['timeline'] = 'module/services/feedback_controller/timeline';
+
+
 
 $route['ajax'] = 'public_ajax_controller';
 $route['ajax/dropzone'] = 'public_ajax_controller/upload_attachments_via_dropzone';
 $route['ajax/upload-document'] = 'public_ajax_controller/upload_data_documents';
 $route['ajax/remove-document'] = 'public_ajax_controller/remove_data_documents';
 $route['public/api_down'] = 'webservice_controller'; 
+
+
+#IOS ROUTE
+$route['public/api_down/ppq-ios'] = 'webservice_controller/ppq_for_ios'; 
+$route['profile/update-questionnaire-ios'] = 'welcome/update_user_questionnaire_ios';
+
+$route['public/api_down/rpq-ios'] = 'webservice_controller/rpq_for_ios'; 
+$route['profile/update-rpq-ios'] = 'welcome/update_user_rpq_ios';
+
+$route['public/api_down/wpq-ios'] = 'webservice_controller/wpq_for_ios';
+$route['profile/update-wpq-ios'] = 'welcome/update_user_wpq_ios';
 
 
 # User Reset Password Routes
@@ -260,6 +284,9 @@ $route['admin/update-faq'] = 'admin/module/service/faq_controller/update_faq';
 $route['admin/data'] = 'admin/module/service/page_controller/manage_data';
 $route['admin/data/add'] = 'admin/module/service/page_controller/create_data';
 $route['admin/data/edit/(:num)'] = 'admin/module/service/page_controller/edit_data';
+
+# Number Game Routes
+$route['admin/number-game'] = 'admin/module/service/number_game_controller';
 
 
 # Symptom Routes

@@ -10,42 +10,42 @@ class Email_engine
 		
 	public function reset_password($to, $body)
 	{
-		$subject = 'Santa Clause - Reset Password Request Received';
+		$subject = 'Spaceage Guru - Reset Password Request Received';
 		
 		return $this->sendEmail($to, $subject, $body);
 	}
 
 	public function reset_admin_password($to, $body)
 	{
-		$subject = 'Santa Clause - Administrator Password Reset Request Recieved';
+		$subject = 'Spaceage Guru - Administrator Password Reset Request Recieved';
 		
 		return $this->sendEmail($to, $subject, $body);
 	}
 	
 	public function reset_user_password($to, $body)
 	{
-		$subject = "Santa Clause - Admin Reset Your Password";
+		$subject = "Spaceage Guru - Admin Reset Your Password";
 		
 		return $this->sendEmail($to, $subject, $body);
 	}
 	
 	public function user_blocked($to, $body)
 	{
-		$subject = "Santa Clause - Admin Blocked You";
+		$subject = "Spaceage Guru - Admin Blocked You";
 		
 		return $this->sendEmail($to, $subject, $body);
 	}
 	
 	public function user_unblocked($to, $body)
 	{
-		$subject = "Santa Clause - Admin Unblocked You";
+		$subject = "Spaceage Guru - Admin Unblocked You";
 		
 		return $this->sendEmail($to, $subject, $body);
 	}
 	
 	public function send_invitation_to_join($to, $body)
 	{
-		$subject = "Santa Clause - Invitation to join santaclauseclub";
+		$subject = "Spaceage Guru - Invitation to join Spaceage.guru";
 				
 		return $this->sendEmail($to, $subject, $body);
 	}
@@ -57,7 +57,7 @@ class Email_engine
 		$config ['mailtype'] = 'html';
 		
 		$this->CI->email->set_mailtype ("html");
-		$this->CI->email->from ('no-reply@digitalnewidea.in', 'Satan Clause');
+		$this->CI->email->from ('no-reply@spaceage.guru', 'Spaceage.guru');
 		$this->CI->email->to ($to);
 		$this->CI->email->subject ($subject);
 		$this->CI->email->message($body);

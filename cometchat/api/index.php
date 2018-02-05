@@ -1,4 +1,9 @@
 <?php
+
+if(!empty($_POST['userid'])){
+	$_POST['basedata'] = $_POST['userid'];
+}
+
 include_once(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR."config.php");
 include_once(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR."cometchat_init.php");
 
@@ -7,6 +12,8 @@ if(!empty($client) && file_exists(dirname(__FILE__).DIRECTORY_SEPARATOR."api.php
 }
 
 $userid = 0;
+$toid = 0;
+$isGroup = 0;
 $apikeyvalue = null;
 $username = null;
 $avatarfile = null;
@@ -108,77 +115,195 @@ if(!empty($_REQUEST['fromuserid'])){
 if(!empty($_REQUEST['touserid'])){
 	$touserid = $_REQUEST['touserid'];
 }
+if(!empty($_REQUEST['toid'])){
+	$toid = $_REQUEST['toid'];
+}
+if(!empty($_REQUEST['isGroup'])){
+	$isGroup = $_REQUEST['isGroup'];
+}
 /*** End Block User API ***/
 
 if(isset($_REQUEST['action'])) {
 	switch ($_REQUEST['action']) {
+
 		case 'createuser':
-		createUser($apikeyvalue, $username, $password, $displayname, $avatarfile, $avatarlink, $profilelink,$group);
-		break;
+			createUser($apikeyvalue, $username, $password, $displayname, $avatarfile, $avatarlink, $profilelink,$group);
+			break;
+
 		case 'getuserinfo':
-		getuserInfo($apikeyvalue, $userid);
-		break;
+			getuserInfo($apikeyvalue, $userid);
+			break;
+
 		case 'updateuser':
-		updateuser($apikeyvalue, $userid, $username, $password, $newpassword, $displayname, $avatarfile, $avatarlink, $profilelink);
-		break;
+			updateuser($apikeyvalue, $userid, $username, $password, $newpassword, $displayname, $avatarfile, $avatarlink, $profilelink);
+			break;
+
 		case 'blockuser':
-		blockuser($apikeyvalue, $fromuserid, $touserid);
-		break;
+			blockuser($apikeyvalue, $fromuserid, $touserid);
+			break;
+
 		case 'unblockuser':
-		unblockuser($apikeyvalue, $fromuserid, $touserid);
-		break;
+			unblockuser($apikeyvalue, $fromuserid, $touserid);
+			break;
+
 		case 'addfriend':
-		addFriend($apikeyvalue, $userid, $friends);
-		break;
+			addFriend($apikeyvalue, $userid, $friends);
+			break;
+
 		case 'removefriend':
-		removeFriend($apikeyvalue, $userid, $friends);
-		break;
+			removeFriend($apikeyvalue, $userid, $friends);
+			break;
+
 		case 'getfriend':
-		getfriend($apikeyvalue, $userid);
-		break;
+			getfriend($apikeyvalue, $userid);
+			break;
+
 		case 'checkAPIKEY':
-		checkAPIKEY($apikeyvalue);
-		break;
+			checkAPIKEY($apikeyvalue);
+			break;
+
 		case 'checkpassword':
-		checkpassword($apikeyvalue, $password);
-		break;
+			checkpassword($apikeyvalue, $password);
+			break;
+
 		case 'authenticateUser':
-		authenticateUser($apikeyvalue, $username, $password);
-		break;
+			authenticateUser($apikeyvalue, $username, $password);
+			break;
+
 		case 'removeuser':
-		removeuser($apikeyvalue, $userid);
-		break;
+			removeuser($apikeyvalue, $userid);
+			break;
+
 		case 'createchatroom':
-		createchatroom($apikeyvalue, $userid,$chatroomname,$chatroomtype,$chatroompassword);
-		break;
+			createchatroom($apikeyvalue, $userid,$chatroomname,$chatroomtype,$chatroompassword);
+			break;
+
 		case 'creategroup':
-		$params = array('apikeyvalue' => $apikeyvalue, 'groupname' => $groupname, 'grouptype' => $grouptype, 'grouppassword' => $grouppassword, 'groupid' => $groupid );
-		creategroup($params);
-		break;
+			$params = array(
+				'apikeyvalue' => $apikeyvalue,
+			 	'groupname' => $groupname,
+			  	'grouptype' => $grouptype,
+			   	'grouppassword' => $grouppassword,
+			    'groupid' => $groupid
+			);
+			creategroup($params);
+			break;
+
+		case 'checkgroup':
+			checkgroup($groupname);
+			break;
+
 		case 'addgroupusers':
-		if($id != null){
-			$params = array('apikeyvalue' => $apikeyvalue, 'id' => $id, 'users' => $users);
-		}else{
-			$params = array('apikeyvalue' => $apikeyvalue, 'groupid' => $groupid, 'users' => $users);
-		}
-		addgroupusers($params);
-		break;
+			if($id != null){
+				$params = array(
+					'apikeyvalue' => $apikeyvalue,
+					'id' => $id,
+					'users' => $users
+				);
+			}else{
+				$params = array(
+					'apikeyvalue' => $apikeyvalue,
+					'groupid' => $groupid,
+					'users' => $users
+				);
+			}
+			addgroupusers($params);
+			break;
+
 		case 'removegroupusers':
-		$params = array('apikeyvalue' => $apikeyvalue, 'groupid' => $groupid, 'users' => $users);
-		removegroupusers($params);
-		break;
+			$params = array(
+				'apikeyvalue' => $apikeyvalue,
+				'groupid' => $groupid,
+				'users' => $users
+			);
+			removegroupusers($params);
+			break;
+
 		case 'deletegroup':
-		$params = array('apikeyvalue' => $apikeyvalue, 'groupid' => $groupid);
-		deletegroup($params);
-		break;
+			$params = array(
+				'apikeyvalue' => $apikeyvalue,
+				'groupid' => $groupid
+			);
+			deletegroup($params);
+			break;
+
 		case 'getpushnotificationchannels':
-		$params = array('apikeyvalue' => $apikeyvalue, 'userid' => $userid, 'uid' => $uid);
-		getpushnotificationchannels($params);
+			$params = array(
+				'apikeyvalue' => $apikeyvalue,
+				'userid' => $userid,
+				'uid' => $uid
+			);
+			getpushnotificationchannels($params);
+			break;
+		case 'createwhiteboard':
+		$params = array('apikeyvalue' => $apikeyvalue, 'userid' => $userid, 'uid' => $uid,'toid' => $toid,'isGroup' => $isGroup);
+		createwhiteboard($params);
 		break;
+
+		case 'createwriteboard':
+			$params = array('apikeyvalue' => $apikeyvalue, 'uid' => $uid, 'toid' => $toid, 'isGroup' => $isGroup);
+			createwriteboard($params);
+			break;
+
+		case 'getCredits':
+			$credits = 0;
+			if(method_exists($GLOBALS['integration'], 'getCredits')){
+				$credits = $GLOBALS['integration']->getCredits();
+			}
+			sendCCResponse(json_encode(array('credits'=>$credits)));
+			break;
+
+		case 'getCreditsToDeduct':
+			$creditsToDeduct = 0;
+			if(method_exists($GLOBALS['integration'], 'getCreditsToDeduct')){
+				$params =  array();
+				if(!empty($_REQUEST['type'])){
+					$params['type'] = $_REQUEST['type'];
+				}
+				if(!empty($_REQUEST['name'])){
+					$params['name'] = $_REQUEST['name'];
+				}
+				if(!empty($_REQUEST['to'])){
+					$params['to'] = $_REQUEST['to'];
+				}
+				if(!empty($_REQUEST['isGroup'])){
+					$params['isGroup'] = $_REQUEST['isGroup'];
+				}
+				if(!empty($_REQUEST['creditsToDeduct'])){
+					$params['creditsToDeduct'] = $_REQUEST['creditsToDeduct'];
+				}
+				$creditsToDeduct = $GLOBALS['integration']->getCreditsToDeduct($params);
+			}
+			sendCCResponse(json_encode(array('creditsinfo'=>$creditsToDeduct)));
+			break;
+
+		case 'deductCredits':
+			$response = false;
+			if(method_exists($GLOBALS['integration'], 'deductCredits')){
+				$params =  array();
+				if(!empty($_REQUEST['type'])){
+					$params['type'] = $_REQUEST['type'];
+				}
+				if(!empty($_REQUEST['name'])){
+					$params['name'] = $_REQUEST['name'];
+				}
+				if(!empty($_REQUEST['to'])){
+					$params['to'] = $_REQUEST['to'];
+				}
+				if(!empty($_REQUEST['isGroup'])){
+					$params['isGroup'] = $_REQUEST['isGroup'];
+				}
+				if(!empty($_REQUEST['creditsToDeduct'])){
+					$params['creditsToDeduct'] = $_REQUEST['creditsToDeduct'];
+				}
+				$response = $GLOBALS['integration']->deductCredits($params);
+			}
+			sendCCResponse(json_encode($response));
+			break;
+
 		default:
-		echo 'Invalid Action';
-		exit;
-		break;
+			echo 'Invalid Action';
+			exit;
 	}
 }
 
@@ -761,6 +886,21 @@ function removeuser($apikeyvalue, $userid) {
 	}
 }
 
+function checkgroup($groupname){
+	if (!empty($groupname)) {
+		$result = sql_query('check_group',array('groupname'=>$groupname));
+		if($row = sql_fetch_assoc($result)){
+			$response = array('success' => array('status' => '1000', 'message' => "Group ".$groupname.' already exists'), 'guid' => $row['guid'],'groupname' => $groupname);
+		}else{
+			$response = array('failed' => array('status' => '1007', 'message' => "Group ".$groupname.' does not exists'),'groupname' => $groupname);
+		}
+	} else{
+		$response = array('failed' => array('status' => '1005', 'message' => "Invalid input"));
+	}
+	echo json_encode($response);
+	exit;
+}
+
 function createchatroom($apikeyvalue,$userid,$chatroomname,$chatroomtype,$chatroompassword){
 	$msg = '';
 
@@ -1119,5 +1259,80 @@ function getpushnotificationchannels($params){
 		$response = array('failed' => array('status' => '1007', 'message' => $msg));
 		echo json_encode($response); exit;
 	}
+
+}
+
+
+function createwhiteboard($params){
+
+    /*
+    * It will allow users who has the API key to create a WhiteBoard URL.
+    * Params:
+    * isGroup - 1 if WhiteBoard is for Group 0 otherwise
+    * userid - userid of user who has initiated a whiteboard
+    * toid - id of the Group / user with whom whiteboard must be shared
+    * apikey: Mendatory parameter, Unique API key that client can obtain from CometChat admin panel
+    * Return a url using which users can share a whiteboard
+    */
+    global $channelprefix;
+	$protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] != 'off') ? 'https' : 'http';
+
+    checkAPIKEY($params['apikeyvalue']);    //Verify the API key
+    $params['toid'] = !empty($params['toid']) ? $params['toid'] : rand();
+    $params['userid'] = !empty($params['userid']) ? $params['userid'] : rand();
+    if(!empty($params['isGroup'])){
+        $whiteboard_session_id = md5($channelprefix."whiteboard_groups".$params['toid']);
+    }else{
+        $whiteboard_session_id = $params['userid']<$params['toid']? md5($params['userid']).md5($params['toid']) : md5($params['toid']).md5($params['userid']);
+        $whiteboard_session_id = md5($channelprefix.'whiteboard_users'.$whiteboard_session_id);
+    }
+
+    if (filter_var(BASE_URL, FILTER_VALIDATE_URL)) {
+    	$whiteboardURL = BASE_URL."plugins/whiteboard/index.php?action=whiteboard&whiteboard_session_id=".$whiteboard_session_id;
+	}else if(!empty($_SERVER['SERVER_NAME'])){
+		$whiteboardURL = $protocol.'://'.$_SERVER['SERVER_NAME'].BASE_URL."plugins/whiteboard/index.php?action=whiteboard&whiteboard_session_id=".$whiteboard_session_id;
+	}else {
+		$whiteboardURL = $protocol.'://'.$_SERVER['HTTP_HOST'].BASE_URL."plugins/whiteboard/index.php?action=whiteboard&whiteboard_session_id=".$whiteboard_session_id;
+	}
+    $response = array('success'=> array('status'=>'1040','whiteboardURL'=>$whiteboardURL));
+    echo json_encode($response);
+    exit;
+
+}
+
+function createwriteboard($params){
+
+    /*
+    * It will allow users who has the API key to create a WriteBoard URL.
+    * Params:
+    * isGroup - 1 if WriteBoard is for Group 0 otherwise
+    * userid - userid of user who has initiated a writeboard
+    * toid - id of the Group / user with whom writeboard must be shared
+    * apikey: Mendatory parameter, Unique API key that client can obtain from CometChat admin panel
+    * Return a url using which users can share a writeboard
+    */
+    global $channelprefix;
+	$protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] != 'off') ? 'https' : 'http';
+
+    checkAPIKEY($params['apikeyvalue']);    //Verify the API key
+    $params['toid'] = !empty($params['toid']) ? $params['toid'] : rand();
+    $params['userid'] = !empty($params['userid']) ? $params['userid'] : rand();
+    if(!empty($params['isGroup'])){
+        $writeboard_session_id = md5($channelprefix."writeboard_groups".$params['toid']);
+    }else{
+        $writeboard_session_id = $params['userid']<$params['toid']? md5($params['userid']).md5($params['toid']) : md5($params['toid']).md5($params['userid']);
+        $writeboard_session_id = md5($channelprefix.'writeboard_users'.$writeboard_session_id);
+    }
+
+    if (filter_var(BASE_URL, FILTER_VALIDATE_URL)) {
+    	$writeboardURL = BASE_URL."plugins/writeboard/index.php?action=writeboard&writeboard_session_id=".$writeboard_session_id;
+	}else if(!empty($_SERVER['SERVER_NAME'])){
+		$writeboardURL = $protocol.'://'.$_SERVER['SERVER_NAME'].BASE_URL."plugins/writeboard/index.php?action=writeboard&writeboard_session_id=".$writeboard_session_id;
+	}else {
+		$writeboardURL = $protocol.'://'.$_SERVER['HTTP_HOST'].BASE_URL."plugins/writeboard/index.php?action=writeboard&writeboard_session_id=".$writeboard_session_id;
+	}
+    $response = array('success'=> array('status'=>'1040','writeboardURL'=>$writeboardURL));
+    echo json_encode($response);
+    exit;
 
 }

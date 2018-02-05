@@ -33,7 +33,9 @@ function getGuestID($guestName) {
 				$userid = $result['id'];
 			}
 		}
-
+		if(!empty($guestName) && !empty($userid)){
+			$query = sql_query('updateGuestName',array('id'=>$userid,'name'=>$guestName));
+		}
 		if (empty($userid) && ((empty($_REQUEST['callbackfn']) || (!empty($_REQUEST['callbackfn']) && $_REQUEST['callbackfn'] != 'desktop') || !empty($_REQUEST['guest_login'])))) {
 			if(empty($guestName)){
 				$guestName = rand(10000,99999);

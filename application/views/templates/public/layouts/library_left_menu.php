@@ -11,7 +11,7 @@
 <!-- 		</li> -->
 <!-- 	</ul> -->
 	
-	<ul>
+	<ul class="txt-white">
 		<li>Data 
 			<a class="pull-right add-pss" href="<?php echo base_url('user/dashboard#myProducts');?>" title="View My Product" alt="View My Product"><i class="fa fa-bars"></i> </a>
 			<a class="pull-right add-pss" href="<?php echo base_url('user/add/data');?>" title="Add Product" alt="Add Product"><i class="fa fa-plus"></i> </a>
@@ -25,3 +25,8 @@
 	
 <div class="copyright">&copy; <?php echo date("Y");?> Spageage guru</div>
 </div>
+<style>
+#midmain .leftmain ul.txt-white li a{
+    color : #FFF !important;
+}
+</style>

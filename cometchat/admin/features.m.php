@@ -291,6 +291,12 @@ function addplugin(){
     global $ts;
     global $plugins;
     global $api_response;
+    if ($_GET['data'] == "voicenote" && !in_array('filetransfer', $plugins)) {
+        $_SESSION['cometchat']['type'] = 'alert';
+        $_SESSION['cometchat']['error'] = 'Please Enable Send A File feature in One-on-one to use Voice Note feature';
+        header("Location:?module=features&ts={$ts}");
+        exit();
+    }
     if (!empty($_GET['data']) && !in_array($_GET['data'], $plugins)) {
         array_push($plugins, $_GET['data']);
         configeditor(array('plugins' => $plugins));
@@ -308,7 +314,12 @@ function addchatroomplugin(){
     global $ts;
     global $crplugins;
     global $api_response;
-
+    if ($_GET['data'] == "voicenote" && !in_array('filetransfer', $crplugins)) {
+        $_SESSION['cometchat']['type'] = 'alert';
+        $_SESSION['cometchat']['error'] = 'Please Enable Send A File feature in Group to use Voice Note feature';
+        header("Location:?module=features&ts={$ts}");
+        exit();
+    }
     if (!empty($_GET['data']) && !in_array($_GET['data'], $crplugins)) {
         array_push($crplugins, $_GET['data']);
         configeditor(array('crplugins' => $crplugins));

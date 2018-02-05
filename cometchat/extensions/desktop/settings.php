@@ -54,15 +54,15 @@ if($branded==0){
 		</div>
 EOD;
 }
-
+$jqueryjstag =  getDynamicScriptAndLinkTags(array('type' => "core",'name' => 'jquery', 'ext' => 'js'));
 echo <<<EOD
 	<!DOCTYPE html>
-	<script src="../js.php?type=core&name=jquery"></script>
+	{$jqueryjstag}
 	<script>
 	  $ = jQuery = jqcc;
 	</script>
-	<link href="{$base_url}/css.php?admin=1" rel="stylesheet">
-	<script src="{$base_url}/js.php?admin=1" type="text/javascript"></script>
+	{$GLOBALS['adminjstag']}
+    {$GLOBALS['admincsstag']}
 	<script type="text/javascript" language="javascript">
 	    function resizeWindow() {
 	    	window.resizeTo((510), (($('form').outerHeight(false)+window.outerHeight-window.innerHeight)));
@@ -108,7 +108,7 @@ echo <<<EOD
 		<form id="dm_details" action="?module=dashboard&action=loadexternal&type=extension&name=desktop&process=true" method="post" enctype="multipart/form-data">
 		<div class="row col-md-12">
 	    	<div class="row">
-				
+
 	    	{$brandedhtml}
 	    	{$brandedOptions}
 
@@ -149,13 +149,13 @@ echo <<<EOD
 				<div class="col-md-11">
 					<input type="text" class="form-control" id="login_foreground_text_field" name="login_foreground_text" value="$login_foreground_text" required="true">
 				</div>
-				
+
 		    </div>
 		    	<div class="row col-md-12" style="padding-bottom:5px;padding-top: 5px;">
 	      			<input type="submit" value="Update Settings" class="btn btn-primary">
 	    		</div>
 		   </div>
-		   
+
 EOD;
 } else {
 	if(isset($_POST)){
@@ -206,7 +206,7 @@ EOD;
 			}
 
 			if(!empty($_SESSION['cometchat']['error'])){
-				echo '<script type="text/javascript">parent.location.reload();</script>'; exit;	
+				echo '<script type="text/javascript">parent.location.reload();</script>'; exit;
 			}
 
 		}

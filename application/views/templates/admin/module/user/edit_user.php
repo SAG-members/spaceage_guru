@@ -163,7 +163,7 @@
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="x_panel">
 				<div class="x_title">
-					<h2>User RSS Feed Subscriptions</h2>
+					<h2>RSS Feed Subscriptions</h2>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
@@ -183,31 +183,11 @@
 										</tr>
 									</thead>
 									<tbody>
-									<?php if($rssSubscriptions): foreach ($rssSubscriptions as $s):
-									switch ($s->category_id)
-									{
-										case 1: $subscriptionType = 'Service'; $subscribedItem = $this->page->get_by_id($s->item_id)->{Page::_PAGE_TITLE}; break;
-										case 2: $subscriptionType = 'Product'; $subscribedItem = $this->page->get_by_id($s->item_id)->{Page::_PAGE_TITLE};  break;
-										case 3: break;
-										case 4: break;
-										case 5: break;
-										case 6: break;
-										case 7: break;
-										case 8: $subscriptionType = 'Sensation'; $subscribedItem = $this->page->get_by_id($s->item_id)->{Page::_PAGE_TITLE}; break;
-										case 9: break;
-										case 10: break;
-										case 11: break;
-										case 12: break;
-										case 13: break;
-										case 14: break;
-										case 15: break;
-									}
-									
-									?>
+									<?php if($rssSubscriptions): foreach ($rssSubscriptions as $s): ?>
 									<tr>
 										<td><?php echo $s->id;?></td>
-										<td><?php echo $subscriptionType;?></td>
-										<td><?php echo $subscribedItem;?></td>
+										<td><?php echo $this->page->get_category($s->category_id);?></td>
+										<td><?php echo $s->page_title;?></td>
 										<td><?php echo $s->date_created;?></td>
 										<td><?php echo $status = $s->unsubscribe ? 'Yes' : 'No';?> </td>
 									</tr>
@@ -226,7 +206,7 @@
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="x_panel">
 				<div class="x_title">
-					<h2>User Subscriptions</h2>
+					<h2>Subscriptions</h2>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">
@@ -290,7 +270,7 @@
 		<div class="col-md-12 col-sm-12 col-xs-12">
 			<div class="x_panel">
 				<div class="x_title">
-					<h2>User PSSS Purchases</h2>
+					<h2>Data Purchases</h2>
 					<div class="clearfix"></div>
 				</div>
 				<div class="x_content">

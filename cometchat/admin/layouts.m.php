@@ -15,7 +15,7 @@ function index() {
 	global $color_original;
     global $layout_original;
     global $ts;
-
+    $staticCDNUrl = STATIC_CDN_URL;
     $athemes = array();
 
 	if ($handle = opendir(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'layouts')) {
@@ -59,11 +59,11 @@ function index() {
 		}
 
 		if (strtolower($ti) == 'embedded'){
-			$activethemes .= '<tr><td id="'.$no.'" d1="'.$ti.'">'.stripslashes($title).$default.'</td><td><a data-toggle="tooltip" title="Generate Embed Code"  href="javascript:void(0)" onclick="javascript:themetype_embedcode(\''.$ti.'\')" ><img src="images/embed.png" ></a>&nbsp;&nbsp;<a href="../cometchat_embedded.php" target="_blank" data-toggle="tooltip" title="Direct link to Embedded" style="margin-right:5px;"><img src="images/link.png"></a></td></tr>';
+			$activethemes .= '<tr><td id="'.$no.'" d1="'.$ti.'">'.stripslashes($title).$default.'</td><td><a data-toggle="tooltip" title="Generate Embed Code"  href="javascript:void(0)" onclick="javascript:themetype_embedcode(\''.$ti.'\')" ><img src="{$staticCDNUrl}/admin/images/embed.png" ></a>&nbsp;&nbsp;<a href="../cometchat_embedded.php" target="_blank" data-toggle="tooltip" title="Direct link to Embedded" style="margin-right:5px;"><img src="{$staticCDNUrl}/admin/images/link.png"></a></td></tr>';
 		}else if(strtolower($ti) == 'docked'){
-			$activethemes .= '<tr><td id="'.$no.'" d1="'.$ti.'">'.stripslashes($title).$default.'</td><td><a data-toggle="tooltip" title="Generate Footer Code" href="javascript:void(0)" onclick="javascript:themetype_embedcode(\''.$ti.'\')"><img src="images/embed.png"></a></td></tr>';
+			$activethemes .= '<tr><td id="'.$no.'" d1="'.$ti.'">'.stripslashes($title).$default.'</td><td><a data-toggle="tooltip" title="Generate Footer Code" href="javascript:void(0)" onclick="javascript:themetype_embedcode(\''.$ti.'\')"><img src="{$staticCDNUrl}/admin/images/embed.png"></a></td></tr>';
 		} else {
-			$activethemes .= '<tr><td id="'.$no.'" d1="'.$ti.'">'.stripslashes($title).$default.'</td><td><a data-toggle="tooltip" title="Edit '.$title.'" href="javascript:void(0)" onclick="javascript:themetype_configmodule(\''.$ti.'\')" style="margin-right:5px;"><img src="images/config.png"></a></td></tr>';
+			$activethemes .= '<tr><td id="'.$no.'" d1="'.$ti.'">'.stripslashes($title).$default.'</td><td><a data-toggle="tooltip" title="Edit '.$title.'" href="javascript:void(0)" onclick="javascript:themetype_configmodule(\''.$ti.'\')" style="margin-right:5px;"><img src="{$staticCDNUrl}/admin/images/config.png"></a></td></tr>';
 		}
 	}
 
@@ -73,7 +73,7 @@ global $colors;
 $colorbox = '';
 foreach($colors as $colorname => $val){
 	$colordetails = unserialize($val[$colorname]);
-	$colorbox .= '<div id="'.$colorname.'_'.$colordetails['primary'].'" style="background:#'.$colordetails['primary'].'" class="colorbox"><div class="tick" id="tick_'.$colorname.'_'.$colordetails['primary'].'"><img src="images/check.svg"/></div> </div>';
+	$colorbox .= '<div id="'.$colorname.'_'.$colordetails['primary'].'" style="background:#'.$colordetails['primary'].'" class="colorbox"><div class="tick" id="tick_'.$colorname.'_'.$colordetails['primary'].'"><img src="{$staticCDNUrl}/admin/images/check.svg"/></div> </div>';
 }
 $colorval = unserialize($colors[$color][$color]);
 
