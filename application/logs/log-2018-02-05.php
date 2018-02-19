@@ -68,3 +68,7 @@ ERROR - 2018-02-05 18:18:47 --> Query error: Column 'txn_id' cannot be null - In
 ERROR - 2018-02-05 18:18:47 --> Severity: Warning --> Cannot modify header information - headers already sent by (output started at /var/www/html/spaceage_guru/system/core/Exceptions.php:272) /var/www/html/spaceage_guru/system/core/Common.php 573
 ERROR - 2018-02-05 18:19:14 --> 404 Page Not Found: Assets/uploads
 ERROR - 2018-02-05 18:25:44 --> 404 Page Not Found: Assets/uploads
+ERROR - 2018-02-05 18:48:00 --> 404 Page Not Found: Assets/uploads
+ERROR - 2018-02-05 18:50:10 --> 404 Page Not Found: Assets/uploads
+ERROR - 2018-02-05 18:57:00 --> 404 Page Not Found: Assets/uploads
+ERROR - 2018-02-05 19:00:10 --> 404 Page Not Found: Assets/uploads

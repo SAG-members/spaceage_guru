@@ -9,6 +9,7 @@ class User extends CI_Model
 	
 	const _TABLE = 'user';
 	const _ID = 'id';
+	const _PCT_WALLET_AMOUNT = 'pct_wallet_amount';
 	const _F_NAME = 'f_name';
 	const _M_NAME = 'm_name';
 	const _L_NAME = 'l_name';
@@ -69,7 +70,17 @@ class User extends CI_Model
 		$this->load->model('user');
 		$this->load->model('user_questionnaire', 'question');
 	}
-
+    
+	public function update_pct_wallet_amount($id, $amount)
+	{
+	    $data = array(static::_PCT_WALLET_AMOUNT => $amount);
+	    
+	    $this->db->where(static::_ID, $id);
+	    $this->db->update(static::_TABLE, $data);
+	    $this->db->affected_rows();
+	    
+	}
+	
 	public function sign_in($username, $password)
 	{
 		$password = md5($password);
@@ -403,7 +414,7 @@ class User extends CI_Model
 	{
 		switch ($membershipId)
 		{
-			case 1 : $type = 'Singed In User'; break;
+			case 1 : $type = 'Signed In User'; break;
 			case 2 : $type = 'Registered User'; break;
 			case 3 : $type = 'Upgraded User'; break;
 			case 4 : $type = 'Membership A'; break;

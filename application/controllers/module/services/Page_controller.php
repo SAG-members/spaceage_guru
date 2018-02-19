@@ -35,6 +35,10 @@ class Page_controller extends Application {
 			$response['error'] = true;
 		}
 		
+		$response['metaTitle'] = $response['page']->{Page::_META_TITLE};
+		$response['metaKeywords'] = $response['page']->{Page::_META_KEYWORD};
+		$response['metaDescription'] = strip_tags($response['page']->{Page::_META_DESCRIPTION});
+		
 		# Set Additional Script
 		$additionalScripts = array('plugin/jquery_toastmessage/jquery.toastmessage.js');
 		$additionalStyles = array('jquery_toastmessage/jquery.toastmessage.css');

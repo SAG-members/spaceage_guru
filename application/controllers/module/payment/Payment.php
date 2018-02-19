@@ -172,4 +172,58 @@ class Payment extends Application
 	    redirect('profile');
 	}
 	
+	public function pay_via_pct_wallet()
+	{
+	    $data = array();
+	    
+	    $this->load->model('user');
+	    $userId = $this->session->userdata('id');
+	    
+	    $data['profile'] = $this->user->getUserProfile($userId);
+	    
+	    $data['pctInfo'] = $this->input->post();	    
+	    	    
+	    $this->template->title("Pay Via Internal PCT Wallet");
+	    $this->template->render('internal-pct-wallet', $data);
+	}
+	
+	public function process_pct_payment()
+	{
+	    # Validate user credentials before processing the payment
+	    
+	    $result = $this->user->sign_in($this->input->post('user-name'), $this->input->post('user-password'));
+	    
+	    if(!$result)
+	    {
+	        $this->message->setFlashMessage(Message::PCT_PAYMENT_FAILED_LOGIN_ERROR); 
+	        redirect('profile');
+	    }
+	    
+	    $txnNum = "PCTINT".time();
+	    $userId = $this->session->userdata('id');
+	    $itemNumber = $this->input->post('item_id');
+	    $itemName = $this->input->post('item_name');
+	    $itemCategory = $this->input->post('category_id');
+	    $grossAmount = $this->input->post('invoice_amount');
+	    
+	    
+	    $profile = $this->user->getUserProfile($userId);
+	    $email = $profile->{User::_EMAIL};
+	    
+	    
+	    $this->load->model('psss_purchase_history','psss');
+	    
+	    $this->psss->create_purchase_history($txnNum, $userId, $itemNumber, $itemName, $itemCategory, $grossAmount, "PCT", $email, 'Internal Wallet');
+	    $this->message->setFlashMessage(Message::PAYMENT_SUCCESS, array('id'=>'1'));
+	    
+	    # Now since the payment is done, we need to subtract gross amount
+	    
+	    $profile = $this->user->getUserProfile($userId);
+	    $walletAmount = $profile->{user::_PCT_WALLET_AMOUNT};
+	    $updatedAmount = ($walletAmount - $grossAmount);
+	    
+	    $this->user->update_pct_wallet_amount($userId, $updatedAmount);
+	    
+	    redirect('profile');
+	}
 }

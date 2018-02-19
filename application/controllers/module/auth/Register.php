@@ -139,6 +139,9 @@ class Register extends Base
 				$this->load->model('user_subscription', 'subscription');
 				$this->subscription->create_subscription($couponCodeDetails->{Coupon_model::_COUPON_CODE}, $lastId, $couponCodeDetails->{Coupon_model::_MEMBERSHIP_TYPE}, 'Membership upgrade by coupon', 3, 0, '', '', $date, $expiry, "Invitation", User_subscription::TYPE_COUPON_SUBSCRIPTION);
 				
+				# Now Since we have the membership from the coupon, we should update this to user profile
+				$this->load->model('user');
+				$this->user->update_user_membership($lastId, $membershipType);
 				
 				
 			}
@@ -182,9 +185,11 @@ class Register extends Base
 				/*=======================================================*/
 						
 				
-				$message = 'Welcome '. generate_user_id($lastId) .' <br/>You are safely logged in and free to access the material above';
-				$this->session->set_userdata('welcome-message', $message);
-											
+				$message = 'Welcome '. generate_user_id($userId) .' <br/>You are safely logged in <br/><br/> Your current membership level is '. $this->user->get_user_membership($userProfile->{User::_USER_MEMBERSHIP_LEVEL});
+// 				$message = 'Welcome '. generate_user_id($lastId) .' <br/>You are safely logged in and free to access the material above';
+// 				$this->session->set_userdata('welcome-message', $message);
+				
+				$this->session->set_flashdata('welcome-message', $message);
 				$this->session->set_userdata($sessionData);
 				
 				redirect(base_url('user/data/introduction-to-spageage-guru'));

@@ -37,6 +37,9 @@
 						<li class=""><a data-toggle="tab" href="#ewallet-tab"> E-Wallet
 								<span class="menu-active"></span>
 						</a></li>
+						<li class=""><a data-toggle="tab" href="#pct-ewallet-tab"> PCT Wallet
+								<span class="menu-active"></span>
+						</a></li>
 					</ul>
 					<div class="tab-content">
 						<div id="ewallet-tab" class="tab-pane">
@@ -48,6 +51,14 @@
 								<button class="addtocart" name="e_wallet_address_button" type="submit">Submit</button>
 									
 							</form>
+							</div>
+						</div>
+						
+						
+						<div id="pct-ewallet-tab" class="tab-pane">
+							<div class="pad-20">
+							<input type="text" class="password" name="pct-wallet-amount" value="PCT <?php echo $profile->{User::_PCT_WALLET_AMOUNT}; ?>" readonly/>
+							<h3> Recent Transactions</h3>
 							</div>
 						</div>
 						

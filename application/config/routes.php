@@ -381,8 +381,10 @@ $route['chat'] = 'ajax_chat_engine_controller';
 
 
 
+# Internal Wallet Payment
 
-
+$route['pay-via-pct-wallet'] = 'module/payment/payment/pay_via_pct_wallet';
+$route['process/pct/payment'] = 'module/payment/payment/process_pct_payment';
 
 
 

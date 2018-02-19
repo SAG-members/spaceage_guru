@@ -53,7 +53,7 @@ class Template
 	}
 	
 	public function title($title){$this->title = $title;}
-	
+		
 	public function setSiteLayout($templateDir, $layoutDir, $moduleDir)
 	{
 		$this->templateDir = $templateDir;

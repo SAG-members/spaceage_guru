@@ -11,6 +11,8 @@
 <!-- Update title dynamically -->
 <title><?php echo $title?></title>
 
+<link rel="icon" href="<?php echo base_url('assets/img/fav-32X32.png'); ?>" type="image/gif" sizes="32x32">
+
 <!-- css -->
 <link href="<?php echo base_url('assets/css/bootstrap/bootstrap.min.css')?>" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/font-awesome.css')?>" rel="stylesheet">

@@ -55,7 +55,7 @@ class Login extends Base
 								
 				# Generate User Id;
 				
-				$message = 'Welcome '. generate_user_id($userId) .' <br/>You are safely logged in and free to access the material above<br/><br/> Your current membership level is '. $this->user->get_user_membership($userProfile->{User::_USER_MEMBERSHIP_LEVEL});
+				$message = 'Welcome '. generate_user_id($userId) .' <br/>You are safely logged in<br/><br/> Your current membership level is '. $this->user->get_user_membership($userProfile->{User::_USER_MEMBERSHIP_LEVEL});
 				$this->session->set_flashdata('welcome-message', $message);
 
 				$this->message->setFlashMessage(Message::LOGIN_SUCCESS, array('id'=>'1'));

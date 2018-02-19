@@ -4,6 +4,9 @@ class Message
     
     const GENERAL_ERROR = 'Something wrong happend !!!, Please try again later';
     
+    const PCT_PAYMENT_FAILED_LOGIN_ERROR = 'Payment failed since invalid login credentials provided';
+    
+    
 	const LOGIN_SUCCESS = 'Logged In Successfully to the System';
 	const LOGIN_FAILURE = 'Invalid Login Credentials';
 	const NO_ACCESS_ERROR = "You don'\t have permissions to visit admin section"; 

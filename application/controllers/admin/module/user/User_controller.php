@@ -172,7 +172,7 @@ class User_controller extends Application {
 	    
 	    $this->load->model('user_subscription','subscription');	    
 	    
-	    $result = $this->subscription->create_subscription($transId, $userId, $membershipProduct, $result->{Membership_model::_MEMBERSHIP_TITLE}, $result->{Membership_model::_CATEGORY_ID}, $transAmount, $transCurrency, $transEmail, $date, $expiry, 1);
+	    $result = $this->subscription->create_subscription($transId, $userId, $membershipProduct, $result->{Membership_model::_MEMBERSHIP_TITLE}, $result->{Membership_model::_CATEGORY_ID}, $transAmount, $transCurrency, $transEmail, $date, $expiry, 'Manual Update', User_subscription::TYPE_PAID_SUBSCRIPTION);
 	    
 	    if($result)$this->message->setFlashMessage(Message::USER_SUBSCRIPTION_SUCCESS, array('id'=>'1'));
 		else $this->message->setFlashMessage(Message::USER_SUBSCRIPTION_FAILURE);
