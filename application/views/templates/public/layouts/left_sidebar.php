@@ -13,8 +13,8 @@ if($this->session->userdata('user_id')) $lockIcon = '';
 			<a class="pull-right add-pss" href="<?php echo base_url('personal-library');?>" title="Add Event" alt="Add Event"><i class="fa fa-plus"></i> </a>
 				
 		</li>
-		<li class="text-center menu-li-style"><a href="#"><i class="pull-left <?php echo $lockIcon; ?>"></i> E-BUSINESS</a></li>
-		<li class="text-center menu-li-style"><a href="<?php echo base_url('escrow');?>"><i class="pull-left <?php echo $lockIcon; ?>"></i> ESCROW</a></li>
+		<li class="text-center menu-li-style"><a href="<?php echo base_url('e-business')?>"><i class="pull-left <?php echo $lockIcon; ?>"></i> E-BUSINESS</a></li>
+		<!-- <li class="text-center menu-li-style"><a href="<?php echo base_url('escrow');?>"><i class="pull-left <?php echo $lockIcon; ?>"></i> ESCROW</a></li> -->
 		<li class="text-center menu-li-style"><a href="<?php echo base_url('shop');?>"><i class="pull-left <?php echo $lockIcon; ?>"></i> SHOP WITH CART</a></li>
 		<li class="text-center menu-li-style"><a href="<?php echo base_url('profile');?>"><i class="pull-left <?php echo $lockIcon; ?>"></i> PROFILE</a></li>
 		<li class="text-center menu-li-style"><a href="<?php echo base_url('service/number-game');?>"><i class="pull-left <?php echo $lockIcon; ?>"></i>Spiritual Guidance</a></li>

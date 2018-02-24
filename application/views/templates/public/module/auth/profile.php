@@ -37,9 +37,9 @@
 						<li class=""><a data-toggle="tab" href="#ewallet-tab"> E-Wallet
 								<span class="menu-active"></span>
 						</a></li>
-						<li class=""><a data-toggle="tab" href="#pct-ewallet-tab"> PCT Wallet
-								<span class="menu-active"></span>
-						</a></li>
+<!-- 						<li class=""><a data-toggle="tab" href="#pct-ewallet-tab"> PCT Wallet -->
+<!-- 								<span class="menu-active"></span> -->
+<!-- 						</a></li> -->
 					</ul>
 					<div class="tab-content">
 						<div id="ewallet-tab" class="tab-pane">

@@ -229,6 +229,10 @@ $route['public/api_down/wpq-ios'] = 'webservice_controller/wpq_for_ios';
 $route['profile/update-wpq-ios'] = 'welcome/update_user_wpq_ios';
 
 
+
+$route['e-business'] = 'module/product/ebusiness_controller';
+
+
 # User Reset Password Routes
 
 $route['reset-password/(:any)'] = 'module/auth/reset_password_controller';
@@ -385,7 +389,7 @@ $route['chat'] = 'ajax_chat_engine_controller';
 
 $route['pay-via-pct-wallet'] = 'module/payment/payment/pay_via_pct_wallet';
 $route['process/pct/payment'] = 'module/payment/payment/process_pct_payment';
-
+$route['transfer/pct'] = 'module/payment/payment/process_pct_transfer';
 
 
 

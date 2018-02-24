@@ -158,6 +158,10 @@ header .menu .navbar-nav>li>a {
 	padding-left: 15px;
 	text-transform: uppercase;
 	margin-bottom: 10px;
+	
+	-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
 }
 
 
@@ -245,6 +249,9 @@ header .menu .navbar-nav>li>a {
 	/*background:#84fb70;*/
 	padding: 5px 10px;
 	/*min-height: 2100px;*/
+	-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
 }
 
 #midmain .midmain .quesmain {
@@ -1738,6 +1745,9 @@ body::-webkit-scrollbar-thumb {
     text-transform: uppercase;
     margin-bottom: 5px !important;
     font-size:17px !important;
+    -webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
 }
 .rightmain .right-menu-items .menu-li-style{
 	background: #FFD700;
@@ -1750,6 +1760,9 @@ body::-webkit-scrollbar-thumb {
     text-transform: uppercase;
     margin-bottom: 5px !important;
     font-size:17px !important;
+    -webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
 }
 .rightmain .right-menu-items ul li a{
 	color: #FFF !important;

@@ -216,6 +216,11 @@ class Payment extends Application
 	    $this->psss->create_purchase_history($txnNum, $userId, $itemNumber, $itemName, $itemCategory, $grossAmount, "PCT", $email, 'Internal Wallet');
 	    $this->message->setFlashMessage(Message::PAYMENT_SUCCESS, array('id'=>'1'));
 	    
+	    # Load pct-transaction model
+	    $this->load->model('pct_transaction');
+	    $result = $this->pct_transaction->create_transaction($userId, 1, $txnNum, 'PSSS Purchase', $grossAmount);
+	    
+	    
 	    # Now since the payment is done, we need to subtract gross amount
 	    
 	    $profile = $this->user->getUserProfile($userId);
@@ -226,4 +231,49 @@ class Payment extends Application
 	    
 	    redirect('profile');
 	}
+	
+	public function process_pct_transfer()
+	{
+	    # Validate user credentials before processing the payment
+	    
+	    $result = $this->user->sign_in($this->input->post('user-name'), $this->input->post('user-password'));
+	    
+	    if(!$result)
+	    {
+	        $this->message->setFlashMessage(Message::PCT_PAYMENT_FAILED_LOGIN_ERROR);
+	        redirect('profile');
+	    }
+	    
+	    $txnId = "PCTINT".time();
+	    $fromUser = $this->session->userdata('id');
+	    $toUser = $this->input->post('to-account');
+	    $txnType = 'User To User Transfer';
+	    $txnPoints = $this->input->post('pct-transfer-points');
+	    
+	    # Now before actually making the transaction store, we need to add points to users account
+	    
+	    $profile = $this->user->getUserProfile($this->session->userdata('id'));
+	    
+	    $walletAmount = $profile->{User::_PCT_WALLET_AMOUNT};
+	    
+	    if($txnPoints > $walletAmount){
+	        $this->message->setFlashMessage(Message::PCT_PAYMENT_TRANSFER_FAILURE_INSUFFICIENT_FUND);
+	        redirect('profile');
+	    }
+	    
+	    
+	    $this->db->where(User::_ID, $toUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $txnPoints));
+	    $this->db->where(User::_ID, $fromUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => ($walletAmount- $txnPoints)));
+	    
+	    
+	    # Load pct-transaction model
+	    $this->load->model('pct_transaction');
+	    $result = $this->pct_transaction->create_transaction($fromUser, $toUser, $txnId, $txnType, $txnPoints);
+	    
+	    if($result) $this->message->setFlashMessage(Message::PCT_PAYMENT_TRANSFER_SUCCESS, array('id'=>1));
+	    else  $this->message->setFlashMessage(Message::PCT_PAYMENT_TRANSFER_FAILURE);
+	    
+	    redirect(base_url('e-business'));
+	}
+	
 }

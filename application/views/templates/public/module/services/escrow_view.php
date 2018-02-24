@@ -1,4 +1,4 @@
-<h2><?php echo $title;?></h2>
+<h2><?php //echo $title;?></h2>
 <?php #pre($data);?>
 <div class="services_text">
 	<?php if($data):?>

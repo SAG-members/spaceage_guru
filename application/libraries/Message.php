@@ -6,6 +6,10 @@ class Message
     
     const PCT_PAYMENT_FAILED_LOGIN_ERROR = 'Payment failed since invalid login credentials provided';
     
+    const PCT_PAYMENT_TRANSFER_SUCCESS = 'PCT Payment transfer successfull';
+    const PCT_PAYMENT_TRANSFER_FAILURE = 'PCT Payment transfer failed';
+    
+    const PCT_PAYMENT_TRANSFER_FAILURE_INSUFFICIENT_FUND = 'Insufficient PCT Points';
     
 	const LOGIN_SUCCESS = 'Logged In Successfully to the System';
 	const LOGIN_FAILURE = 'Invalid Login Credentials';
