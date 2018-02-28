@@ -157,7 +157,7 @@ if($this->session->userdata('user_id')) $lockIcon = '';
 			<?php //echo 1; ?>
 			<div id="cometchat_embed_synergy_container" style="width:100%;height:420px;max-width:100%;border:1px solid #CCCCCC;overflow:hidden;" ></div>
 			<script src="<?php echo base_url('cometchat/js.php?type=core&name=embedcode'); ?>" type="text/javascript"></script>
-			<script>var iframeObj = {};iframeObj.module="synergy";iframeObj.style="min-height:420px;min-width:100%;";iframeObj.width="100%";iframeObj.height="420px";iframeObj.src="<?php echo base_url('/cometchat/cometchat_embedded.php')?>"; if(typeof(addEmbedIframe)=="function"){addEmbedIframe(iframeObj);}</script>
+			<script>var iframeObj = {};iframeObj.module="synergy";iframeObj.style="min-height:420px;min-width:100%;";iframeObj.width="100%";iframeObj.height="420px";iframeObj.src="<?php echo base_url('cometchat/cometchat_embedded.php')?>"; if(typeof(addEmbedIframe)=="function"){addEmbedIframe(iframeObj);}</script>
     	<?php endif; ?>		
 	</ul>
 </div>		

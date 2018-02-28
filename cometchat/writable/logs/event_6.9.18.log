@@ -24,3 +24,4 @@
  Dec 14 12:06:33 : {"LATEST_VERSION":"","api_response":""}
  Dec 14 12:08:33 : {"trayicon":{"home":["home","Home","\/","","","","","",""],"chatrooms":["chatrooms","Chatrooms","modules\/chatrooms\/index.php","_popup","600","300","","1","1"],"announcements":["announcements","Announcements","modules\/announcements\/index.php","_popup","280","300","","1",""],"games":["games","Single Player Games","modules\/games\/index.php","_popup","465","300","","1",""],"share":["share","Share This Page","modules\/share\/index.php","_popup","350","50","","1",""],"scrolltotop":["scrolltotop","Scroll To Top","javascript:jqcc.cometchat.scrollToTop();","","","","","",""],"translate":["translate","Translate This Page","modules\/translate\/index.php","_popup","280","310","","1",""]}}
  Feb 14 07:09:08 : {"LATEST_VERSION":"7.0.3","api_response":""}
+ Feb 28 04:27:18 : {"LATEST_VERSION":"7.0.5","api_response":""}

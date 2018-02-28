@@ -223,7 +223,7 @@ class Library extends Application
 			$this->load->library('cometchat_engine');
 			
 			ob_start();
-			$this->cometchat_engine->create_group($lastId, $this->input->post('title'), 0);
+			$this->cometchat_engine->create_group($lastId, $this->input->post('title'), 3);
 			$chatroomData = ob_get_clean();
 			$chatroomDataArr = json_decode($chatroomData, true);
 			
