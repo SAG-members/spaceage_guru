@@ -1,7 +1,7 @@
 <div class="quesmain">
 <h2>Registration</h2>
 <hr/>
-<h2>The registration may take time 5-30 minutes. You are helping the algoritm to make your freetime as enjoyable fantasy as possible.</h2>
+<h2>With this basic registration you are helping the algorithm to make your life as enjoyable fantasy as possible.</h2>
 <br/>
 <form id="register_form" method="post" action="<?php echo base_url('signup')?>" autocomplete="off" enctype="multipart/form-data">
 	<input style="display:none" type="text" name="fakeusernameremembered"/>
@@ -9,7 +9,7 @@
 	
 	
 	<h2>Where did you find about SAG(Spaceage Guru)?</h2>
-	<input type="text" name="recommendor" class="password" placeholder="Enter avatar names/coupon code/user id">
+	<input type="text" name="recommendor" class="password" placeholder="Enter Avatar name/coupon code/User ID">
 	
 	<h2>Select the country where you desire to use the program</h2>
 	<select name="country" class="password" required>
@@ -24,20 +24,20 @@
 	<input type="text" name="avatar_name" class="password" placeholder="Enter avatar name" autocomplete="off">
 	
 	<div class="form-group">
-		<div class="row"><div class="col-md-6"><div class="fileUpload btn btn-primary"><span>Upload Avatar Image</span><input type="file" class="upload" id="profile-avtar" name="file"/></div></div>
+		<div class="row"><div class="col-md-6"><div class="fileUpload btn btn-primary"><span>Upload Avatar Image (Optional)</span><input type="file" class="upload" id="profile-avtar" name="file"/></div></div>
 		<div class="col-md-6"><div class="avtar-image-box"></div></div></div>
 	</div>
 	<div class="clearfix"></div>
 	
 	
-	<h2>What are you?</h2>
-	<input type="text" name="what_you_want_to_become" class="password" placeholder="How would you describe yourself in your life" autocomplete="off">
+	<h2>What are you?</h2>	
+	<textarea style="height: 100px; " name="what_are_you" class="password" placeholder="How would you describe yourself in your life" autocomplete="off"></textarea>
 	
-	<h2>What do you want to become?</h2>
-	<input type="text" name="what_are_you" class="password" placeholder="Describe to which you want to develop yourself" autocomplete="off">
+	<h2>What do you want to become?</h2>	
+	<textarea style="height: 100px; " name="what_you_want_to_become" class="password" placeholder="Describe to which you want to develop yourself" autocomplete="off"></textarea>
 	
 	<h2>What do you need?</h2>
-	<input type="text" name="what_do_you_need" class="password" placeholder="We all know time&money, but rather write what would you get with them" autocomplete="off">
+	<textarea style="height: 100px; " name="what_do_you_need" class="password" placeholder="We all know time & money, but instead of them rather write what would you need with a bunch of money on your bank account and 24 hours of time everyday from now on." autocomplete="off"></textarea>
 	 
 	<!-- <h2>What is the problem that is preventing you from becoming the one you desire to become ?</h2>
 	<input type="text" name="problem_preventing" class="password" placeholder="What is the problem that is preventing you from becoming the one you desire to become?" autocomplete="off"> -->
@@ -70,7 +70,7 @@
 	<input name="secret_question_answer" type="password" placeholder="Please write a personal security question answer"	class="password">
 	 -->
 	 
-	<h2>Would you like to receive suggestions from our 3rd party partners to aid you become the one you desire to become? </h2>
+	<h2>Would you like to receive suggestions from our 3rd party partners to aid you reach your tasks & goals? </h2>
 	<div class="checkboobmain">
 		<input type="radio" name="suggestion_required" required="" value="1"> 
 		<label>Yes</label>
@@ -84,15 +84,16 @@
 		<input type="checkbox" id="age-flag" name="age-flag" required /> <label>I
 			agree I'm above 18 years old</label><br /> 
 		
-		<input type="checkbox"
-			id="terms-flag" name="terms-flag" required /> <label>I accept all
-			terms of <a data-toggle="modal" data-target="#myModal">TOUS</a>
+		<input type="checkbox" id="terms-flag" name="terms-flag" required /> 
+		I accept all terms of <a data-toggle="modal" data-target="#myModal">TOUS (Terms Of Usage And Service)</a> and 
+		<a href="<?php echo base_url('privacy-policy'); ?>" target="_blank">Privacy Policy</a>
+		
 		</label>
 	</div>	 
 	
 	<div class="field buttons">
 		<label class="main">&nbsp;</label>
-		<button type="button" name="confirm-user-registration" class="submit">Submit</button>
+		<button type="button" name="confirm-user-registration" class="submit btn-round-red">Submit</button>
 	</div>
 </form>
 </div>

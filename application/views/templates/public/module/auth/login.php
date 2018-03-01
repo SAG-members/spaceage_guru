@@ -10,9 +10,9 @@
 <div class="services_text feedback">
 	<form action="<?php echo base_url('/index.php/login')?>" method="post"
 		autocomplete="off">
-		<label>Username</label> <input name="username" type="text"
+		<label>Username</label> <input class="password" name="username" type="text"
 			autocomplete="new-password"> <label>Password</label> <input
-			name="password" type="password" autocomplete="new-password">
+			name="password"  class="password" type="password" autocomplete="new-password">
 		<?php if($this->session->has_userdata('referrer')):?>
 		<input type="hidden" name="referrer"
 			value="<?php echo $this->session->userdata('referrer');?>" /> 
@@ -21,7 +21,7 @@
 			<label><a data-toggle="modal" data-target="#forgot-password">Forgot
 					Password?</a><a href="<?php echo base_url('register');?>">Register</a></label>
 		</div>
-		<button type="submit" name="btn-submit">Login</button>
+		<button type="submit" class="btn-round-red" name="btn-submit">Login</button>
 	</form>
 </div>
 
@@ -56,7 +56,7 @@
 							</div>
 							<div class="secret-question mar-t-20">
 								<p></p>
-								<input type="text" class="form-control" name="security_question_answer" placeholder="Write your answer here"/>
+								<input type="text" class="form-control password" name="security_question_answer" placeholder="Write your answer here"/>
 								
 								<button type="button" class="btn btn-success mar-t-20" name="btn_submit_question_answer">Submit Answer</button>
 							</div>
@@ -69,7 +69,7 @@
 								
 								<div class="input-group">
 									<span class="input-group-addon" id="basic-addon1"><i class="fa fa-lock" aria-hidden="true"></i></span>
-								  	<input type="password" class="form-control" name="for_cpassword" placeholder="Please Re-Enter new password"/>
+								  	<input type="password" class="form-control password" name="for_cpassword" placeholder="Please Re-Enter new password"/>
 								</div>
 																
 								<button type="button" class="btn btn-success mar-t-20" name="btn_submit_change_password">Change Password</button>

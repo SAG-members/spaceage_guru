@@ -56,6 +56,9 @@ $route['module/auth'] = "module/auth/register";
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE; 
 
+
+$route['privacy-policy'] = 'cms_page_controller';
+
 # Auth Routes
 $route['register'] = 'module/auth/register';
 $route['signup'] = 'module/auth/register/sign_up'; 
@@ -227,6 +230,11 @@ $route['profile/update-rpq-ios'] = 'welcome/update_user_rpq_ios';
 
 $route['public/api_down/wpq-ios'] = 'webservice_controller/wpq_for_ios';
 $route['profile/update-wpq-ios'] = 'welcome/update_user_wpq_ios';
+
+
+# CALENDAR ROUTE
+$route['profile/calendar'] = 'webservice_controller/calendar_for_mobile';
+
 
 
 

@@ -111,7 +111,7 @@ class Webservice_controller extends CI_Controller
 	
 	
 	const SERVICE_MEMBERSHIP_PURCHASE = 16000;
-	
+	const SERVICE_PSS_PURCHASE = 16001;
 	
 	const SERVICE_LIKE_PAGE_DATA = 17000;
 	const SERVICE_UNLIKE_PAGE_DATE = 17001;
@@ -123,6 +123,9 @@ class Webservice_controller extends CI_Controller
 	const SERVICE_PPQ_FOR_ISO = 'ios_ppq';
 	const SERVICE_RPQ_FOR_ISO = 'ios_rpq';
 	const SERVICE_WPQ_FOR_ISO = 'ios_wpq';
+	
+	
+	const SERVICE_CALENDAR_FOR_MOBILE = 'mobile_calendar';
 	
 	
 	public function __construct()
@@ -243,7 +246,7 @@ class Webservice_controller extends CI_Controller
 			case self::SERVICE_SET_CALENDAR_COMMENT : $response = $this->set_calendar_comment($payload); break;
 			
 			case self::SERVICE_MEMBERSHIP_PURCHASE : $response = $this->membership_purchase($payload); break;
-			
+			case self::SERVICE_PSS_PURCHASE : $response = $this->pss_purchase($payload); break;
 			
 			case self::SERVICE_LIKE_PAGE_DATA : $response = $this->like_page_data($payload); break;
 			case self::SERVICE_UNLIKE_PAGE_DATE : $response = $this->unlike_page_data($payload); break;
@@ -254,6 +257,8 @@ class Webservice_controller extends CI_Controller
 			case self::SERVICE_PPQ_FOR_ISO : $response = $this->ppq_for_ios($payload); break;
 			case self::SERVICE_RPQ_FOR_ISO : $response = $this->rpq_for_ios($payload); break;
 			case self::SERVICE_WPQ_FOR_ISO : $response = $this->wpq_for_ios($payload); break;
+			
+			case self::SERVICE_CALENDAR_FOR_MOBILE : $this->calendar_for_mobile($payload); break;
 			
 		}
 		
@@ -3202,14 +3207,6 @@ class Webservice_controller extends CI_Controller
 	    	case 1: $expiry = $expiry->add(new DateInterval('P1M')); $expiry = $expiry->format('Y-m-d H:i:s');break;
 	    	case 2: $expiry = $expiry->add(new DateInterval('P1Y')); $expiry = $expiry->format('Y-m-d H:i:s');break;
 	    }
-	    	
-	    if($result->{Membership_model::_MEMBERSHIP_TYPE} == 7)
-	    {
-	        $expiry = new DateTime();
-	        	
-	        $expiry = $expiry->add(new DateInterval('P1Y'));
-	        $expiry = $expiry->format('Y-m-d H:i:s');
-	    }
 	    
 	    if($result->{Membership_model::_MEMBERSHIP_TYPE} == 7)
 	    {
@@ -3231,6 +3228,37 @@ class Webservice_controller extends CI_Controller
 	    
 	    return $response;
 	}
+	
+	public function pss_purchase($payload)
+	{
+	    $response = array();
+	    
+	    if(!$this->input->post('user_id'))
+	    {
+	        $response = array('flag'=>0,'message'=>'OOPS ! please login first');
+	        return $response;
+	    }
+	    
+	    # Load PSSS purchase history modal
+	    
+	    $this->load->model('psss_purchase_history','psss');
+	    
+	    $txnId = $this->input->post('txn_id');
+	    $userId = $this->input->post('user_id');
+	    $itemNumber = $this->input->post('item_number');
+	    $itemName = $this->input->post('item_name');
+	    $category = $this->input->post('category');
+	    $grossAmount = $this->input->post('gross_amount');
+	    $currencyCode = $this->input->post('currency_code');
+	    $payerEmail = $this->input->post('payer_email');
+	    	    
+	    
+	    $this->psss->create_purchase_history($txnId, $userId, $itemNumber, $itemName, $category, $grossAmount, $currencyCode, $payerEmail, 'Paypal');
+	    $this->message->setFlashMessage(Message::PAYMENT_SUCCESS, array('id'=>'1'));
+	    	    
+	    return $response;
+	}
+	
 	
 	public function like_page_data($payload)
 	{
@@ -3475,4 +3503,89 @@ class Webservice_controller extends CI_Controller
 	    $data['userId'] = $this->input->get('user-id');
 	    $this->load->view('templates/public/module/ios/ios_wpq', $data);
 	}
+	
+	public function calendar_for_mobile()
+	{
+	    $response = array();
+	    
+	    if(!$this->input->get('user-id'))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login First');
+	        echo json_encode($response);
+	        exit;
+	    }
+	    
+	    $data = array();
+	    
+	    
+	    $data['userId'] = $this->input->get('user-id');
+	    $this->load->view('templates/public/module/ios/calendar', $data);
+	}
+	
+	/*
+	public function process_paypal_payment($payload)
+	{
+	    $response = array();
+	    
+	    if($this->input->get('user-id'))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login First');
+	        return $response;
+	    }
+	    
+	    # Decide on the basis of type
+	    $type = $this->input->post('action_type');
+	    
+	    if($type == 'membership')
+	    {
+	        # Payment Verified Now Update Database
+	        
+	        $this->load->model('user_subscription','subscription');
+	        $this->load->model('membership_model','membership');
+	        $this->load->model('page');
+	        $this->load->model('user');
+	        
+	        
+	        # First Step is to get subscription amount and calculate subscription expiry
+	        
+	        $result = $this->membership->get_membership_by_id($this->input->post('item_number'));
+	        
+	        $date = new DateTime();
+	        $date = $date->format('Y-m-d H:i:s');
+	        
+	        $expiry = new DateTime();
+	        
+	        switch ($this->input->post('subscription_type'))
+	        {
+	            case 1: $expiry = $expiry->add(new DateInterval('P1M')); $expiry = $expiry->format('Y-m-d H:i:s');break;
+	            case 2: $expiry = $expiry->add(new DateInterval('P1Y')); $expiry = $expiry->format('Y-m-d H:i:s');break;
+	        }
+	        
+	        if($result->{Membership_model::_MEMBERSHIP_TYPE} == 7)
+	        {
+	            $expiry = new DateTime();
+	            
+	            $expiry = $expiry->add(new DateInterval('P1Y'));
+	           
+	        }
+	        else
+	        {
+	            # Update new membership for user
+	            
+	            $this->user->update_user_membership($this->input->post('user_id'), $result->{Membership_model::_MEMBERSHIP_TYPE});	                        
+	        }
+	        
+	        $expiry = $expiry->format('Y-m-d H:i:s');
+	        
+	        $this->subscription->create_subscription($this->input->post('txn_id'), $this->input->post('user_id'), $this->input->post('item_number'), $this->input->post('item_name'), $this->input->post('category'), $this->input->post('mc_gross'), $this->input->post('currency_code'), $this->input->post('payer_email'), $date, $expiry, 'Paypal', 'paid');
+	        $response = array('flag'=>1, 'message'=>'Subscription Successfull');
+	        
+	        return $response;
+	    }
+	    if($type == 'psss')
+	    {
+	        
+	    }	    
+	}
+	*/
 }

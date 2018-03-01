@@ -10,11 +10,11 @@
 
 <h2 class="text-center">Login</h2>
 <div class="services_text feedback">
-	<form action="<?php echo base_url('/index.php/login')?>" method="post"
+	<form action="<?php echo base_url('login')?>" method="post"
 		autocomplete="off">
-		<label>Username</label> <input name="username" type="text"
+		<label>Username</label> <input class="password" name="username" type="text"
 			autocomplete="new-password"> <label>Password</label> <input
-			name="password" type="password" autocomplete="new-password">
+			name="password" class="password" type="password" autocomplete="new-password">
 		<?php if($this->session->has_userdata('referrer')):?>
 		<input type="hidden" name="referrer"
 			value="<?php echo $this->session->userdata('referrer');?>" /> 

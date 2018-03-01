@@ -607,14 +607,19 @@ border-radius: 5px;
 .password {
 	width: 100%;
 	height: 45px;
-	background: #f3ad6e;
+	/*background: #f3ad6e;*/
+	background : #FFD700;
 	border: 1px solid #ad635e;
 	resize: none;
 	margin-top: 20px;
 	margin-bottom: 20px;
 	padding: 5px;
-	color: #FFF;
+	/*color: #FFF;*/
+	color:#000;
 	opacity: 10;
+	-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
 }
 
 placeholder {
@@ -810,7 +815,7 @@ body,html,.container,#midmain,.fullheight {
 	color:#fff;
 }
 .gold{
-	color : #b3b009 !important;
+	color : #63141A !important;
 }
 input[type="text"], textarea{ 
 	//color:#635c5c !important;
@@ -1793,3 +1798,18 @@ ul li a{
 	color: #000 !important;
 }
 
+.btn-round-red{
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background :#63141A !important; 
+	color : #fff;
+}
+
+.feedback button{
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background :#63141A !important;
+	color : #fff;
+}

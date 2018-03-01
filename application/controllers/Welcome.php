@@ -193,5 +193,10 @@ class Welcome extends Base
 	    redirect(base_url('public/api_down/wpq-ios?user-id='.$userId));
 	}
 	
+	public function privacy_policy()
+	{
+	    $this->template->title('Privacy Policy');
+	    $this->template->render('cms/single', $data);	
+	}
 	
 }

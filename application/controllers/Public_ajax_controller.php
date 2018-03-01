@@ -56,6 +56,8 @@ class Public_ajax_controller extends CI_Controller
 	
 	const AJAX_VALIDATE_ESCROW_LIMIT = 13000;
 	
+	const AJAX_USER_CALENDAR_EVENT_MOBILE = 'calendar_events_for_mobile';
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -117,6 +119,9 @@ class Public_ajax_controller extends CI_Controller
 			case self::AJAX_VALIDATE_ESCROW_COUNTRY : $response = $this->validateEscrowCountry($payload); break;
 			
 			case self::AJAX_VALIDATE_ESCROW_LIMIT : $response = $this->validateEscrowLimit($payload); break;
+			
+			
+			case self::AJAX_USER_CALENDAR_EVENT_MOBILE : $response = $this->getUserCalendarEventsForMobiile($payload); break;
 		}
 		
 		echo json_encode($response);
@@ -1206,6 +1211,26 @@ class Public_ajax_controller extends CI_Controller
         
 	    
 	    
+	}
+	
+	private function getUserCalendarEventsForMobiile($payload)
+	{
+	    if($this->input->post('user_id'))
+	    {
+	        # Load user library events modal
+	        $this->load->model('library_event_model', 'library1');
+	        
+	        $userId = $this->input->post('user_id');
+	        
+	        $result = $this->library1->getLibraryEventsByUserId($userId);
+	        
+	        $response = array('flag'=>1, 'result'=>$result);
+	    }
+	    else
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	    }
+	    return $response;
 	}
 	
 }
