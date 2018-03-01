@@ -61,13 +61,21 @@
 										<input type="text" name="user-name" class="password" value="<?php echo $profile->{User::_USERNAME}; ?>" readonly>
 									</div>
 									<div class="form-group">
-										<label>To User</label>
-										<select class="password" name="to-account" name="to-account">
+										<label>To User</label>										
+										<select class="specified_user_value password" name="to-account" name="to-account">
 											<option value="select" disabled selected>Select</option>
 											<?php if($accounts): foreach ($accounts as $acc):?>
 											<option value="<?php echo $acc->{User::_ID}?>"><?php echo $acc->{User::_USERNAME}?></option>
 											<?php endforeach; endif; ?>
 										</select>
+									</div>
+									<div class="form-group">
+										<label>Topic</label>
+										<textarea style="height: 100px;" class="password" name="pct-topic"></textarea>
+									</div>
+									<div class="form-group">
+										<label>Message</label>
+										<textarea style="height: 100px;" rows="5" cols="" class="password" name="pct-message"></textarea>
 									</div>
 									<div class="form-group">
 										<label>PCT Balance</label>
@@ -82,7 +90,7 @@
 										<input type="password" class="password" name="user-password">
 									</div>
 									<div class="form-group">									
-										<input type="submit" class="password" name="pct-transfer-points-submit-btn">
+										<input type="submit" class="btn-round-red password" name="pct-transfer-points-submit-btn">
 									</div>
 								</form>
 							</div>
@@ -102,4 +110,5 @@
 		</div>
 	</div>
 </div>
-					
+
+			

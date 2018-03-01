@@ -14,6 +14,8 @@ class Pct_transaction extends CI_Model
 	const _TXN_ID = 'txn_id';
 	const _TXN_TYPE = 'txn_type';
 	const _TXN_POINTS = 'txn_points';
+	const _TXN_TOPIC = 'txn_topic';
+	const _TXN_MESSAGE = 'txn_message';
 	const _STATUS = 'status';
 	const _DATE_CREATED = 'date_created';
 	const _DATE_MODIFIED = 'date_modified';
@@ -23,7 +25,7 @@ class Pct_transaction extends CI_Model
 		parent::__construct();
 	}
 	
-	public function create_transaction($fromUser, $toUser, $txnId, $txnType, $txnPoints)
+	public function create_transaction($fromUser, $toUser, $txnId, $txnType, $txnPoints, $txnTopic = null, $txnMessage = null)
 	{
 	    $data = array(
 	        static::_FROM_USER => $fromUser,
@@ -31,6 +33,8 @@ class Pct_transaction extends CI_Model
 	        static::_TXN_ID => $txnId,
 	        static::_TXN_TYPE => $txnType,
 	        static::_TXN_POINTS => $txnPoints,	        
+	        static::_TXN_TOPIC => $txnTopic,	        
+	        static::_TXN_MESSAGE => $txnMessage,	        
 	    );
 	    
 	    $this->db->insert(static::_TABLE, $data);

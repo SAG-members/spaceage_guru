@@ -608,8 +608,8 @@ border-radius: 5px;
 	width: 100%;
 	height: 45px;
 	/*background: #f3ad6e;*/
-	background : #FFD700;
-	border: 1px solid #ad635e;
+	background : #FFD700 !important;
+	border: 1px solid #ad635e !important;
 	resize: none;
 	margin-top: 20px;
 	margin-bottom: 20px;

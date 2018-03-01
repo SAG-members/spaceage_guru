@@ -249,6 +249,8 @@ class Payment extends Application
 	    $toUser = $this->input->post('to-account');
 	    $txnType = 'User To User Transfer';
 	    $txnPoints = $this->input->post('pct-transfer-points');
+	    $txnTopic = $this->input->post('pct-topic');
+	    $txnMessage = $this->input->post('pct-message');
 	    
 	    # Now before actually making the transaction store, we need to add points to users account
 	    
@@ -268,7 +270,7 @@ class Payment extends Application
 	    
 	    # Load pct-transaction model
 	    $this->load->model('pct_transaction');
-	    $result = $this->pct_transaction->create_transaction($fromUser, $toUser, $txnId, $txnType, $txnPoints);
+	    $result = $this->pct_transaction->create_transaction($fromUser, $toUser, $txnId, $txnType, $txnPoints, $txnTopic, $txnMessage);
 	    
 	    if($result) $this->message->setFlashMessage(Message::PCT_PAYMENT_TRANSFER_SUCCESS, array('id'=>1));
 	    else  $this->message->setFlashMessage(Message::PCT_PAYMENT_TRANSFER_FAILURE);

@@ -1,5 +1,6 @@
 <?php 
-$lockIcon = 'fa fa-lock';
+// $lockIcon = 'fa fa-lock';
+$lockIcon = '';
 
 if($this->session->userdata('user_id')) $lockIcon = '';
 
