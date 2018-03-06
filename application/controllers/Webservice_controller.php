@@ -352,7 +352,7 @@ class Webservice_controller extends CI_Controller
 	{
 		$response = array();
 		
-		if($this->input->post('country') && $this->input->post('avatar_name') && $this->input->post('what_are_you') && $this->input->post('what_you_want_to_become') && $this->input->post('password') && $this->input->post('cpassword') && $this->input->post('secret_question') && $this->input->post('secret_question_answer') && $this->input->post('device_id') && $this->input->post('device_token'))
+		if($this->input->post('country') && $this->input->post('avatar_name') && $this->input->post('what_are_you') && $this->input->post('what_you_want_to_become') && $this->input->post('password') && $this->input->post('cpassword') && $this->input->post('device_id') && $this->input->post('device_token'))
 		{
 			$recommendor = $this->input->post('recommendor') ? $this->input->post('recommendor') : '';
 			$country = $this->input->post('country');
@@ -365,8 +365,12 @@ class Webservice_controller extends CI_Controller
 			
 			$password = $this->input->post('password');
 			$cpassword = $this->input->post('cpassword');
-			$securityQuestion = $this->input->post('secret_question');
-			$securityQuestionAnswer = $this->input->post('secret_question_answer');
+// 			$securityQuestion = $this->input->post('secret_question');			
+// 			$securityQuestionAnswer = $this->input->post('secret_question_answer');
+
+			$securityQuestion = '';
+			$securityQuestionAnswer = '';
+			
 			$requiredSuggestion = $this->input->post('reqd_suggestion');
 			
 			# Validate if both passwords are equal

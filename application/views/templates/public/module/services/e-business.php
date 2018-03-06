@@ -1,3 +1,17 @@
+<style>
+.select2-container{
+    display: block !important;
+    width: 100% !important;
+    background: #FFD700 !important;
+    border: 1px solid #FFD700 !important;
+}
+.select2-selection{
+    height: 45px !important;
+    padding-top: 8px !important;
+     background: #FFD700 !important;
+    border: 1px solid #FFD700 !important;
+}
+</style>
 <div class="profile">
 	<div class="panel panel-default mar-t-20">
 		<div class="panel-heading">
@@ -51,7 +65,7 @@
 							
 							</div>
 						</div>
-						
+						<?php //pre($accounts); ?>
 						<!-- PCT AMOUNT TRANSFER TAB -->
 						<div id="pct-amount-transfer-tab" class="tab-pane">
 							<div class="pad-20">
@@ -62,10 +76,12 @@
 									</div>
 									<div class="form-group">
 										<label>To User</label>										
-										<select class="specified_user_value password" name="to-account" name="to-account">
-											<option value="select" disabled selected>Select</option>
-											<?php if($accounts): foreach ($accounts as $acc):?>
-											<option value="<?php echo $acc->{User::_ID}?>"><?php echo $acc->{User::_USERNAME}?></option>
+										<select class="specified_user_value password" name="to-account" name="to-account">																						
+											<?php if($accounts): foreach ($accounts as $acc):?>											
+											<?php $name = !empty($acc->{User::_AVATAR_NAME}) ? $acc->{User::_AVATAR_NAME} : !empty($acc->{User::_USERNAME}) ? $acc->{User::_USERNAME} : "";  ?>
+											
+											
+											<option value="<?php echo $acc->{User::_ID}?>"><?php echo $name; ?></option>
 											<?php endforeach; endif; ?>
 										</select>
 									</div>
@@ -111,4 +127,13 @@
 	</div>
 </div>
 
+<link href="<?php echo base_url(); ?>assets/css/select2/select2.min.css" rel="stylesheet">
+<script src="<?php echo base_url(); ?>assets/js/plugin/select2/select2.full.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+$(".specified_user_value").select2();
+
+
+</script>
 			
