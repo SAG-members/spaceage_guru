@@ -8,6 +8,7 @@
 </div>
 
 <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap/bootstrap.min.css'); ?>">
+<link rel="stylesheet" href="<?php echo base_url('assets/css/font-awesome.css'); ?>">
 <link rel="stylesheet" href="<?php echo base_url('assets/css/fullcalendar/fullcalendar.css'); ?>">
 
 <script>BASE_URL='<?php echo base_url(); ?>'; </script>
@@ -15,6 +16,8 @@
 <script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/jquery-ui.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/moment.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/plugin/classy/js/jquery.classyedit.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/app.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/bootstrap-datetimepicker.js"></script>
 
 <script src="<?php echo base_url('assets/js/plugin/fullcalendar/fullcalendar.js'); ?>"></script>
@@ -338,63 +341,117 @@ $('body').on('change', 'select[name="escrow_type"]', function(){
  
 $(document).on('click', 'button[type="button"][name="update_comment"]', function(e){
 
-	var eventId = $('input[type="hidden"][name="edit_event_id"]').val();
-	var comment = $('textarea[name="event_comment"]').val();
-	var price = $('input[type="text"][name="price"]').val();
-	var location = $('input[type="text"][name="location"]').val();
-	var address = $('input[type="text"][name="address"]').val();
-	var lat = $('input[type="hidden"][name="lat"]').val();
-	var lng = $('input[type="hidden"][name="lng"]').val();
-	var paymentFrom = $('select[name="payment_from"]').val();
-	var deliveryMethod = $('select[name="delivery_method"]').val();
-	var paymentWhen = $('select[name="payment_when"]').val();
-	var dateTime = $('input[type="text"][name="escrow_date_time"]').val();
-	var escrowType = 1 
-	
-	var escrowLimit = 1;
-	if($('select[name="escrow_type"]').length >= 1)
-	{ 
-		escrowType = $('select[name="escrow_type"]').val(); 
-		escrowLimit = $('input[type="text"][name="escrow_limit"]').val();
-	}
-	
-	if(comment =='' || location ==''|| address == ''|| lat==''|| lng=='' || price == '' || dateTime == '' || escrowType == '')
+	$('.pop_up_message_box').html('');
+	var itemId = $('select[name="item_name"]').val();
+
+	if($('input[type="text"][name="escrow_date_time"]').val() == "")
 	{
-		$('.pop_up_message_box').html(MessageHelper.showMessage('error', 'Please provide comment, location, address, date-time and lat, lng and escrow type'));
-
-		
-
+		$('.pop_up_message_box').html(MessageHelper.showMessage('error', 'Please select date'));
 		return false;
 	}
 
-	var events = {'eventId':eventId, 'comment':comment, 'location':location, 'address': address, 'lat':lat, 'lng':lng, 'price':price, 'paymentFrom':paymentFrom, 'deliveryMethod':deliveryMethod, 'paymentWhen':paymentWhen, 'dateTime':dateTime, 'escrowType':escrowType, 'escrowLimit':escrowLimit};
+	if($('select[name="item_name"] option:selected').val() == "select")
+	{
+		$('.pop_up_message_box').html(MessageHelper.showMessage('error', 'Please select a item'));
+		return false;
+	}
+	
+	events = {};
+	/* Step1 Create event */	
+		
+	events['userId'] = $('select[name="item_name"]').find(':selected').data('user');
+   	events['eventDataId'] = itemId;
+	events['eventTitle'] = $('select[name="item_name"]').find(':selected').text();
+	events['eventPrice'] = $('select[name="item_name"]').find(':selected').data('price');
+	events['startDate'] = $('input[type="text"][name="escrow_date_time"]').val();
+	events['endDate'] = '';
+	events['fullDay'] = true;	
+	
+	var data = {'acid':'save_calendar_events_for_mobile', 'payload':JSON.stringify(events)};
+	$.ajax({
+		url: BASE_URL + '/ajax',
+		data: data,
+		type: 'POST',
+		dataType: 'json',
+		async : false,
+		success: function(response){
+    		event.id = response.lastId;
+			//$('#calendar').fullCalendar('updateEvent',event);
 
-	var data = {'acid':601, 'payload':JSON.stringify(events)};   
-    $.ajax({
-  		url: BASE_URL + '/ajax',
-  		data: data,
-  		type: 'POST',
-  		dataType: 'json',
-  		success: function(response){	
-  			if(response.flag == 0){
-				$('.pop_up_message_box').html(MessageHelper.showMessage('error', response.message));
-  			}
-  			else
-  			{
-  				$('.pop_up_message_box').html(MessageHelper.showMessage('success', response.message));
-  				setTimeout(function(){ window.location.reload();}, 5000);
-  			}
-  						    			
-    				
-  		},
-  		error: function(e){
-  			alert('Error processing your request: '+e.responseText);
-  		}
-  	});
+			var eventId = response.lastId;
+			var comment = $('textarea[name="event_comment"]').val();
+			var price = $('input[type="text"][name="price"]').val();
+			var location = $('input[type="text"][name="location"]').val();
+			var address = $('input[type="text"][name="address"]').val();
+			var lat = $('input[type="hidden"][name="lat"]').val();
+			var lng = $('input[type="hidden"][name="lng"]').val();
+			var paymentFrom = $('select[name="payment_from"]').val();
+			var deliveryMethod = $('select[name="delivery_method"]').val();
+			var paymentWhen = $('select[name="payment_when"]').val();
+			var dateTime = $('input[type="text"][name="escrow_date_time"]').val();
+			var escrowType = 1 
 
+// 			console.log(eventId);
+// 			console.log(comment);
+// 			console.log(price);
+// 			console.log(location);
+// 			console.log(address);
+// 			console.log(lat);
+// 			console.log(lng);
+// 			console.log(paymentFrom);
+// 			console.log(deliveryMethod);
+// 			console.log(paymentWhen);
+// 			console.log(dateTime);
+			
+			
 
+			var escrowLimit = 1;
+			if($('select[name="escrow_type"]').length >= 1)
+			{ 
+				escrowType = $('select[name="escrow_type"]').val(); 
+				escrowLimit = $('input[type="text"][name="escrow_limit"]').val();
+			}
+			
+			if(comment =='' || location ==''|| address == ''|| lat==''|| lng=='' || price == '' || dateTime == '' || escrowType == '')
+			{
+				$('.pop_up_message_box').html(MessageHelper.showMessage('error', 'Please provide comment, location, address, date-time and lat, lng and escrow type'));
 
+				return false;
+			}
 
+			var events = {'eventId':eventId, 'comment':comment, 'location':location, 'address': address, 'lat':lat, 'lng':lng, 'price':price, 'paymentFrom':paymentFrom, 'deliveryMethod':deliveryMethod, 'paymentWhen':paymentWhen, 'dateTime':dateTime, 'escrowType':escrowType, 'escrowLimit':escrowLimit};
+
+			var data = {'acid':601, 'payload':JSON.stringify(events)};   
+		    $.ajax({
+		  		url: BASE_URL + '/ajax',
+		  		data: data,
+		  		type: 'POST',
+		  		dataType: 'json',
+		  		success: function(response){	
+		  			if(response.flag == 0){
+						$('.pop_up_message_box').html(MessageHelper.showMessage('error', response.message));
+		  			}
+		  			else
+		  			{
+		  				$('.pop_up_message_box').html(MessageHelper.showMessage('success', response.message));
+		  				setTimeout(function(){ window.location.reload();}, 1000);
+		  			}
+		  						    			
+		    				
+		  		},
+		  		error: function(e){
+		  			alert('Error processing your request: '+e.responseText);
+		  		}
+		  	});
+						
+		},
+		error: function(e)
+		{
+			$('.message').show();
+			$('.pop_up_message_box').html(MessageHelper.showMessage('error', e.responseText));
+			console.log(e.responseText);
+		}
+	});
 	
 });
 
@@ -447,7 +504,7 @@ $(document).on('click', 'button[type="button"][name="update_comment"]', function
 		<!-- Modal content-->
 		<div class="modal-content" style="background: #63141A;">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<button type="button" class="close" data-dismiss="modal" style="color: #fff;"><i class="fa fa-close fa-2x"></i></button>
 				<h4 class="modal-title" style="color:#fff; ">Edit Event</h4>
 			</div>
 			<div class="modal-body">
@@ -456,12 +513,25 @@ $(document).on('click', 'button[type="button"][name="update_comment"]', function
 						<div class="pop_up_message_box"></div>
 						<div class="form-group">
 							<div class="col-md-6">
-								<label style="color: #FFF;">Data Type</label> 
-								<input type="text" name="data_type" class="form-control" readonly>
+								<label style="color: #FFF;">Data Type</label>
+								<select name="data_type" class="form-control">
+								<option value="select">Select</option>
+								<?php if($categories): foreach ($categories as $k => $v):?>
+								<option value="<?php echo $k; ?>"><?php echo $v?></option>
+								<?php endforeach; endif;?>
+								</select> 
+								
 							</div>
 							<div class="col-md-6">
 								<label style="color: #FFF;">Item</label> 
-								<input type="text" name="item_name" class="form-control" readonly>						  		
+								
+								<select name="item_name" class="form-control">
+								<option value="select">Select</option>
+								<?php if($data): foreach ($data as $d):?>
+								<option value="<?php echo $d->{Page::_ID}; ?>" data-user="<?php echo $userId; ?>" data-price="<?php echo $d->{Page::_PRICE}?>" data-category="<?php echo $d->{Page::_CATEGORY_ID}?>"><?php echo $d->{Page::_PAGE_TITLE}; ?></option>
+								<?php endforeach; endif;?>
+								</select> 
+												  		
 							</div>
 						</div>
 						<div class="form-group"
@@ -581,7 +651,7 @@ $(document).on('click', 'button[type="button"][name="update_comment"]', function
 <script>
 	$(function(){
 		$('input[type="text"][name="escrow_date_time"]').datetimepicker({
-			format: 'd-m-Y HH:mm',
+// 			format: 'm/d/Y HH:mm',
 			 
 		});
 		$('[data-toggle="tooltip"]').tooltip() ;
@@ -790,6 +860,43 @@ $('select[name="payment_from"]').on('change', function(){
 }); 
 
 
+$('select[name="item_name"]').on('change', function(){
+	var $this = $(this);
+	
+	var category = $this.find(':selected').data('category');
+	var price = $this.find(':selected').data('price');
+		
+	$('select[name="data_type"] option[value="'+category+'"]').prop('selected', true);
+	$('input[type="text"][name="actual_price"]').val(price);
+
+	
+});
+
+ 
+// $('select[name="data_type"]').on('change', function(){
+// 	var $this = $(this);
+// 	var category = $this.val();
+
+// 	/* Fire Ajax Request to get data */
+
+// 	$.ajax({
+// 		type:'post'
+// 		data :{'acid':,'payload':},
+// 		url :,
+// 		success:function(response)
+// 		{
+
+// 		}	
+// 	}); 
+
+
+	
+// });
+
+
+
+
+ 
 	  
 
 

@@ -7,7 +7,7 @@ $(function(){
 
 	$(".select_6_multiple").select2({
 		placeholder: "Select countries",
-		maximumSelectionLength: 50,
+		maximumSelectionLength: 900,
 	    allowClear: true
 	});
 	

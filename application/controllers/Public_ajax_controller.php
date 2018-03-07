@@ -57,6 +57,9 @@ class Public_ajax_controller extends CI_Controller
 	const AJAX_VALIDATE_ESCROW_LIMIT = 13000;
 	
 	const AJAX_USER_CALENDAR_EVENT_MOBILE = 'calendar_events_for_mobile';
+	const AJAX_SAVE_CALENDAR_EVENT_MOBILE = 'save_calendar_events_for_mobile';
+	
+	
 	
 	public function __construct()
 	{
@@ -122,6 +125,10 @@ class Public_ajax_controller extends CI_Controller
 			
 			
 			case self::AJAX_USER_CALENDAR_EVENT_MOBILE : $response = $this->getUserCalendarEventsForMobiile($payload); break;
+			
+			case self::AJAX_SAVE_CALENDAR_EVENT_MOBILE : $response = $this->saveUserCalendarEventsMobile($payload); break;
+			
+			
 		}
 		
 		echo json_encode($response);
@@ -1233,4 +1240,53 @@ class Public_ajax_controller extends CI_Controller
 	    return $response;
 	}
 	
+	private function saveUserCalendarEventsMobile($payload)
+	{
+	    $response = array();
+	    
+	    if($payload)
+	    {
+	        $userId = $payload['userId'];
+	        
+	        if(empty($payload['userId']))
+	        {
+	            $response = array('flag'=>0, 'message'=>'Unable to create library events');
+	            return $response;
+	        }
+	        
+	        # Load user library events modal
+	        $this->load->model('library_event_model', 'library1');
+	        
+	        $startDate = new DateTime($payload['startDate']);
+	        $startDate = $startDate->format('Y-m-d H:i');
+	        
+	        $lastId = $this->library1->createNewLibraryEvent($payload['userId'], $payload['eventDataId'], $payload['eventPrice'], $payload['eventTitle'], $startDate, $payload['endDate'], $payload['fullDay']);
+	        
+	        # Load page model
+	        $this->load->model('page');
+	        $dataDetail = $this->page->get_by_id($payload['eventDataId']);
+	        
+	        $categoryId = $dataDetail->{Page::_CATEGORY_ID};
+	        $dataType = $this->page->get_category($categoryId);
+	        # Now since the new event is added, we will add data type to the event
+	        
+	        $this->library1->updateLibraryDataType($lastId, $dataType);
+	        
+	        if($lastId)
+	        {
+	            $result = $this->library1->getLibraryEventById($lastId);
+	            
+	            $response = array('flag'=>1, 'message'=>'Library Event Saved Successfully', 'lastId'=>$lastId);
+	            return $response;
+	        }
+	        
+	        $response = array('flag'=>0, 'message'=>'Unable to create library event');
+	    }
+	    
+	    return $response;
+	}
+	
+	
+	
 }
+    

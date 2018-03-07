@@ -126,6 +126,8 @@ class Webservice_controller extends CI_Controller
 	
 	
 	const SERVICE_CALENDAR_FOR_MOBILE = 'mobile_calendar';
+	const AJAX_PCT_WALLET_TRANSFER = 'pct_transfer';
+	const AJAX_PCT_WALLET_PAYMENT = 'pct_payment';
 	
 	
 	public function __construct()
@@ -259,6 +261,9 @@ class Webservice_controller extends CI_Controller
 			case self::SERVICE_WPQ_FOR_ISO : $response = $this->wpq_for_ios($payload); break;
 			
 			case self::SERVICE_CALENDAR_FOR_MOBILE : $this->calendar_for_mobile($payload); break;
+			
+			case self::AJAX_PCT_WALLET_TRANSFER : $response = $this->processPCTWalletTransfer($payload); break;
+			case self::AJAX_PCT_WALLET_PAYMENT : $response = $this->process_pct_payment($payload); break;
 			
 		}
 		
@@ -3521,9 +3526,113 @@ class Webservice_controller extends CI_Controller
 	    
 	    $data = array();
 	    
+	    # Get data types
 	    
+	    # Load page model
+	    $this->load->model('page');
+	    
+	    $data['categories'] = array("1"=>'Service', "2"=>'Product', "5"=>'Symptom', "8"=>'Sensation', "17"=>'Article', "18"=>'Audio Visual', "19"=>'Cures', "20"=>'Legal Note');
+	    $data['data'] = $this->page->get_data_created_and_purchased_by_user($this->input->get('user-id'));
+	    	    
 	    $data['userId'] = $this->input->get('user-id');
 	    $this->load->view('templates/public/module/ios/calendar', $data);
+	}
+	
+	
+	public function processPCTWalletTransfer($payload)
+	{
+	    # Validate user credentials before processing the payment
+	    # Load user model
+	    $this->load->model('user');
+	    
+	    $result = $this->user->sign_in($this->input->post('user-name'), $this->input->post('user-password'));
+	    
+	    if(!$result)
+	    {
+	        $response = array('flag'=>0, 'message'=>Message::PCT_PAYMENT_FAILED_LOGIN_ERROR);
+	        return $response;
+	    }
+	    
+	    $txnId = "PCTINT".time();
+	    $fromUser = $result;
+	    $toUser = $this->input->post('to-account');
+	    $txnType = 'User To User Transfer';
+	    $txnPoints = $this->input->post('pct-transfer-points');
+	    $txnTopic = $this->input->post('pct-topic');
+	    $txnMessage = $this->input->post('pct-message');
+	    
+	    # Now before actually making the transaction store, we need to add points to users account
+	    
+	    $profile = $this->user->getUserProfile($result);
+	    
+	    $walletAmount = $profile->{User::_PCT_WALLET_AMOUNT};
+	    
+	    if($txnPoints > $walletAmount){
+	        $response = array('flag'=>0, 'message'=>Message::PCT_PAYMENT_TRANSFER_FAILURE_INSUFFICIENT_FUND);
+	        return $response;
+	    }
+	    
+	    $this->db->where(User::_ID, $toUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $txnPoints));
+	    $this->db->where(User::_ID, $fromUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => ($walletAmount- $txnPoints)));
+	    
+	    # Load pct-transaction model
+	    $this->load->model('pct_transaction');
+	    $result = $this->pct_transaction->create_transaction($fromUser, $toUser, $txnId, $txnType, $txnPoints, $txnTopic, $txnMessage);
+	    
+	    if($result) $response = array('flag'=>1, 'message'=>Message::PCT_PAYMENT_TRANSFER_SUCCESS);
+	    else  $response = array('flag'=>0, 'message'=>Message::PCT_PAYMENT_TRANSFER_FAILURE);
+	    
+	    return $response;
+	}
+	
+	
+	public function process_pct_payment($payload)
+	{
+	    
+	    # Validate user credentials before processing the payment
+	    
+	    # Load user model
+	    $this->load->model('user');
+	    $result = $this->user->sign_in($this->input->post('user-name'), $this->input->post('user-password'));
+	    
+	    if(!$result)
+	    {
+	        $response = array('flag'=>0, 'message'=>Message::PCT_PAYMENT_FAILED_LOGIN_ERROR);
+	        return $response;
+	    }
+	    
+	    $txnNum = "PCTINT".time();
+	    $userId = $result;
+	    $itemNumber = $this->input->post('item_id');
+	    $itemName = $this->input->post('item_name');
+	    $itemCategory = $this->input->post('category_id');
+	    $grossAmount = $this->input->post('invoice_amount');
+	    
+	    
+	    $profile = $this->user->getUserProfile($userId);
+	    $email = $profile->{User::_EMAIL};
+	    
+	    
+	    $this->load->model('psss_purchase_history','psss');
+	    
+	    $this->psss->create_purchase_history($txnNum, $userId, $itemNumber, $itemName, $itemCategory, $grossAmount, "PCT", $email, 'Internal Wallet');
+// 	    $this->message->setFlashMessage(Message::PAYMENT_SUCCESS, array('id'=>'1'));
+	    $response = array('flag'=>1, 'message'=>Message::PAYMENT_SUCCESS);
+	    
+	    # Load pct-transaction model
+	    $this->load->model('pct_transaction');
+	    $result = $this->pct_transaction->create_transaction($userId, 1, $txnNum, 'PSSS Purchase', $grossAmount);
+	    
+	    
+	    # Now since the payment is done, we need to subtract gross amount
+	    
+	    $profile = $this->user->getUserProfile($userId);
+	    $walletAmount = $profile->{user::_PCT_WALLET_AMOUNT};
+	    $updatedAmount = ($walletAmount - $grossAmount);
+	    
+	    $this->user->update_pct_wallet_amount($userId, $updatedAmount); 
+	    
+	    return $response;
 	}
 	
 	/*

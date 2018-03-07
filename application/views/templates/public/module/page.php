@@ -116,16 +116,31 @@ switch ($page->{Page::_VISIBILITY})
 	<div class="row">
     	<?php if($files): foreach ($files as $file) :  $extn = get_file_extension($file->document);?>
         	
-        <?php if($extn == 'png' || $extn == 'jpg' || $extn == 'jpeg' || $extn == 'bmp' || $extn == 'x-png') :?>
-        <div class="col-md-3" style="min-height: 160px;">
-        	<img style="width: 100%;" src="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>"/>
-        </div>
-        <?php elseif($extn == 'mp4' || $extn == 'mp3'):?>
-        <div class="col-md-3"  style="min-height: 160px;">
-        	<img src="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>"/>
-        </div>
-        <?php endif;?>
-        <?php endforeach; endif;?>
+        	<?php if($extn == 'png' || $extn == 'jpg' || $extn == 'jpeg' || $extn == 'bmp' || $extn == 'x-png') :?>
+        	<div class="col-md-3" style="min-height: 160px;">
+        		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
+        			<img style="width: 100%;" src="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>"/>
+        		</a>
+        	</div>
+        	<?php elseif($extn == 'mp4' || $extn == 'mp3'):?>
+        	<div class="col-md-3"  style="min-height: 160px;">
+        		<img src="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>"/>
+        	</div>
+        	<?php elseif($extn == 'pdf') :?>
+        	<div class="col-md-3" style="min-height: 160px;">
+        		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
+        			<img style="width: 100%;" src="<?php echo base_url('assets/img/pdf.jpeg'); ?>"/>
+        		</a>
+        	</div>
+        	<?php elseif ( $extn == 'doc' || $extn == 'docx') :?>
+        	<div class="col-md-3" style="min-height: 160px;">
+        		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
+        			<img style="width: 100%;" src="<?php echo base_url('assets/img/doc.jpeg') ?>"/>
+        		</a>
+        	</div>
+        	<?php endif;?>
+        	
+        	<?php endforeach; endif;?>
         <div class="clearfix"></div>
    	</div>
 	

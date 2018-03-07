@@ -278,11 +278,26 @@ if(isset($page))
 	                <!-- If files exists start here-->
 	                
 	               	<?php if($files): foreach ($files as $file) :  $extn = get_file_extension($file->document);?>
-        	
-		        	<?php if($extn == 'png' || $extn == 'jpg' || $extn == 'jpeg' || $extn == 'bmp' || $extn == 'x-png') :?>
-		        	<div class="col-md-3" style="min-height: 160px;">
-		        		<img style="width: 100%;" src="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>"/>
-		        	</div>
+        			
+        			
+        			<?php if($extn == 'png' || $extn == 'jpg' || $extn == 'jpeg' || $extn == 'bmp' || $extn == 'x-png') :?>
+                	<div class="col-md-3" style="min-height: 160px;">
+                		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
+                			<img style="width: 100%;" src="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>"/>
+                		</a>
+                	</div>
+                	<?php elseif($extn == 'pdf') :?>
+                	<div class="col-md-3" style="min-height: 160px;">
+                		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
+                			<img style="width: 100%;" src="<?php echo base_url('assets/img/pdf.jpeg'); ?>"/>
+                		</a>
+                	</div>
+                	<?php elseif ( $extn == 'doc' || $extn == 'docx') :?>
+                	<div class="col-md-3" style="min-height: 160px;">
+                		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
+                			<img style="width: 100%;" src="<?php echo base_url('assets/img/doc.jpeg') ?>"/>
+                		</a>
+                	</div>                	        			
 		        	<?php elseif($extn == 'mp4' || $extn == 'mp3' || $extn == 'avi'):?>
 		        	<div class="col-md-3"  style="min-height: 160px;">
 		        		<video width="320" height="240" controls>
@@ -955,25 +970,25 @@ $(function(){
 
 	$(".select_2_multiple").select2({
 		placeholder: "Select countries where data available in",
-    	maximumSelectionLength: 300,
+    	maximumSelectionLength: 900,
         allowClear: true
     });
 
 	$(".select_3_multiple").select2({
 		placeholder: "Select users you want to share the data with",
-    	maximumSelectionLength: 300,
+    	maximumSelectionLength: 900,
         allowClear: true
     });
 
 	$(".select_4_multiple").select2({
 		placeholder: "Select countries where data is legal to use physically",
-    	maximumSelectionLength: 300,
+    	maximumSelectionLength: 900,
         allowClear: true
     });
 
 	$(".select_6_multiple").select2({
 		placeholder: "Select countries where data is legal to use physically with restriction",
-    	maximumSelectionLength: 300,
+    	maximumSelectionLength: 900,
         allowClear: true
     }); 
 

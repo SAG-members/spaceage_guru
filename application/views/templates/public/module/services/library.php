@@ -568,7 +568,7 @@ $(document).on('click', 'button[type="button"][name="update_comment"]', function
 <script>
 	$(function(){
 		$('input[type="text"][name="escrow_date_time"]').datetimepicker({
-			format: 'd-m-Y HH:mm',
+// 			format: 'd-m-Y HH:mm',
 			 
 		});
 		$('[data-toggle="tooltip"]').tooltip() ;
