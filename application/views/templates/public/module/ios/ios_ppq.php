@@ -1,3 +1,4 @@
+<link href="<?php echo base_url('assets/css/custom.css')?>" rel="stylesheet">
 <div class="quesmain">
 	<div class="idealsteps-container"> 
 		<?php if($this->message->hasFlashMessage()) :?>
@@ -42,7 +43,7 @@
 						<p>Like to think that could do it, but what happens then</p>
 					</div>
 					<h3>2. What do you want in your free time?</h3>
-					<textarea name="question2" cols="" rows="" placeholder="Write here"><?php if($questionnaire) {echo $questionnaire[1]->answer;}?></textarea>
+					<textarea class="password" name="question2" cols="" rows="" placeholder="Write here"><?php if($questionnaire) {echo $questionnaire[1]->answer;}?></textarea>
 					<h3>3. Why is above important for you?</h3>
 					<textarea name="question3" cols="" rows="" placeholder="Write here"><?php if($questionnaire) { echo $questionnaire[2]->answer;}?></textarea>								
 <!-- 					<div class="field buttons"> -->
@@ -57,11 +58,11 @@
 					<h3 id="heading_q_4">
 						4. Why is statement <?php echo $criteria = !empty($questionnaire[3]->answer) ? $questionnaire[3]->answer : 'Criteria';?> important for you? </h3>
 						<input type="hidden" name="hidden-question-4" value="Why is statement Criteria important for you?"/>
-					<textarea name="question4" cols="" rows="" placeholder="Write here"><?php if($questionnaire) { echo $questionnaire[3]->answer;}?></textarea>
+					<textarea  class="password" name="question4" cols="" rows="" placeholder="Write here"><?php if($questionnaire) { echo $questionnaire[3]->answer;}?></textarea>
 					<h3>
 						5. Why is above statement important for you?
 					</h3>
-					<textarea name="question5" cols="" rows="" placeholder="Write here"><?php if($questionnaire) { echo $questionnaire[4]->answer;}?></textarea>
+					<textarea class="password" name="question5" cols="" rows="" placeholder="Write here"><?php if($questionnaire) { echo $questionnaire[4]->answer;}?></textarea>
 					
 					<?php 
 						$achecked=""; $bchecked="";

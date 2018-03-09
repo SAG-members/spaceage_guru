@@ -1,3 +1,4 @@
+<link href="<?php echo base_url('assets/css/custom.css')?>" rel="stylesheet">
 <div class="quesmain">
 	<div class="idealsteps-container"> 
 		<?php if($this->message->hasFlashMessage()) :?>

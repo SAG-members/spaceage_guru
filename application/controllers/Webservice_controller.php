@@ -2730,7 +2730,7 @@ class Webservice_controller extends CI_Controller
 			
 			$countryAvailableIn = explode(',',$dataDetails->country_available_in);
 			
-			if(!empty($countryAvailableIn))
+			if(count($countryAvailableIn) > 1)
 			{   
 			    foreach ($countryAvailableIn as $available)
 			    {
@@ -2752,10 +2752,11 @@ class Webservice_controller extends CI_Controller
 			
 			$countryLegalIn = explode(',',$dataDetails->country_legal_in);
 			
-			if(!empty($countryLegalIn))
+			if(count($countryLegalIn) > 1)
 			{
 			    foreach ($countryLegalIn as $available)
 			    {
+			        
 			        $a = $this->country->get_by_id($available);
 			        
 			        array_push($countryLegalInArr, $this->country->get_by_id($available)->{Country::_COUNTRY_NAME});
@@ -2767,16 +2768,13 @@ class Webservice_controller extends CI_Controller
 			/*===================================== Getting Country Legal In =====================================*/
 			
 			
-			
-			
-			
 			/*===================================== Getting Country Allowed In =====================================*/
 			
 			$countryAllowedInArr = array();
 			
 			$countryAllowedIn = explode(',',$dataDetails->country_allowed_in);
 			
-			if(!empty($countryAllowedIn))
+			if(count($countryAllowedIn) > 1)
 			{
 			    foreach ($countryAllowedIn as $available)
 			    {
@@ -2791,6 +2789,7 @@ class Webservice_controller extends CI_Controller
 			/*===================================== Getting Country Allowed In =====================================*/
 			
 			$res['page'] = $dataDetails;
+			
 			$res['submodilities'] = $this->submoditlity->get_submodility_by_page_id($res['page']->{Page::_ID});
 			$res['files'] = $this->data_document->get_data_document($res['page']->{Page::_ID});
 			$res['like_dislike'] = $this->pld->get_count_like_dislike($res['page']->{Page::_ID});
