@@ -194,4 +194,61 @@ class Welcome extends Base
 	}
 	
 	
+	public function updateWalletBalance()
+	{
+	    # Get all users from user subscription
+	    # Load subscription model
+	    $this->load->model('user_subscription', 'subscription');
+	    
+	    $subscriptions = $this->subscription->get_subscriptions();
+	    
+	    # Loop through subscriptions
+	    
+	    if(!empty($subscriptions))
+	    {
+	        $queryArray = array();
+	        
+	        foreach ($subscriptions as $sub)
+	        {
+	            # Get user Id
+	            $userId = $sub->user_id;
+	            
+	            # Get Item Id
+	            $itemId = $sub->item_id;
+	                        
+	            # Load membership model
+	            $this->load->model('membership_model', 'membership');
+	            
+	            # Get credit points based on item id
+	            $result = $this->membership->get_membership_by_id($itemId);
+	            
+	            # credit points 
+	            $creditPoints = $result->{Membership_model::_CREDIT_POINT};
+	            
+	            # Load user model
+	            $this->load->model('user');
+	            
+	            $userProfile = $this->user->getUserProfile($userId);
+	            
+	            # Get wallet balance
+	            
+	            $walletPoints = $userProfile->{User::_PCT_WALLET_AMOUNT};
+	            	            
+	            $amount = $walletPoints == 0 ? $creditPoints : ($creditPoints + $walletPoints);
+	            
+	            # Update wallet amount
+	            $this->user->update_pct_wallet_amount($userId, $amount);
+	            
+	            array_push($queryArray, $this->db->last_query());
+	            
+	        }
+	        
+	        pre($queryArray);
+	        
+	    }
+	    
+	}
+	
+	
+	
 }

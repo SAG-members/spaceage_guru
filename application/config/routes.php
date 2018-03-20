@@ -400,8 +400,8 @@ $route['process/pct/payment'] = 'module/payment/payment/process_pct_payment';
 $route['transfer/pct'] = 'module/payment/payment/process_pct_transfer';
 
 
- 
-
+# Update wallet balance 
+$route['update-wallet-balance'] = 'welcome/updateWalletBalance';
 
 
 

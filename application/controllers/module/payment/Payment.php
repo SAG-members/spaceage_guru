@@ -155,6 +155,24 @@ class Payment extends Application
         $this->subscription->create_subscription($data['txn_id'], $this->session->userdata('id'), $data['item_number'], $data['item_name'], $data['category'], $data['mc_gross'], $data['currency_code'], $data['payer_email'], $date, $expiry, 'Paypal', static::_SUBSCRIPTION_TYPE_PAID);
         $this->message->setFlashMessage(Message::PAYMENT_SUCCESS, array('id'=>'1'));
         
+        # Once we have the membership purchase done, next task is to update wallet balance for the user
+        # Based on item number let's get membership details
+        
+        $membershipData = $this->membership->get_membership_by_id($data['item_number']);
+        
+        # Points to be added to wallet
+        $creditPoints = $membershipData->{Membership_model::_CREDIT_POINT};
+        
+        # Get current Wallet points
+        $userProfile = $this->user->getUserProfile($this->session->userdata('id'));
+        
+        $walletPoints = $userProfile->{User::_PCT_WALLET_AMOUNT};
+        
+        $amount = $walletPoints == 0 ? $creditPoints : ($creditPoints + $walletPoints);
+        
+        # Update wallet amount
+        $this->user->update_pct_wallet_amount($this->session->userdata('id'), $amount);
+                
         redirect('profile');
     }
     

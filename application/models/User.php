@@ -72,7 +72,7 @@ class User extends CI_Model
 	}
     
 	public function update_pct_wallet_amount($id, $amount)
-	{
+	{	    
 	    $data = array(static::_PCT_WALLET_AMOUNT => $amount);
 	    
 	    $this->db->where(static::_ID, $id);

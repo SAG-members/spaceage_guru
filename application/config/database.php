@@ -75,7 +75,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
     'dsn'	=> '',
-    'hostname' => 'mysql58297-env-2038960.fi.cloudplatform.fi',
+    'hostname' => 'localhost',
     'username' => 'root',
     'password' => 'xantatech',
     'database' => 'spaceage_guru',

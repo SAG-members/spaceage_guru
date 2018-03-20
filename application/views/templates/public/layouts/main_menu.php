@@ -8,7 +8,7 @@
 		        		<button class="btn btn-secondary" name="btn-wiki-search" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
 		      		</span>
 				</div>
-				<?php if($this->session->userdata('id')):?>
+				
     			<h4>Advance Search Option <a class="open_library_advance_search pull-right"><i class="fa fa-plus"></i></a></h4>
     			<div class="library_advance_search" id="new-post">
     				<div class="row">
@@ -67,7 +67,7 @@
     				</div>
     			</div>
 			
-			<?php endif;?>
+			
 			</div>
         </div>
     </div>
@@ -77,8 +77,18 @@
     	</div>
     </div>
     
-    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 fullcol pad-r-15">
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 fullcol">
         <div class="rightmain">
+        	<div class="text-center white-color">
+        		<p>
+        			<a class="white-color" href="<?php echo base_url('login'); ?>">LOGIN</a> / 
+        			<a class="white-color" href="<?php echo base_url('register'); ?>">REGISTER</a>
+        		</p>
+        	</div>
+        	<form action="">
+        		<div class="col-md-6 pad-l-0 pad-r-0"><input class="password" type="text" placeholder="username"></div>
+        		<div class="col-md-6 pad-l-0 pad-r-0"><input class="password" type="password" placeholder="password"></div>
+        	</form>
         </div>
     </div>
 </div>

@@ -139,12 +139,12 @@ class Base extends CI_Controller
 			    }
 			}
 			
-		}
-		
-		
-		
-		
-		
-				
+		    if(!$this->session->userdata('id'))
+		    {
+		        $this->template->setLeftSideBar('pre_login_left_sidebar',$this->data);
+		        $this->template->setRightSideBar('pre_login_right_sidebar', $this->data);
+		    }
+			
+		}				
 	}	
 }
