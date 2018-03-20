@@ -1,9 +1,15 @@
 <div class="leftmain">
-	<ul>
-		<li>
-			<a href="<?php echo base_url('profile');?>">Profile</a>
-		</li>		
-	</ul>
+<!-- 	<ul> -->
+<!-- 		<li>Personal Library</li> -->
+<!-- 		<li> -->
+			<!-- <div style="padding-right:15px;"><div class="input-group"> -->
+<!-- 			  <input type="text" name="wiki-search" class="form-control" placeholder="Search" aria-describedby="basic-addon1"> -->
+<!-- 			  <span class="input-group-btn"> -->
+<!-- 		        <button class="btn btn-secondary" name="btn-wiki-search" type="button"><i class="fa fa-search" aria-hidden="true"></i></button> -->
+<!-- 		      </span> -->
+<!-- 			</div></div> -->
+<!-- 		</li> -->
+<!-- 	</ul> -->
 	
 	<ul class="txt-white">
 		<li>Data 

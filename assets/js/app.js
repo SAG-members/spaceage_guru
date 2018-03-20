@@ -632,7 +632,7 @@ function getWikiSearchResult(e)
 				html +='<thead>';
 					html +='<tr>';
 						html +='<td>Data</td>';
-						html +='<td>Description</td>';
+//						html +='<td>Description</td>';
 					html +='<tr>';	
 				html +='</thead>';	
 				html +='<tbody>';
@@ -645,7 +645,7 @@ function getWikiSearchResult(e)
 					if(description.length > 100) {description = description.substring(0,100);};
 					html +='<tr>';
 						html +='<td><a href="'+BASE_URL+'user/data/'+v.page_slug+'">'+v.page_title+'</a></td>';
-						html +='<td>'+description+'</td>';
+//						html +='<td>'+description+'</td>';
 					html +='</tr>';
 				});
 				
@@ -950,9 +950,9 @@ function sendInvitationToJoin(e)
 		
 		return false;
 	}
-	0
 	
-	var payload = {coupon:coupon,email:email};
+	
+	var payload = {coupon:coupon.replace("'","\\"),email:email};
 	
 	$.ajax({
 		url:BASE_URL+'ajax',

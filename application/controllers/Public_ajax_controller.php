@@ -618,8 +618,8 @@ class Public_ajax_controller extends CI_Controller
 	
 		# Load Results From Products Based On Search
 		$this->load->model('page');
-		$result = $this->page->search_data($membeshipLevel, $search, $categories, $tags);
-		
+		$result = $this->page->search_data(trim($membeshipLevel), trim($search), trim($categories), trim($tags));
+// 		echo $this->db->last_query();
 		if($result)$response = array('flag'=>1, 'result'=>$result);
 		else $response = array('flag'=>0, 'message'=>'No Result Found');
 		
@@ -998,9 +998,9 @@ class Public_ajax_controller extends CI_Controller
 		{
 			# Load Coupon Model
 			$this->load->model('admin/coupon_model','coupon');
-    
+			
 			$count = $this->coupon->validate_coupon_code($payload['coupon']);
-
+            
 			if(count($count) == 0) {
 			    $response = array('flag'=>0,'message'=>'Invalid Coupon Code');
 			    return $response;
@@ -1033,7 +1033,9 @@ class Public_ajax_controller extends CI_Controller
 			
 		}
         
-        
+		$response = array('flag'=>0,'message'=>'Please provide a coupon code before sending invitation');
+		
+		return $response;
         
         
 	} 
@@ -1285,8 +1287,6 @@ class Public_ajax_controller extends CI_Controller
 	    
 	    return $response;
 	}
-	
-	
 	
 }
     

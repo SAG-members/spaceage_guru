@@ -28,4 +28,19 @@
 <?php endif;?>
 
 
+<script type="text/javascript">
+$(function(){
 
+$('pre').each(function(){
+	
+	var div = '<div class="alike-pre">'+$(this).html()+'</div>';
+	
+	$(div).insertAfter($(this));
+
+	$(this).remove();
+});
+
+
+});
+
+</script>

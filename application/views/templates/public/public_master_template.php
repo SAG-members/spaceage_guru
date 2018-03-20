@@ -147,13 +147,13 @@ mixpanel.track("<?php echo $title?>");
 	
 	<?php if(isset($leftSideData['playVideo']) && $leftSideData['playVideo'] == true) :?>
 	$(function(){
-		$('#virginUserVideoModal').modal('show');
+// 		$('#virginUserVideoModal').modal('show');
 
 
-		$('video').on('ended',function(){
-			$('#virginUserVideoModal').modal('hide');
-			console.log("video ended");
-		});
+// 		$('video').on('ended',function(){
+// 			$('#virginUserVideoModal').modal('hide');
+// 			console.log("video ended");
+// 		});
 	});
 	
 	<?php endif;?>

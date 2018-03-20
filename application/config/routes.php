@@ -2,66 +2,66 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
-| -------------------------------------------------------------------------
-| URI ROUTING
-| -------------------------------------------------------------------------
-| This file lets you re-map URI requests to specific controller functions.
-|
-| Typically there is a one-to-one relationship between a URL string
-| and its corresponding controller class/method. The segments in a
-| URL normally follow this pattern:
-|
-|	example.com/class/method/id/
-|
-| In some instances, however, you may want to remap this relationship
-| so that a different class/function is called than the one
-| corresponding to the URL.
-|
-| Please see the user guide for complete details:
-|
-|	https://codeigniter.com/user_guide/general/routing.html
-|
-| -------------------------------------------------------------------------
-| RESERVED ROUTES
-| -------------------------------------------------------------------------
-|
-| There are three reserved routes:
-|
-|	$route['default_controller'] = 'welcome';
-|
-| This route indicates which controller class should be loaded if the
-| URI contains no data. In the above example, the "welcome" class
-| would be loaded.
-|
-|	$route['404_override'] = 'errors/page_missing';
-|
-| This route will tell the Router which controller/method to use if those
-| provided in the URL cannot be matched to a valid route.
-|
-|	$route['translate_uri_dashes'] = FALSE;
-|
-| This is not exactly a route, but allows you to automatically route
-| controller and method names that contain dashes. '-' isn't a valid
-| class or method name character, so it requires translation.
-| When you set this option to TRUE, it will replace ALL dashes in the
-| controller and method URI segments.
-|
-| Examples:	my-controller/index	-> my_controller/index
-|		my-controller/my-method	-> my_controller/my_method
-*/
+ | -------------------------------------------------------------------------
+ | URI ROUTING
+ | -------------------------------------------------------------------------
+ | This file lets you re-map URI requests to specific controller functions.
+ |
+ | Typically there is a one-to-one relationship between a URL string
+ | and its corresponding controller class/method. The segments in a
+ | URL normally follow this pattern:
+ |
+ |	example.com/class/method/id/
+ |
+ | In some instances, however, you may want to remap this relationship
+ | so that a different class/function is called than the one
+ | corresponding to the URL.
+ |
+ | Please see the user guide for complete details:
+ |
+ |	https://codeigniter.com/user_guide/general/routing.html
+ |
+ | -------------------------------------------------------------------------
+ | RESERVED ROUTES
+ | -------------------------------------------------------------------------
+ |
+ | There are three reserved routes:
+ |
+ |	$route['default_controller'] = 'welcome';
+ |
+ | This route indicates which controller class should be loaded if the
+ | URI contains no data. In the above example, the "welcome" class
+ | would be loaded.
+ |
+ |	$route['404_override'] = 'errors/page_missing';
+ |
+ | This route will tell the Router which controller/method to use if those
+ | provided in the URL cannot be matched to a valid route.
+ |
+ |	$route['translate_uri_dashes'] = FALSE;
+ |
+ | This is not exactly a route, but allows you to automatically route
+ | controller and method names that contain dashes. '-' isn't a valid
+ | class or method name character, so it requires translation.
+ | When you set this option to TRUE, it will replace ALL dashes in the
+ | controller and method URI segments.
+ |
+ | Examples:	my-controller/index	-> my_controller/index
+ |		my-controller/my-method	-> my_controller/my_method
+ */
 
-$route['default_controller'] = 'cms_page_controller'; 
+$route['default_controller'] = 'cms_page_controller';
 $route['module/auth'] = "module/auth/register";
 // $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE; 
+$route['translate_uri_dashes'] = FALSE;
 
 
 $route['privacy-policy'] = 'cms_page_controller';
 
 # Auth Routes
 $route['register'] = 'module/auth/register';
-$route['signup'] = 'module/auth/register/sign_up'; 
+$route['signup'] = 'module/auth/register/sign_up';
 $route['login'] = 'module/auth/login';
 $route['logout'] = 'module/auth/logout';
 $route['home'] = 'module/auth/home';
@@ -81,7 +81,7 @@ $route['whitepaper'] = 'cms_page_controller';
 // $route['timeline'] = 'cms_page_controller';
 #$route['introduction-to-spageage-guru'] = 'cms_page_controller';
 
-# Membership Routes 
+# Membership Routes
 $route['faq'] = 'module/services/faq';
 $route['faq/post-question'] = 'module/services/faq/post_question';
 $route['faq/question/(:num)'] = 'module/services/service_public/show_question';
@@ -91,7 +91,7 @@ $route['membership/pay'] = 'module/services/membership/user_payment';
 $route['membership/thanku'] = 'module/services/membership/thanku';
 $route['registered-user'] = 'module/services/service_public/show_registered_user_page';
 
- 
+
 
 # Membership Routes
 #$route['membership/registered-user'] = 'module/services/reminder_service/registered_user';
@@ -218,14 +218,14 @@ $route['ajax'] = 'public_ajax_controller';
 $route['ajax/dropzone'] = 'public_ajax_controller/upload_attachments_via_dropzone';
 $route['ajax/upload-document'] = 'public_ajax_controller/upload_data_documents';
 $route['ajax/remove-document'] = 'public_ajax_controller/remove_data_documents';
-$route['public/api_down'] = 'webservice_controller'; 
+$route['public/api_down'] = 'webservice_controller';
 
 
 #IOS ROUTE
-$route['public/api_down/ppq-ios'] = 'webservice_controller/ppq_for_ios'; 
+$route['public/api_down/ppq-ios'] = 'webservice_controller/ppq_for_ios';
 $route['profile/update-questionnaire-ios'] = 'welcome/update_user_questionnaire_ios';
 
-$route['public/api_down/rpq-ios'] = 'webservice_controller/rpq_for_ios'; 
+$route['public/api_down/rpq-ios'] = 'webservice_controller/rpq_for_ios';
 $route['profile/update-rpq-ios'] = 'welcome/update_user_rpq_ios';
 
 $route['public/api_down/wpq-ios'] = 'webservice_controller/wpq_for_ios';
@@ -381,9 +381,9 @@ $route['admin/subscriptions'] = 'admin/module/order/order_controller/manage_subs
 # Admin Reset Password
 
 $route['admin/paypal-setting'] = 'admin/module/payment/payment_controller';
- 
 
-# Admin Updagrade User 
+
+# Admin Updagrade User
 $route['admin/upgrade/user'] = 'admin/module/user/user_controller/updgrade_user_membership';
 
 
@@ -400,7 +400,7 @@ $route['process/pct/payment'] = 'module/payment/payment/process_pct_payment';
 $route['transfer/pct'] = 'module/payment/payment/process_pct_transfer';
 
 
-
+ 
 
 
 

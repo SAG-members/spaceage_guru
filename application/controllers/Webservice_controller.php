@@ -128,6 +128,8 @@ class Webservice_controller extends CI_Controller
 	const SERVICE_CALENDAR_FOR_MOBILE = 'mobile_calendar';
 	const AJAX_PCT_WALLET_TRANSFER = 'pct_transfer';
 	const AJAX_PCT_WALLET_PAYMENT = 'pct_payment';
+	const AJAX_GET_TRANSACTION_HISTORY = 'transaction_history';
+	const AJAX_GET_WALLET_AMOUNT = 'wallet_amount';
 	
 	
 	public function __construct()
@@ -264,7 +266,8 @@ class Webservice_controller extends CI_Controller
 			
 			case self::AJAX_PCT_WALLET_TRANSFER : $response = $this->processPCTWalletTransfer($payload); break;
 			case self::AJAX_PCT_WALLET_PAYMENT : $response = $this->process_pct_payment($payload); break;
-			
+			case self::AJAX_GET_TRANSACTION_HISTORY : $response = $this->get_transaction_history($payload); break;
+			case self::AJAX_GET_WALLET_AMOUNT : $response = $this->get_wallet_amount($payload); break;
 		}
 		
 		echo json_encode($response);
@@ -454,6 +457,7 @@ class Webservice_controller extends CI_Controller
 				$response['flag']=1;
 				$response['message'] = 'User registered successfully';
 				$response['result'] = $this->user->getUserProfile($userId);
+				$response['result']->membership_name = $this->user->get_user_membership($response['result']->{User::_USER_MEMBERSHIP_LEVEL});
 			}
 			else
 			{
@@ -538,6 +542,8 @@ class Webservice_controller extends CI_Controller
 				$response['flag']=1;
 				$response['message'] = 'Logged in successfully';
 				$response['result'] = $this->user->getUserProfile($userId);
+				$response['result']->membership_name = $this->user->get_user_membership($response['result']->{User::_USER_MEMBERSHIP_LEVEL});
+// 				
 			}
 			else
 			{
@@ -624,6 +630,7 @@ class Webservice_controller extends CI_Controller
 			$this->load->model('user');
 			
 			$result = $this->user->getUserProfile($userId);
+			$result->membership_name = $this->user->get_user_membership($result->{User::_USER_MEMBERSHIP_LEVEL});
 			
 			if($result)
 			{
@@ -3578,7 +3585,13 @@ class Webservice_controller extends CI_Controller
 	    $this->load->model('pct_transaction');
 	    $result = $this->pct_transaction->create_transaction($fromUser, $toUser, $txnId, $txnType, $txnPoints, $txnTopic, $txnMessage);
 	    
-	    if($result) $response = array('flag'=>1, 'message'=>Message::PCT_PAYMENT_TRANSFER_SUCCESS);
+	    # Now once the payment is successfull, we should get the balance once again and pass this
+	    
+	    $profile = $this->user->getUserProfile($fromUser);	    
+	    $walletAmount = $profile->{User::_PCT_WALLET_AMOUNT};
+	    
+	    
+	    if($result) $response = array('flag'=>1, 'message'=>Message::PCT_PAYMENT_TRANSFER_SUCCESS, 'walletAmount'=>$walletAmount);
 	    else  $response = array('flag'=>0, 'message'=>Message::PCT_PAYMENT_TRANSFER_FAILURE);
 	    
 	    return $response;
@@ -3634,70 +3647,49 @@ class Webservice_controller extends CI_Controller
 	    return $response;
 	}
 	
-	/*
-	public function process_paypal_payment($payload)
+	public function get_transaction_history($payload)
+	{
+	    $response = array();
+	 
+	    if(empty($this->input->post('user_id')))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    
+	    
+	    # Load pct transaction model
+	    $this->load->model('pct_transaction');
+	        
+	    $response = array('flag'=>0, 'result'=> $this->pct_transaction->get_transactions($this->input->post('user_id')));
+	    
+	    return $response;
+	}
+	
+	public function get_wallet_amount($payload)
 	{
 	    $response = array();
 	    
-	    if($this->input->get('user-id'))
+	    if(empty($this->input->post('user_id')))
 	    {
-	        $response = array('flag'=>0, 'message'=>'Please login First');
+	        $response = array('flag'=>0, 'message'=>'Please login first');
 	        return $response;
 	    }
 	    
-	    # Decide on the basis of type
-	    $type = $this->input->post('action_type');
+	    $this->load->model('user');
 	    
-	    if($type == 'membership')
+	    $result = $this->user->getUserProfile($this->input->post('user_id'));
+	    	    
+	    if($result)
 	    {
-	        # Payment Verified Now Update Database
-	        
-	        $this->load->model('user_subscription','subscription');
-	        $this->load->model('membership_model','membership');
-	        $this->load->model('page');
-	        $this->load->model('user');
-	        
-	        
-	        # First Step is to get subscription amount and calculate subscription expiry
-	        
-	        $result = $this->membership->get_membership_by_id($this->input->post('item_number'));
-	        
-	        $date = new DateTime();
-	        $date = $date->format('Y-m-d H:i:s');
-	        
-	        $expiry = new DateTime();
-	        
-	        switch ($this->input->post('subscription_type'))
-	        {
-	            case 1: $expiry = $expiry->add(new DateInterval('P1M')); $expiry = $expiry->format('Y-m-d H:i:s');break;
-	            case 2: $expiry = $expiry->add(new DateInterval('P1Y')); $expiry = $expiry->format('Y-m-d H:i:s');break;
-	        }
-	        
-	        if($result->{Membership_model::_MEMBERSHIP_TYPE} == 7)
-	        {
-	            $expiry = new DateTime();
-	            
-	            $expiry = $expiry->add(new DateInterval('P1Y'));
-	           
-	        }
-	        else
-	        {
-	            # Update new membership for user
-	            
-	            $this->user->update_user_membership($this->input->post('user_id'), $result->{Membership_model::_MEMBERSHIP_TYPE});	                        
-	        }
-	        
-	        $expiry = $expiry->format('Y-m-d H:i:s');
-	        
-	        $this->subscription->create_subscription($this->input->post('txn_id'), $this->input->post('user_id'), $this->input->post('item_number'), $this->input->post('item_name'), $this->input->post('category'), $this->input->post('mc_gross'), $this->input->post('currency_code'), $this->input->post('payer_email'), $date, $expiry, 'Paypal', 'paid');
-	        $response = array('flag'=>1, 'message'=>'Subscription Successfull');
-	        
-	        return $response;
+	        $response = array('flag'=>1, 'pct_wallet_amount'=>$result->{User::_PCT_WALLET_AMOUNT});
 	    }
-	    if($type == 'psss')
+	    else
 	    {
-	        
-	    }	    
+	        $response = array('flag'=>0, 'message'=>'No Such User exists');
+	    }
+	    	    
+	    return $response;
 	}
-	*/
+	
 }

@@ -131,7 +131,7 @@ class Coupon_model extends CI_Model
 		$date = $date->format('Y-m-d H:i:s');
 		
 		$this->db->from(static::_TABLE);
-		$this->db->where(static::_COUPON_CODE, $couponCode);
+		$this->db->like(static::_COUPON_CODE, $this->db->escape($couponCode));
 		$this->db->where(static::_EXPIRY_DATE ." >=" .$this->db->escape($date));
 		$query = $this->db->get();
 				

@@ -237,7 +237,7 @@
 							<?php if($this->session->userdata('membershipLevel') > 2):?>
 							<input type="text" name="user-email" class="password" placeholder="Add User Email to Invite"/>
 							<input type="text" name="coupon" class="password" placeholder="Enter Coupon Code"/>
-							<button class="addtocart" name="btn-invite-user" type="button">Invite</button>
+							<button class="addtocart btn-round-red" name="btn-invite-user" type="button">Invite</button>
 							<?php else :?>
 							<div class="alert alert-danger">You have to be UU or Member to invite friends</div>
 							<?php endif;?>

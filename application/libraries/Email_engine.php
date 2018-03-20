@@ -54,14 +54,15 @@ class Email_engine
 	{
 		$config ['charset'] = 'utf-8';
 		$config ['wordwrap'] = TRUE;
-		$config ['mailtype'] = 'html';
+		$config ['mailtype'] = 'html'; 
 		
 		$this->CI->email->set_mailtype ("html");
-		$this->CI->email->from ('no-reply@spaceage.guru', 'Spaceage.guru');
+		$this->CI->email->from ('info@spaceage.guru', 'Spaceage Guru');
 		$this->CI->email->to ($to);
 		$this->CI->email->subject ($subject);
 		$this->CI->email->message($body);
 		
 		return $this->CI->email->send () ? true : false;
+		#print_r($this->CI->email->print_debugger());
 	}
 }

@@ -37,7 +37,7 @@
 	<textarea style="height: 100px; " name="what_you_want_to_become" class="password" placeholder="Describe to which you want to develop yourself" autocomplete="off"></textarea>
 	
 	<h2>What do you need?</h2>
-	<textarea style="height: 100px; " name="what_do_you_need" class="password" placeholder="We all know time & money, but instead of them rather write what would you need with a bunch of money on your bank account and 24 hours of time everyday from now on." autocomplete="off"></textarea>
+	<textarea style="height: 100px; " name="what_do_you_need" class="password" placeholder="We all know time & money, but instead of them rather write what would you do with a bunch of money on your bank account and 24 hours of time everyday from now on." autocomplete="off"></textarea>
 	 
 	<!-- <h2>What is the problem that is preventing you from becoming the one you desire to become ?</h2>
 	<input type="text" name="problem_preventing" class="password" placeholder="What is the problem that is preventing you from becoming the one you desire to become?" autocomplete="off"> -->

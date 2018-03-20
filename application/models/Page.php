@@ -162,17 +162,21 @@ class Page extends CI_Model
 	{
 		$response = array();
 		
+		$this->db->select('page_title, page_description, page_slug, tag, category_id');
 		$this->db->from(static::_TABLE);
 		$this->db->where(static::_STATUS, 1);
 				
 		if($visibility)
 		{
-			$this->db->where(static::_VISIBILITY .' <= ', $visibility);
+// 			$this->db->where(static::_VISIBILITY .' <= ', $visibility);
 		}
 				
 		if($searchKey)
 		{
-			$this->db->where(static::_PAGE_TITLE ." LIKE '%$searchKey' OR ". static::_PAGE_DESCRIPTION ." LIKE '%$searchKey'");
+// 		    $this->db->like(static::_PAGE_TITLE, $searchKey);
+// 		    $this->db->or_like(static::_PAGE_DESCRIPTION, $searchKey);
+		    $this->db->where(static::_PAGE_TITLE ." LIKE '$searchKey%' OR ". static::_PAGE_DESCRIPTION ." LIKE '$searchKey%'");
+		    $this->db->or_where(static::_TAG ." LIKE '$searchKey%'");
 		}
 		
 		if($categories)
@@ -182,7 +186,7 @@ class Page extends CI_Model
 		
 		if($tags)
 		{
-			$this->db->or_where(static::_TAG ." LIKE '%$tags'");
+			$this->db->or_where(static::_TAG ." LIKE '$tags%'");
 		}
 		
 		$this->db->order_by(static::_DATE_CREATED, 'DESC');

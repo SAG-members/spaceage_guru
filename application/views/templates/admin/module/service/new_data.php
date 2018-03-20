@@ -1,9 +1,9 @@
-<?php 
+<?php
 $page_title = ''; $page_description = ''; $visibility = ''; $anonymous = ''; $public = 'checked'; $page_tags = "";
 
 $registered = ''; $upgraded = ''; $memberA = ''; $memberB = ''; $memberC = '';  $memberD = ''; $specifiedUser = '';
 
-$metaTitle = ''; $metaKeyword = ''; $metaDescription = ''; $priceChecked = ''; $price = ''; 
+$metaTitle = ''; $metaKeyword = ''; $metaDescription = ''; $priceChecked = ''; $price = '';
 $regions = ''; $regionArr = ''; $priceLess = ''; $legalRegions = ''; $legalRegionArr = "";
 $physicalRegions = ''; $physicalRegionArr = '';
 
@@ -16,7 +16,7 @@ $visual_associated =''; $visual_associated_val =''; $visual_center =''; $visual_
 $visual_shape_val =''; $visual_flat =''; $visual_flat_val =''; $visual_close =''; $visual_close_val =''; $visual_panormic ='';
 $visual_panormic_val =''; $auditory_sound_val =''; $auditory_volume_val =''; $auditory_tone_val =''; $auditory_tempo_val ='';
 $auditory_pitch_val =''; $auditory_pace_val =''; $auditory_timbre_val =''; $auditory_duration_val =''; $auditory_intensity_val ='';
-$auditory_rhythm_val =''; $auditory_direction_val =''; $auditory_harmony_val =''; $auditory_ear_val =''; 
+$auditory_rhythm_val =''; $auditory_direction_val =''; $auditory_harmony_val =''; $auditory_ear_val ='';
 $kinesthic_location_in_body_val = '';$kinesthic_breating_val ='';
 $kinesthic_pulse_val =''; $kinesthic_skin_val =''; $kinesthic_weight_val =''; $kinesthic_pressure_val =''; $kinesthic_intensity_val ='';
 $kinesthic_tactile_val =''; $olafactory_sweet_val =''; $olafactory_sour_val =''; $olafactory_salt_val =''; $olafactory_bitter_val ='';
@@ -27,121 +27,121 @@ $product = ''; $service = 'checked'; $senses = ''; $legalNote = ''; $audioVisual
 
 if(isset($page))
 {
-	$page_title = $page->{Page::_PAGE_TITLE};
-	$page_description = $page->{Page::_PAGE_DESCRIPTION};
-	$page_tags = $page->{Page::_TAG};
-	if($page->{Page::_ANONYMOUS}) $anonymous = 'checked';
-	if($page->{Page::_PRICE} && $page->{Page::_PRICE} != '0.00'){$priceChecked = 'checked'; $status = '';}
-	
-	if($page->{Page::_PRICELESS}){$priceLess = 'checked';}
-	
-	$metaTitle = $page->{Page::_META_TITLE};
-	$metaKeyword = $page->{Page::_META_KEYWORD}; 
-	$metaDescription = $page->{Page::_META_DESCRIPTION};
-	
-	$price = $page->{Page::_PRICE};
-	
-	switch ($page->{Page::_VISIBILITY})
-	{
-		case Page::VISIBILITY_PUBLIC : $public = 'checked'; break;
-		case Page::VISIBILITY_REGISTERED : $registered = 'checked'; break;
-		case Page::VISIBILITY_UPGRADED : $upgraded = 'checked'; break;
-		case Page::VISIBILITY_MEMBERSHIP_A : $memberA = 'checked'; break;
-		case Page::VISIBILITY_MEMBERSHIP_B : $memberB = 'checked'; break;
-		case Page::VISIBILITY_MEMBERSHIP_C : $memberC = 'checked'; break;
-		case Page::VISIBILITY_MEMBERSHIP_D : $memberD = 'checked'; break;
-		case Page::VISIBILITY_SPECIFIED_USER : $specifiedUser = 'checked'; break;
-	}
-// 	echo $public;
-// 	echo $specifiedUser;
-	
-	switch ($page->{Page::_CATEGORY_ID})
-	{
-		case Page::_CATEGORY_PRODUCT : $product = 'checked'; break;
-		case Page::_CATEGORY_SERVICE : $service = 'checked'; break;
-		case Page::_CATEGORY_SENSES : $senses = 'checked'; break;
-		case Page::_CATEGORY_LEAGAL_NOTE : $legalNote = 'checked'; break;
-		case Page::_CATEGORY_AUDIO_VISUAL : $audioVisual = 'checked'; break;
-		case Page::_CATEGORY_SYMPTOM : $symptom = 'checked'; break;
-		case Page::_CATEGORY_ARTICLE : $article = 'checked'; break;
-		case Page::_CATEGORY_CURES : $cure = 'checked'; break;
-	}
-	
-	
-	
-	$action = base_url('admin/data/edit/'.$page->{Page::_ID});
-	
-	$regions = $page->{Page::_COUNTRY_AVAILABLE_IN};
-	$regionArr = explode(',', $regions);
-	
-	$legalRegions = $page->{Page::_COUNTRY_LEGAL_IN};
-	$legalRegionArr = explode(',', $legalRegions);
-	
-	$physicalRegions = $page->{Page::_COUNTRY_ALLOWED_IN};
-	$physicalRegionArr = explode(',', $physicalRegions);
-	
-	if($submodilities)
-	{
-		$visual_images_val = $submodilities->{Page_submodility::_VISUAL_IMAGE_VAL};
-		$visual_motion = $submodilities->{Page_submodility::_VISUAL_MOTION};
-		$visual_motion_val = $submodilities->{Page_submodility::_VISUAL_MOTION_VAL};
-		$visual_color = $submodilities->{Page_submodility::_VISUAL_MOTION};
-		$visual_color_val = $submodilities->{Page_submodility::_VISUAL_COLOR_VAL};
-		$visual_bright = $submodilities->{Page_submodility::_VISUAL_BRIGHT};;
-		$visual_bright_val = $submodilities->{Page_submodility::_VISUAL_BRIGHT_VAL};
-		$visual_focused = $submodilities->{Page_submodility::_VISUAL_FOCUSED};;
-		$visual_focused_val = $submodilities->{Page_submodility::_VISUAL_FOCUSED_VAL};
-		$visual_bordered = $submodilities->{Page_submodility::_VISUAL_BORDERED};;
-		$visual_bordered_val = $submodilities->{Page_submodility::_VISUAL_BORDERED_VAL};
-		$visual_associated = $submodilities->{Page_submodility::_VISUAL_ASSOCIATED};;
-		$visual_associated_val = $submodilities->{Page_submodility::_VISUAL_ASSOCIATED_VAL};
-		$visual_center = $submodilities->{Page_submodility::_VISUAL_CENTER};;
-		$visual_center_val = $submodilities->{Page_submodility::_VISUAL_CENTER_VAL};
-		$visual_size_val =''; $visual_shape_val = $submodilities->{Page_submodility::_VISUAL_SHAPE_VAL};
-		$visual_flat = $submodilities->{Page_submodility::_VISUAL_FLAT};;
-		$visual_flat_val = $submodilities->{Page_submodility::_VISUAL_FLAT_VAL};
-		$visual_close = $submodilities->{Page_submodility::_VISUAL_CLOSE};;
-		$visual_close_val = $submodilities->{Page_submodility::_VISUAL_CLOSE_VAL};
-		$visual_panormic = $submodilities->{Page_submodility::_VISUAL_PANORMIC};;
-		$visual_panormic_val = $submodilities->{Page_submodility::_VISUAL_PANORMIC_VAL};
-		
-		$auditory_sound_val = $submodilities->{Page_submodility::_AUDITORY_SOUND_VAL};
-		$auditory_volume_val = $submodilities->{Page_submodility::_AUDITORY_VOLUME_VAL};
-		$auditory_tone_val = $submodilities->{Page_submodility::_AUDITORY_TONE_VAL};
-		$auditory_tempo_val = $submodilities->{Page_submodility::_AUDITORY_TEMPO_VAL};
-		$auditory_pitch_val = $submodilities->{Page_submodility::_AUDITORY_PITCH_VAL};
-		$auditory_pace_val = $submodilities->{Page_submodility::_AUDITORY_PACE_VAL};
-		$auditory_timbre_val = $submodilities->{Page_submodility::_AUDITORY_TIMBRE_VAL};
-		$auditory_duration_val = $submodilities->{Page_submodility::_AUDITORY_DURATION_VAL};
-		$auditory_intensity_val = $submodilities->{Page_submodility::_AUDITORY_INTENSITY_VAL};
-		$auditory_rhythm_val = $submodilities->{Page_submodility::_AUDITORY_RHYTHM_VAL};
-		$auditory_direction_val = $submodilities->{Page_submodility::_AUDITORY_DIRECTION_VAL};
-		$auditory_harmony_val = $submodilities->{Page_submodility::_AUDITORY_HARMONY_VAL};
-		$auditory_ear_val = $submodilities->{Page_submodility::_AUDITORY_EAR_VAL};
-		
-		$kinesthic_location_in_body_val = $submodilities->{Page_submodility::_KINESTHIC_LOCATION_IN_BODY_VAL};
-		$kinesthic_breating_val = $submodilities->{Page_submodility::_KINESTHIC_BREATING_VAL};
-		$kinesthic_pulse_val = $submodilities->{Page_submodility::_KINESTHIC_PULSE_VAL};
-		$kinesthic_skin_val = $submodilities->{Page_submodility::_KINESTHIC_SKIN_VAL};
-		$kinesthic_weight_val = $submodilities->{Page_submodility::_KINESTHIC_WEIGHT_VAL};
-		$kinesthic_pressure_val = $submodilities->{Page_submodility::_KINESTHIC_PRESSURE_VAL};
-		$kinesthic_intensity_val = $submodilities->{Page_submodility::_KINESTHIC_INTENSITY_VAL};
-		$kinesthic_tactile_val = $submodilities->{Page_submodility::_KINESTHIC_TACTILE_VAL};
-		
-		$olafactory_sweet_val = $submodilities->{Page_submodility::_OLAFACTORY_SWEET_VAL};
-		$olafactory_sour_val = $submodilities->{Page_submodility::_OLAFACTORY_SOUR_VAL};
-		$olafactory_salt_val = $submodilities->{Page_submodility::_OLAFACTORY_SALT_VAL};
-		$olafactory_bitter_val = $submodilities->{Page_submodility::_OLAFACTORY_BITTER_VAL};
-		$olafactory_aroma_val = $submodilities->{Page_submodility::_OLAFACTORY_AROMA_VAL};
-		$olafactory_fragrance_val = $submodilities->{Page_submodility::_OLAFACTORY_FRAGRANCE_VAL};
-		$olafactory_essence_val = $submodilities->{Page_submodility::_OLAFACTORY_ESSENCE_VAL};
-		$olafactory_pungence_val = $submodilities->{Page_submodility::_OLAFACTORY_PUNGENCE_VAL};
-	
-	}
-	
-	
-	
-	
+    $page_title = $page->{Page::_PAGE_TITLE};
+    $page_description = $page->{Page::_PAGE_DESCRIPTION};
+    $page_tags = $page->{Page::_TAG};
+    if($page->{Page::_ANONYMOUS}) $anonymous = 'checked';
+    if($page->{Page::_PRICE} && $page->{Page::_PRICE} != '0.00'){$priceChecked = 'checked'; $status = '';}
+    
+    if($page->{Page::_PRICELESS}){$priceLess = 'checked';}
+    
+    $metaTitle = $page->{Page::_META_TITLE};
+    $metaKeyword = $page->{Page::_META_KEYWORD};
+    $metaDescription = $page->{Page::_META_DESCRIPTION};
+    
+    $price = $page->{Page::_PRICE};
+    
+    switch ($page->{Page::_VISIBILITY})
+    {
+        case Page::VISIBILITY_PUBLIC : $public = 'checked'; break;
+        case Page::VISIBILITY_REGISTERED : $registered = 'checked'; break;
+        case Page::VISIBILITY_UPGRADED : $upgraded = 'checked'; break;
+        case Page::VISIBILITY_MEMBERSHIP_A : $memberA = 'checked'; break;
+        case Page::VISIBILITY_MEMBERSHIP_B : $memberB = 'checked'; break;
+        case Page::VISIBILITY_MEMBERSHIP_C : $memberC = 'checked'; break;
+        case Page::VISIBILITY_MEMBERSHIP_D : $memberD = 'checked'; break;
+        case Page::VISIBILITY_SPECIFIED_USER : $specifiedUser = 'checked'; break;
+    }
+    // 	echo $public;
+    // 	echo $specifiedUser;
+    
+    switch ($page->{Page::_CATEGORY_ID})
+    {
+        case Page::_CATEGORY_PRODUCT : $product = 'checked'; break;
+        case Page::_CATEGORY_SERVICE : $service = 'checked'; break;
+        case Page::_CATEGORY_SENSES : $senses = 'checked'; break;
+        case Page::_CATEGORY_LEAGAL_NOTE : $legalNote = 'checked'; break;
+        case Page::_CATEGORY_AUDIO_VISUAL : $audioVisual = 'checked'; break;
+        case Page::_CATEGORY_SYMPTOM : $symptom = 'checked'; break;
+        case Page::_CATEGORY_ARTICLE : $article = 'checked'; break;
+        case Page::_CATEGORY_CURES : $cure = 'checked'; break;
+    }
+    
+    
+    
+    $action = base_url('admin/data/edit/'.$page->{Page::_ID});
+    
+    $regions = $page->{Page::_COUNTRY_AVAILABLE_IN};
+    $regionArr = explode(',', $regions);
+    
+    $legalRegions = $page->{Page::_COUNTRY_LEGAL_IN};
+    $legalRegionArr = explode(',', $legalRegions);
+    
+    $physicalRegions = $page->{Page::_COUNTRY_ALLOWED_IN};
+    $physicalRegionArr = explode(',', $physicalRegions);
+    
+    if($submodilities)
+    {
+        $visual_images_val = $submodilities->{Page_submodility::_VISUAL_IMAGE_VAL};
+        $visual_motion = $submodilities->{Page_submodility::_VISUAL_MOTION};
+        $visual_motion_val = $submodilities->{Page_submodility::_VISUAL_MOTION_VAL};
+        $visual_color = $submodilities->{Page_submodility::_VISUAL_MOTION};
+        $visual_color_val = $submodilities->{Page_submodility::_VISUAL_COLOR_VAL};
+        $visual_bright = $submodilities->{Page_submodility::_VISUAL_BRIGHT};;
+        $visual_bright_val = $submodilities->{Page_submodility::_VISUAL_BRIGHT_VAL};
+        $visual_focused = $submodilities->{Page_submodility::_VISUAL_FOCUSED};;
+        $visual_focused_val = $submodilities->{Page_submodility::_VISUAL_FOCUSED_VAL};
+        $visual_bordered = $submodilities->{Page_submodility::_VISUAL_BORDERED};;
+        $visual_bordered_val = $submodilities->{Page_submodility::_VISUAL_BORDERED_VAL};
+        $visual_associated = $submodilities->{Page_submodility::_VISUAL_ASSOCIATED};;
+        $visual_associated_val = $submodilities->{Page_submodility::_VISUAL_ASSOCIATED_VAL};
+        $visual_center = $submodilities->{Page_submodility::_VISUAL_CENTER};;
+        $visual_center_val = $submodilities->{Page_submodility::_VISUAL_CENTER_VAL};
+        $visual_size_val =''; $visual_shape_val = $submodilities->{Page_submodility::_VISUAL_SHAPE_VAL};
+        $visual_flat = $submodilities->{Page_submodility::_VISUAL_FLAT};;
+        $visual_flat_val = $submodilities->{Page_submodility::_VISUAL_FLAT_VAL};
+        $visual_close = $submodilities->{Page_submodility::_VISUAL_CLOSE};;
+        $visual_close_val = $submodilities->{Page_submodility::_VISUAL_CLOSE_VAL};
+        $visual_panormic = $submodilities->{Page_submodility::_VISUAL_PANORMIC};;
+        $visual_panormic_val = $submodilities->{Page_submodility::_VISUAL_PANORMIC_VAL};
+        
+        $auditory_sound_val = $submodilities->{Page_submodility::_AUDITORY_SOUND_VAL};
+        $auditory_volume_val = $submodilities->{Page_submodility::_AUDITORY_VOLUME_VAL};
+        $auditory_tone_val = $submodilities->{Page_submodility::_AUDITORY_TONE_VAL};
+        $auditory_tempo_val = $submodilities->{Page_submodility::_AUDITORY_TEMPO_VAL};
+        $auditory_pitch_val = $submodilities->{Page_submodility::_AUDITORY_PITCH_VAL};
+        $auditory_pace_val = $submodilities->{Page_submodility::_AUDITORY_PACE_VAL};
+        $auditory_timbre_val = $submodilities->{Page_submodility::_AUDITORY_TIMBRE_VAL};
+        $auditory_duration_val = $submodilities->{Page_submodility::_AUDITORY_DURATION_VAL};
+        $auditory_intensity_val = $submodilities->{Page_submodility::_AUDITORY_INTENSITY_VAL};
+        $auditory_rhythm_val = $submodilities->{Page_submodility::_AUDITORY_RHYTHM_VAL};
+        $auditory_direction_val = $submodilities->{Page_submodility::_AUDITORY_DIRECTION_VAL};
+        $auditory_harmony_val = $submodilities->{Page_submodility::_AUDITORY_HARMONY_VAL};
+        $auditory_ear_val = $submodilities->{Page_submodility::_AUDITORY_EAR_VAL};
+        
+        $kinesthic_location_in_body_val = $submodilities->{Page_submodility::_KINESTHIC_LOCATION_IN_BODY_VAL};
+        $kinesthic_breating_val = $submodilities->{Page_submodility::_KINESTHIC_BREATING_VAL};
+        $kinesthic_pulse_val = $submodilities->{Page_submodility::_KINESTHIC_PULSE_VAL};
+        $kinesthic_skin_val = $submodilities->{Page_submodility::_KINESTHIC_SKIN_VAL};
+        $kinesthic_weight_val = $submodilities->{Page_submodility::_KINESTHIC_WEIGHT_VAL};
+        $kinesthic_pressure_val = $submodilities->{Page_submodility::_KINESTHIC_PRESSURE_VAL};
+        $kinesthic_intensity_val = $submodilities->{Page_submodility::_KINESTHIC_INTENSITY_VAL};
+        $kinesthic_tactile_val = $submodilities->{Page_submodility::_KINESTHIC_TACTILE_VAL};
+        
+        $olafactory_sweet_val = $submodilities->{Page_submodility::_OLAFACTORY_SWEET_VAL};
+        $olafactory_sour_val = $submodilities->{Page_submodility::_OLAFACTORY_SOUR_VAL};
+        $olafactory_salt_val = $submodilities->{Page_submodility::_OLAFACTORY_SALT_VAL};
+        $olafactory_bitter_val = $submodilities->{Page_submodility::_OLAFACTORY_BITTER_VAL};
+        $olafactory_aroma_val = $submodilities->{Page_submodility::_OLAFACTORY_AROMA_VAL};
+        $olafactory_fragrance_val = $submodilities->{Page_submodility::_OLAFACTORY_FRAGRANCE_VAL};
+        $olafactory_essence_val = $submodilities->{Page_submodility::_OLAFACTORY_ESSENCE_VAL};
+        $olafactory_pungence_val = $submodilities->{Page_submodility::_OLAFACTORY_PUNGENCE_VAL};
+        
+    }
+    
+    
+    
+    
 }
 
 
