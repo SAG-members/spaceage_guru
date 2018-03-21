@@ -348,6 +348,11 @@ $route['admin/delete-country'] = 'admin/module/country/country_controller/delete
 $route['admin/publish-country'] = 'admin/module/country/country_controller/publish_country';
 $route['admin/unpublish-country'] = 'admin/module/country/country_controller/unpublish_country';
 
+# Currency Routes
+$route['admin/currency'] = 'admin/module/country/country_controller/get_currency';
+
+
+
 # Ajax Routes
 $route['admin/ajax'] = 'admin/ajax_request_controller';
 
@@ -386,6 +391,9 @@ $route['admin/paypal-setting'] = 'admin/module/payment/payment_controller';
 # Admin Updagrade User
 $route['admin/upgrade/user'] = 'admin/module/user/user_controller/updgrade_user_membership';
 
+# Admin PCT Setting
+$route['admin/pct-setting']='admin/module/pct/pct_controller';
+$route['admin/add/pct-rate']='admin/module/pct/pct_controller/add_pct_rate';
 
 # Chat Route
 
@@ -401,7 +409,8 @@ $route['transfer/pct'] = 'module/payment/payment/process_pct_transfer';
 
 
 # Update wallet balance 
-$route['update-wallet-balance'] = 'welcome/updateWalletBalance';
+#$route['update-wallet-balance'] = 'welcome/updateWalletBalance';
+$route['add/new/event'] = 'module/services/library/register_new_event';
 
 
 

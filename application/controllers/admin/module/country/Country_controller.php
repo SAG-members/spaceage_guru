@@ -9,6 +9,7 @@ class Country_controller extends Application
 		parent::__construct();
 		
 		$this->load->model('admin/country_model','country');
+		$this->load->model('currency','currency');
 	}
 
 	public function index()
@@ -17,6 +18,14 @@ class Country_controller extends Application
 		
 		$this->template->title('Manage Countries');
 		$this->template->render('country/manage_countries', $data);
+	}
+	
+	public function get_currency()
+	{
+	    $data['currencies'] = $this->currency->getCurrencies();
+	    
+	    $this->template->title('Manage Currencies');
+	    $this->template->render('country/manage_curriencies', $data);
 	}
 	
 	public function publish_country()

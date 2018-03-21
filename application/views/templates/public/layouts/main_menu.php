@@ -79,6 +79,7 @@
     
     <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 fullcol">
         <div class="rightmain">
+        	<?php if(!$this->session->userdata('id')) : ?>
         	<div class="text-center white-color">
         		<p>
         			<a class="white-color" href="<?php echo base_url('login'); ?>">LOGIN</a> / 
@@ -89,6 +90,7 @@
         		<div class="col-md-6 pad-l-0 pad-r-0"><input class="password" type="text" placeholder="username"></div>
         		<div class="col-md-6 pad-l-0 pad-r-0"><input class="password" type="password" placeholder="password"></div>
         	</form>
+        	<?php endif; ?>
         </div>
     </div>
 </div>

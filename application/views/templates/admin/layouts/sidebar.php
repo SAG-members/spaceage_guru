@@ -41,13 +41,14 @@
 			<ul class="nav side-menu">
 				<li><a href="<?php echo base_url('admin/cms');?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> CMS Pages</a></li>
 				<li><a href="<?php echo base_url('admin/countries')?>"><i class="fa fa-map" aria-hidden="true"></i> Countries </a></li>
+				<li><a href="<?php echo base_url('admin/currency')?>"><i class="fa fa-money" aria-hidden="true"></i> Currencies </a></li>
 				<li><a href="<?php echo base_url('admin/coupons');?>"><i class="fa fa-bars" aria-hidden="true"></i> Coupons</a></li>
 				<li><a href="<?php echo base_url('admin/data');?>"><i class="fa fa-cubes" aria-hidden="true"></i> Data </a></li>	
 				<li><a href="<?php echo base_url('admin/escrow');?>"><i class="fa fa-university" aria-hidden="true"></i> Escrow </a></li>	
 				<li><a href="<?php echo base_url('admin/faqs');?>"><i class="fa fa-question-circle-o" aria-hidden="true"></i> FAQ </a></li>
 				<li><a href="<?php echo base_url('admin/number-game');?>"><i class="fa fa-cube" aria-hidden="true"></i> Number Game</a></li>
 				<li><a href="<?php echo base_url('admin/orders');?>"><i class="fa fa-truck" aria-hidden="true"></i> Data Purchase</a></li>
-				<li><a href="<?php echo base_url('admin/pct');?>"><i class="fa fa-btc" aria-hidden="true"></i> PCT</a></li>
+				<li><a href="<?php echo base_url('admin/pct-setting');?>"><i class="fa fa-btc" aria-hidden="true"></i> PCT Setting</a></li>
 				<li><a href="<?php echo base_url('admin/rss-feeds');?>"><i class="fa fa-rss" aria-hidden="true"></i> RSS Subscription</a></li>
 				<li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i> Settings </a>
 					<ul class="nav child_menu">

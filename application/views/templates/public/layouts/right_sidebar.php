@@ -8,8 +8,10 @@ if($this->session->userdata('user_id')) $lockIcon = '';
 <div class="rightmain">
 	<ul class="right-menu-items">
 		<li class="text-center menu-li-style">
-    		<a href="<?php echo base_url('timeline')?>">TIMELINE</a>    		
+    		<a href="<?php echo base_url('timeline')?>">TIMELINE</a>
+    		<a class="pull-right add-pss" href="<?php echo base_url('personal-library');?>" title="Add Event" alt="Add Event"><i class="fa fa-plus"></i> </a>
 		</li>
+		
 		<li class="text-center menu-li-style">
 			<a href="<?php echo base_url('whitepaper')?>">WHITEPAPER</a>
 		</li>

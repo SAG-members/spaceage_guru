@@ -288,6 +288,12 @@ class Message
 	const WALLET_ADDRESS_CREATE_FAILURE = "OOPS ! Unable to process your request, please try again later";
 	const WALLET_ADDRESS_CREATE_ERROR = "Please provide wallet address first";
 	
+	const EVENT_CREATE_SUCCESS = "Event created successfully";
+	const EVENT_CREATE_FAILURE = "OOPS !!! unable to create event please try again";
+	
+	const PCT_RATE_ADDED_SUCCESS = "PCT rate added successfully";
+	const PCT_RATE_ADDED_FAILURE = "OOPS ! unable to add rate, please try again later";
+	const PCT_RATE_ADDED_MESSAGE = "Please provide pct rate, currency and conversion rate";
 	
 	private $CI;
 	public function __construct()

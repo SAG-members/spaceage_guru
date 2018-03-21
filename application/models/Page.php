@@ -206,10 +206,10 @@ class Page extends CI_Model
 		$this->db->select('A.*, B.item_id');
 		$this->db->from("page as A");
 		$this->db->join("psss_purchase_history B","A.id = B.item_id", 'left');
-		$this->db->join('rss_feed_subscription C', "A.id = C.item_id", 'left');
+// 		$this->db->join('rss_feed_subscription C', "A.id = C.item_id", 'left');
 		$this->db->where('A.user_id', $userId);
 		$this->db->or_where('B.user_id', $userId);
-		$this->db->or_where('C.user_id', $userId);
+// 		$this->db->or_where('C.user_id', $userId);
 		$this->db->group_by('A.id');
 		$response = $this->db->get()->result();
 				
