@@ -25,6 +25,7 @@
 									<thead>
 										<tr role="row">																					
 											<th>Country Name</th>
+											<th>Currency Name</th>
 											<th>Symbol</th>
 										</tr>
 									</thead>
@@ -32,7 +33,8 @@
 									<?php if($currencies): foreach ($currencies as $currency):?>
 									<tr>																				
 										<td><?php echo $currency->{Currency::_NAME};?></td>
-										<td><?php echo $currency->{Currency::_SYMBOL}; ?></td>										
+										<td><?php echo $currency->{Currency::_CURRENCY_NAME};?></td>
+										<td><?php echo $currency->{Currency::_CURRENCY_SYMBOL}; ?></td>										
 									</tr>
 									<?php endforeach; endif;?>
 									</tbody>

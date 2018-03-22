@@ -69,7 +69,7 @@
 								<div>
 									<label class="control-label">Select the country where you desire to use the program</label>
 									<div class="profile">
-									<select name="country">
+									<select name="country" class="password">
 		 								<option value="0">Select Country</option>
 										<?php if($countries): foreach ($countries as $country): $selected = '';?>
 										<?php if($country['id']=== $profile->{User::_COUNTRY}){$selected = 'selected="selected"';}?>
@@ -106,7 +106,7 @@
 								<div class="row mar-t-10">
 									<div class="col-sm-6">
 										<label class="control-label">Gender</label>
-										<select name="user_gender">
+										<select name="user_gender" class="password">
 										  <option value="0">Select Gender</option>
 										  <?php foreach ($genderArr as $k => $v) :?>
 										  <?php $selected = ""; if($k == $profile->{User::_GENDER}){$selected = "selected='selected'";}?>
@@ -151,10 +151,18 @@
 											<!-- col-sm-10 -->
 										
 									</div>
-<!-- 									<div class="col-sm-6 mar-t-25"> -->
-<!-- 										<label class="control-label">&nbsp;</label>  -->
-<!-- 										<div class="fileUpload btn btn-primary"><span>Upload Avatar Image</span><input type="file" class="upload" id="profile-avtar" name="file"/></div> -->
-<!-- 									</div> -->
+									<div class="col-sm-6">
+										<label class="control-label">Currency</label> 
+										<select name="currency" class="password">
+											<option>select</option>
+											<?php if($curriencies) : foreach ($curriencies as $cu) : ?>
+											<?php $selected = ""; if($cu->{Currency::_ID} == $profile->{User::_CURRENCY}){ $selected = "selected"; } ?>
+											
+                                        	<?php if(empty($cu->{Currency::_CURRENCY_SYMBOL})) continue; ?>
+                                        	<option value="<?php echo $cu->{Currency::_ID} ?>" <?php echo $selected; ?>><?php echo $cu->{Currency::_CURRENCY_CODE}." - ".$cu->{Currency::_CURRENCY_SYMBOL}; ?></option>
+                                        	<?php endforeach; endif; ?>
+										</select>
+									</div>
 								</div>
 								<?php 
 									$avtar = $profile->{User::_AVATAR_IMAGE} == "" ? '' : '<img src="'.base_url(Template::_PUBLIC_AVTAR_DIR.$profile->{User::_AVATAR_IMAGE}).'" width="120px;" height="120px"/>';?>

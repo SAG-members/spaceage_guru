@@ -11,7 +11,10 @@ class Currency extends CI_Model
 	const _ID = 'id';
 	const _NAME = 'name';
 	const _CODE = 'code';
-	const _SYMBOL = 'symbol';	
+	const _DIAL_CODE = 'dial_code';
+	const _CURRENCY_NAME = 'currency_name';
+	const _CURRENCY_SYMBOL = 'currency_symbol';
+	const _CURRENCY_CODE = 'currency_code';		
 	
 	public function __construct()
 	{
@@ -33,19 +36,5 @@ class Currency extends CI_Model
 	    
 	    if(!empty($field)) return $this->db->get()->row()->{$field};
 	    return $this->db->get()->row();
-	}
-	
-// 	public function get_name_by_id($id)
-// 	{
-// 	    $this->db->where(static::_ID, $id);
-// 	    $this->db->from(static::_TABLE);
-// 	    return $this->db->get()->row()->{static::_NAME};
-// 	}
-	
-// 	public function get_symbol_by_id($id)
-// 	{
-// 	    $this->db->where(static::_ID, $id);
-// 	    $this->db->from(static::_TABLE);
-// 	    return $this->db->get()->row()->{static::_NAME};
-// 	}
+	}	
 }

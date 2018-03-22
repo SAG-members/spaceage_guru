@@ -19,11 +19,15 @@ class Library extends Application
 		$this->load->model('country');
 		$this->load->model('user');
 		$this->load->model('currency');
-	
+		$this->load->model('pct_setting', 'pct');
+		
 		# Load personal library data
 		$this->data['datas'] = $this->page->get_data_created_and_purchased_by_user($this->session->userdata('id'));
-		$this->data['currencies'] = $this->currency->getCurrencies();
 		
+		$this->data['currencyRates'] = $this->pct->get_rates();
+		$this->data['currencies'] = $this->currency->getCurrencies();
+		$this->data['profile'] = $this->user->getUserProfile($this->session->userdata('id'));
+				
 		$this->template->setLeftSideBar('pre_login_left_sidebar_add_event',$this->data); 
 		
 	}

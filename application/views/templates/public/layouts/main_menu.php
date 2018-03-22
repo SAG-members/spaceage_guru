@@ -71,13 +71,13 @@
 			</div>
         </div>
     </div>
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 fullcol">
+    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 fullcol">
     	<div class="midmain">
     		<p>!WE ARE LIVING IN IT SO LETS START HEALING IT WHILE ENJOYING LIFE ON IT!</p>
     	</div>
     </div>
     
-    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 fullcol">
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 fullcol">
         <div class="rightmain">
         	<?php if(!$this->session->userdata('id')) : ?>
         	<div class="text-center white-color">
@@ -86,9 +86,18 @@
         			<a class="white-color" href="<?php echo base_url('register'); ?>">REGISTER</a>
         		</p>
         	</div>
-        	<form action="">
-        		<div class="col-md-6 pad-l-0 pad-r-0"><input class="password" type="text" placeholder="username"></div>
-        		<div class="col-md-6 pad-l-0 pad-r-0"><input class="password" type="password" placeholder="password"></div>
+        	<form action="<?php echo base_url('login')?>" method="post">
+        		<div class="col-md-6 pad-l-0 pad-r-0"><input class="password" name="username" type="text" placeholder="username"></div>
+        		<div class="col-md-6 pad-l-0 pad-r-0">
+        			<div class="input-group">
+    			  		<input class="password" type="password" name="password" placeholder="password">
+    			  		<span class="input-group-btn">
+    		        		<button style="height: 43px;" class="btn btn-secondary" name="btn-wiki-search" type="submit">Go</button>
+    		      		</span>
+    				</div>
+        		</div>
+        		
+        		
         	</form>
         	<?php endif; ?>
         </div>

@@ -88,12 +88,15 @@ if($this->session->userdata('user_id')) $lockIcon = '';
             		<div class="col-md-6">
             			<label style="color: #FFF;">&nbsp;</label> 
             			<div class="input-group">
-            				<input type="text" name="price" class="form-control">
+            				<input type="text" name="price" class="form-control" disabled>
             				<div class="input-group-addon" style="padding: 0;">
                                 <select name="price_currency" style="height: 32px;">
-                                	<?php if($leftSideData['currencies']) : foreach ($leftSideData['currencies'] as $cu) : ?>
-                                	<option value="<?php echo $cu->{Currency::_ID} ?>"><?php echo $cu->{Currency::_SYMBOL}; ?></option>
-                                	<?php endforeach; endif; ?>
+                                	<?php if($leftSideData['currencyRates']): foreach ($leftSideData['currencyRates'] as $r) : ?>
+                                		<?php $selected = ""; if($r->{pct_setting::_CURRENCY} == $leftSideData['profile']->{User::_CURRENCY}) $selected = "selected";?>
+                                		<option <?php echo $selected; ?> value="<?php echo $r->{pct_setting::_CURRENCY} ?>" data-rate="<?php echo $r->{pct_setting::_CONVERSION_RATE}?>"><?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_SYMBOL); ?></option>
+                                	<?php endforeach; endif;?>
+                                	
+                                	
                                 </select>
                           	</div>
             			</div>						  		
@@ -428,6 +431,22 @@ function geocodePosition(pos)
 // 	    infowindow.open(map, marker);
 	});
 }
+
+
+$('select[name="price_currency"]').on('change', convert_rate);
+$('input[type="text"][name="pct_price"]').on('keyup, blur', convert_rate);
+
+
+function convert_rate()
+{
+	var conversionRate = $('select[name="price_currency"]').find(':selected').data('rate');
+	var pctVal = $('input[type="text"][name="pct_price"]').val();
+
+	convertedVal = parseFloat(conversionRate) * parseFloat(pctVal);
+
+	$('input[type="text"][name="price"]').val(convertedVal);
+}
+
 
 </script>
 

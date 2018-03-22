@@ -33,6 +33,7 @@ class User extends CI_Model
 	const _STATUS = 'status';
 	const _ADDRESS = 'address';
 	const _COUNTRY = 'country'; 
+	const _CURRENCY = 'currency'; 
 	const _RECOMMENDOR = '	recommendor';
 	const _IS_LOGGED_IN = 'is_logged_in';
 	const _LOGGED_COOKIE = 'logged_cookie';
@@ -512,4 +513,17 @@ class User extends CI_Model
 	    
 	    return $this->db->affected_rows();
 	}
+	
+	public function update_currency($userId, $currencyId)
+	{
+	    $data = array(static::_CURRENCY => $currencyId);
+	    
+	    $this->db->where(static::_ID, $userId);
+	    $this->db->update(static::_TABLE, $data);
+	    
+	    return $this->db->affected_rows();
+	    
+	}
+	
+	
 }

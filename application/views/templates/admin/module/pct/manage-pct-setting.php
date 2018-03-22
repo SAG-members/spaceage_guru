@@ -22,8 +22,7 @@
 									role="grid" aria-describedby="datatable_info">
 									<thead>
 										<tr role="row">											
-											<th>PCT Rate</th>
-											<th>Country Name</th>
+											<th>PCT Rate</th>											
 											<th>Country Symbol</th>
 											<th>Conversion Rate</th>
 											<th>Date Created</th>												
@@ -32,9 +31,8 @@
 									<tbody>
 									<?php if($pctConversions): foreach ($pctConversions as $pct):?>
 									<tr>										
-										<td><?php echo $pct->{pct_setting::_PCT_RATE};?></td>
-										<td><?php echo $this->currency->get_by_id($pct->{pct_setting::_CURRENCY}, Currency::_NAME)?></td>
-										<td><?php echo $this->currency->get_by_id($pct->{pct_setting::_CURRENCY}, Currency::_SYMBOL)?></td>
+										<td><?php echo $pct->{pct_setting::_PCT_RATE};?></td>										
+										<td><?php echo $this->currency->get_by_id($pct->{pct_setting::_CURRENCY}, Currency::_CURRENCY_SYMBOL)?></td>
 										<td><?php echo $pct->{pct_setting::_CONVERSION_RATE};?></td>
 										<td><?php echo $pct->{pct_setting::_DATE_CREATED};?></td>										
 									</tr>
@@ -70,7 +68,8 @@
     				<div class="form-group">
     					<select class="form-control" name="currency">
     						<?php if($currencies): foreach ($currencies as $cur) :?>
-    						<option value="<?php echo $cur->{Currency::_ID} ?>"><?php echo $cur->{Currency::_NAME}."-".$cur->{Currency::_SYMBOL} ?></option>
+    						<?php if(empty($cur->{Currency::_CURRENCY_SYMBOL})) continue; ?>
+    						<option value="<?php echo $cur->{Currency::_ID} ?>"><?php echo $cur->{Currency::_CURRENCY_NAME}."-".$cur->{Currency::_CURRENCY_SYMBOL} ?></option>
     						<?php endforeach; endif;?>
     					</select>	
     				</div>
