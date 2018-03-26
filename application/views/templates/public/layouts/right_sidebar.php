@@ -58,102 +58,53 @@ if($this->session->userdata('user_id')) $lockIcon = '';
 		</li>
 		
 		<li class="text-center menu-li-style"><i class="pull-left <?php echo $lockIcon; ?>"></i> COMMUNICATION</li>
-		<?php 
-		  $date = new DateTime();
-		?>
+		
 		<?php if($this->session->userdata('isLoggedIn')):?>
 			<?php if($rightSideData['communication']): foreach ($rightSideData['communication'] as $c): ?>
-			
-			<?php 
-    			if($c->escrow_type == 2)
-    			{
-    			    if(! $this->escrow->get_offer_count_status($c->id, $this->session->userdata('id'), $c->user_id, $this->session->userdata('membershipLevel'))) continue;
-    			    $escrowDetails = $this->escrow->get_offer_status($c->id, $this->session->userdata('id'));
-    		          	    
-    			    if(!empty($escrowDetails))
-    			    {
-    			        if($escrowDetails->status == 1) continue;
-    			        if($escrowDetails->status==1 && $escrowDetails->escrow_seller_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==1 && $escrowDetails->escrow_buyer_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==3 && $escrowDetails->escrow_seller_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==3 && $escrowDetails->escrow_buyer_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==5 && $escrowDetails->escrow_seller_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==5 && $escrowDetails->escrow_buyer_id == $this->session->userdata('id')) continue;
-    			    }
-    			}
-    			else
-    			{
-    			    if($c->user_id == $this->session->userdata('id')) continue;
-    			    
-    			    $escrowDetails = $this->escrow->get_offer_status($c->id);
-    			    
-    			    if(!empty($escrowDetails))
-    			    {
-    			        if($escrowDetails->status == 1) continue;
-    			        if($escrowDetails->status==1 && $escrowDetails->escrow_seller_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==1 && $escrowDetails->escrow_buyer_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==3 && $escrowDetails->escrow_seller_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==3 && $escrowDetails->escrow_buyer_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==4) continue;
-    			        if($escrowDetails->status==5) continue;
-    			    }
-    			    
-    			    
-    			    $escrowDetails = $this->escrow->get_offer_status($c->id, $this->session->userdata('id'));
-    			    
-    			    if(!empty($escrowDetails))
-    			    {
-    			        if($escrowDetails->status == 1) continue;
-    			        if($escrowDetails->status==1 && $escrowDetails->escrow_seller_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==1 && $escrowDetails->escrow_buyer_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==3 && $escrowDetails->escrow_seller_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==3 && $escrowDetails->escrow_buyer_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==5 && $escrowDetails->escrow_seller_id == $this->session->userdata('id')) continue;
-    			        if($escrowDetails->status==5 && $escrowDetails->escrow_buyer_id == $this->session->userdata('id')) continue;
-    			    }
-    			}			
-			?>
-			<div class="col-md-12 col-xs-12 widget widget_tally_box">
-    			<div class="x_panel ui-ribbon-container fixed_height_390">
-    				<div class="x_title">
-    					<h2><?php echo str_replace('<', '', $c->title); ?></h2>
-    					<div class="clearfix"></div>
-    				</div>
-    				<div class="x_content">
-    					<h4><?php echo $c->{Library_event_comment_model::_COMMENT}?></h3>
-    						<p>
-    							<b>Location </b>
-    						</p>
-    						<p><?php echo $c->{Library_event_comment_model::_LOCATION}?></p>
-    						<p>
-    							<b>Price </b>
-    						</p>
-    						<p>&euro; <?php echo $c->{Library_event_comment_model::_PRICE}?></p>
-    						<p>
-    							<b>Date Time </b>
-    						</p>
-    						<p><?php echo $c->{Library_event_comment_model::_DATE_TIME}?></p>
-    				
-    				</div>
-    				<div class="x_footer">
-    					<input type="hidden" name="hidden_comment_id" value="<?php echo $c->{Library_event_comment_model::_ID}?>" />
-    					
-    					<div class="col-md-3 padding_none">
-    						<button type="button" name="btn_decline" class="btn btn-danger">Decline</button>
-    					</div>
-    					<div class="col-md-6 padding_none">
-    						<button type="button" name="btn_recommend_to_friend" data-toggle="modal" data-target="#recommend_to_friend"
-    							class="btn btn-warning">Recommend to friend</button>
-    					</div>
-    					<div class="col-md-3 padding_none">
-    						<button type="button" name="btn_yield" class="btn btn-success">Yield</button>
-    					</div>
-    					
-    					
-    				</div>
-    			</div>
-    		</div>
-			<?php endforeach; endif; ?>	
+				<?php if($this->user_event_status->get_by_id($c->id, $this->session->userdata('id')) > 0) continue; ?>
+    			<div class="col-md-12 col-xs-12 widget widget_tally_box">
+        			<div class="x_panel ui-ribbon-container fixed_height_390">
+        				<div class="x_title">
+        					<h2><?php echo $this->page->get_by_id($c->item_id, Page::_PAGE_TITLE); ?></h2>        					
+        					<div class="clearfix"></div>
+        				</div>
+        				<div class="x_content">
+        					<h4><?php echo $c->comment; ?></h3>
+        						<p>
+        							<b>Location </b>
+        						</p>
+        						<p><?php echo $c->address?></p>
+        						<p>
+        							<b>Price </b>
+        						</p>
+        						<p>PCT <?php echo $c->pct_price?></p>
+        						
+        						<?php if($c->has_expiry_date):?>
+        							<p>
+            							<b>Date Time </b>
+            						</p>
+            						<p><?php echo $c->expiry_date; ?></p>
+        						<?php endif; ?>
+        						
+        				
+        				</div>
+        				<div class="x_footer">
+        					<div class="col-md-3 padding_none">
+        						<button type="button" data-event-id="<?php echo $c->id; ?>" name="btn_decline[]" class="btn btn-danger">Decline</button>
+        					</div>
+        					<div class="col-md-6 padding_none">
+        						<button type="button" name="btn_recommend_to_friend" data-toggle="modal" data-target="#recommend_to_friend"
+        							class="btn btn-warning">Recommend to friend</button>
+        					</div>
+        					<div class="col-md-3 padding_none">
+        						<button type="button"  data-event-id="<?php echo $c->id; ?>" class="btn btn-success" name="btn_yield">Yield</button>
+        					</div>
+        					
+        					
+        				</div>
+        			</div>
+        		</div>		
+			<?php endforeach; endif;?>	
 		<?php endif; ?>
 		<li class="text-center menu-li-style"><i class="pull-left <?php echo $lockIcon; ?>"></i> CHAT WITH FRIENDS</li>
 		<?php if($this->session->userdata('isLoggedIn')): ?>
@@ -263,33 +214,119 @@ if($this->session->userdata('user_id')) $lockIcon = '';
 
 
 
+
+
+
+<!-- Escrow/Smart Contract Modal -->
+
+<div id="escrowSmartContractModal" class="modal fade" role="dialog">
+	<div class="modal-dialog  modal-sm">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<form method="post" action="<?php echo base_url('user/add/goal')?>">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Choose an option ?</h4>
+				</div>
+				<div class="modal-body">
+					<p>How do you want to pay for the offer ?</p>
+				</div>
+				<div class="modal-footer">
+					<input type="hidden" name="hidden_type" value="goal" /> <input
+						type="hidden" name="hidden_redirect_path[]" />
+					<button type="button" name="yield-offer-escrow" class="btn btn-success" data-dismiss="modal">Escrow</button>
+					<button type="button" name="yield-offer-smart-contract" class="btn btn-primary">Smart Contract</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+</div>
+<div class="clearfix"></div>
+
+
+
+
+
+
+
+
 <!--  Let's Run a javascript code on run-time to get current path -->
 
 <script type="text/javascript">
-$(function(){
-	$('input[type="hidden"][name="hidden_redirect_path[]"]').val(window.location.pathname);
 
-	/* Decline Offer */
-	$('button[type="button"][name="btn_decline"]').off().on('click', function(e){
-		var id = $(this).parents('.x_footer').find('input[type="hidden"][name="hidden_comment_id"]').val();
+
+$('button[type="button"][name="btn_yield"]').on('click', function(){
+	var eventId = $(this).data('eventId');
+	$("#escrowSmartContractModal").find('button[type="button"][name="yield-offer-escrow"]').attr('data-event-id', eventId);
+	$("#escrowSmartContractModal").find('button[type="button"][name="yield-offer-smart-contract"]').attr('data-event-id', eventId);
+	$("#escrowSmartContractModal").modal('show');
+});
+
+
+
+
+
+$(document).on('click', 'button[type="button"][name="btn_decline[]"]', function(e){
+	var id = $(this).data('eventId');
+	console.log(id);
+	
 		var redirectPath = window.location.href;
 
 		var newForm = jQuery('<form>', {
-	        'action': BASE_URL + 'user/decline-offer',
+	        'action': BASE_URL + 'decline/event',
 	        'target': '_top',
 	        'method':'post'	
 	    }).append(jQuery('<input>', {
-	        'name': 'id',
+	        'name': 'event-id',
 	        'type': 'hidden',
 	        'value': id,
+	    })).append(jQuery('<input>', {
+	        'name': 'action',
+	        'type': 'hidden',
+	        'value': 'decline',
 	    })).append(jQuery('<input>', {
 	        'name': 'redirect_url',
 	        'type': 'hidden',
 	        'value': redirectPath,
 	    }));
-		
+	
 		newForm.appendTo('body').submit();
-	});
+});
+
+
+$(document).on('click', 'button[type="button"][name="yield-offer-smart-contract"]', function(e){
+	var id = $(this).data('eventId');
+	
+	
+	var redirectPath = window.location.href;
+
+	var newForm = jQuery('<form>', {
+        'action': BASE_URL + 'yield/event',
+        'target': '_top',
+        'method':'post'	
+    }).append(jQuery('<input>', {
+        'name': 'event-id',
+        'type': 'hidden',
+        'value': id,
+    })).append(jQuery('<input>', {
+        'name': 'action',
+        'type': 'hidden',
+        'value': 'yield',
+    })).append(jQuery('<input>', {
+        'name': 'redirect_url',
+        'type': 'hidden',
+        'value': redirectPath,
+    }));
+
+	newForm.appendTo('body').submit();
+});
+
+$(function(){
+	$('input[type="hidden"][name="hidden_redirect_path[]"]').val(window.location.pathname);
+
+	/* Decline Offer */
+	
 
 
 	/* Recommend to fried Offer */
@@ -298,77 +335,77 @@ $(function(){
 	});
 
 	/* Yield Offer */
-	$('button[type="button"][name="btn_yield"]').off().on('click', function(e){
-		var id = $(this).parents('.x_footer').find('input[type="hidden"][name="hidden_comment_id"]').val();
-		var redirectPath = window.location.href;
+// 	$('button[type="button"][name="btn_yield"]').off().on('click', function(e){
+// 		var id = $(this).parents('.x_footer').find('input[type="hidden"][name="hidden_comment_id"]').val();
+// 		var redirectPath = window.location.href;
 
-		var payload = {'comment_id':id};
-		var data = {'acid':12000, 'payload':JSON.stringify(payload)};
-		var url = BASE_URL+'/ajax';
-		AjaxCommon.startAjaxRequest(url, data).done(function(response){
+// 		var payload = {'comment_id':id};
+// 		var data = {'acid':12000, 'payload':JSON.stringify(payload)};
+// 		var url = BASE_URL+'/ajax';
+// 		AjaxCommon.startAjaxRequest(url, data).done(function(response){
 			
-			if(response.aflag == 0)
-			{
-				$().toastmessage('showToast', {
-				    text     : response.message,
-				    sticky   : true,
-				    position : 'top-right',
-				    type     : 'error',
-				    close    : function () {/*console.log("toast is closed ...");*/}
-				});
+// 			if(response.aflag == 0)
+// 			{
+// 				$().toastmessage('showToast', {
+// 				    text     : response.message,
+// 				    sticky   : true,
+// 				    position : 'top-right',
+// 				    type     : 'error',
+// 				    close    : function () {/*console.log("toast is closed ...");*/}
+// 				});
 
-				return false;
-			}
-			else if(response.bflag == 0)
-			{
-				$().toastmessage('showToast', {
-				    text     : response.message,
-				    sticky   : true,
-				    position : 'top-right',
-				    type     : 'warning',
-				    close    : function () {
-				    	var newForm = jQuery('<form>', {
-					        'action': BASE_URL + 'user/accept-offer',
-					        'target': '_top',
-					        'method':'post'	
-					    }).append(jQuery('<input>', {
-					        'name': 'id',
-					        'type': 'hidden',
-					        'value': id,
-					    })).append(jQuery('<input>', {
-					        'name': 'redirect_url',
-					        'type': 'hidden',
-					        'value': redirectPath,
-					    }));
+// 				return false;
+// 			}
+// 			else if(response.bflag == 0)
+// 			{
+// 				$().toastmessage('showToast', {
+// 				    text     : response.message,
+// 				    sticky   : true,
+// 				    position : 'top-right',
+// 				    type     : 'warning',
+// 				    close    : function () {
+// 				    	var newForm = jQuery('<form>', {
+// 					        'action': BASE_URL + 'user/accept-offer',
+// 					        'target': '_top',
+// 					        'method':'post'	
+// 					    }).append(jQuery('<input>', {
+// 					        'name': 'id',
+// 					        'type': 'hidden',
+// 					        'value': id,
+// 					    })).append(jQuery('<input>', {
+// 					        'name': 'redirect_url',
+// 					        'type': 'hidden',
+// 					        'value': redirectPath,
+// 					    }));
 						
-						newForm.appendTo('body').submit();
+// 						newForm.appendTo('body').submit();
 
-					}
-				});
+// 					}
+// 				});
 
-				return false;
-			}
-			else
-			{
-				var newForm = jQuery('<form>', {
-			        'action': BASE_URL + 'user/accept-offer',
-			        'target': '_top',
-			        'method':'post'	
-			    }).append(jQuery('<input>', {
-			        'name': 'id',
-			        'type': 'hidden',
-			        'value': id,
-			    })).append(jQuery('<input>', {
-			        'name': 'redirect_url',
-			        'type': 'hidden',
-			        'value': redirectPath,
-			    }));
+// 				return false;
+// 			}
+// 			else
+// 			{
+// 				var newForm = jQuery('<form>', {
+// 			        'action': BASE_URL + 'user/accept-offer',
+// 			        'target': '_top',
+// 			        'method':'post'	
+// 			    }).append(jQuery('<input>', {
+// 			        'name': 'id',
+// 			        'type': 'hidden',
+// 			        'value': id,
+// 			    })).append(jQuery('<input>', {
+// 			        'name': 'redirect_url',
+// 			        'type': 'hidden',
+// 			        'value': redirectPath,
+// 			    }));
 				
-				newForm.appendTo('body').submit();
-			}
-		});
+// 				newForm.appendTo('body').submit();
+// 			}
+// 		});
 				
-	});
+// 	});
 
 	/* Escrow Offer */
 	$('button[type="button"][name="btn_escrow"]').off().on('click', function(){

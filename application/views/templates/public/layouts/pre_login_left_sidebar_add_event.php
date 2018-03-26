@@ -88,7 +88,7 @@ if($this->session->userdata('user_id')) $lockIcon = '';
             		<div class="col-md-6">
             			<label style="color: #FFF;">&nbsp;</label> 
             			<div class="input-group">
-            				<input type="text" name="price" class="form-control" disabled>
+            				<input type="text" name="price" class="form-control" readonly>
             				<div class="input-group-addon" style="padding: 0;">
                                 <select name="price_currency" style="height: 32px;">
                                 	<?php if($leftSideData['currencyRates']): foreach ($leftSideData['currencyRates'] as $r) : ?>

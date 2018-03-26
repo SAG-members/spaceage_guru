@@ -42,5 +42,31 @@ class User_event_model extends CI_Model
 	    return $this->db->insert_id();
 	}
 	
+	public function get_by_id($id)
+	{
+	    $this->db->from(static::_TABLE);
+	    $this->db->where(static::_ID, $id);
+	    return $this->db->get()->row();
+	}
+	
+	public function get_communication_data($userId)
+	{
+	    $response = array();
+	    
+	    $this->db->select('A.id, A.user_id, A.topic, A.comment, A.item_id, A.image, A.pct_price, A.price, A.expiry_date, A.has_expiry_date, A.address');
+	    $this->db->from("user_events as A");
+	    $this->db->join("rss_feed_subscription as C","C.item_id = A.item_id", 'left');
+// 	    $this->db->join("user_events_status as D","D.event_id = A.id", 'left');
+	    $this->db->where('C.unsubscribe', 0);
+// 	    $this->db->where('D.status !=', 1);
+// 	    $this->db->or_where('D.status !=', 2);
+// 	    $this->db->or_where('D.status !=', 3);
+	    $this->db->where('C.user_id', $userId);	    		
+	    $this->db->group_by('A.id');
+	    $response = $this->db->get()->result();	    
+	    
+	    return $response;
+	}
+	
 	
 }

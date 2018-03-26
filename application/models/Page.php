@@ -228,13 +228,15 @@ class Page extends CI_Model
 		return $response;
 	}
 	
-	public function get_by_id($id)
+	public function get_by_id($id, $field = null)
 	{
 		$response = array();
 	
 		$this->db->from(static::_TABLE);
-		$this->db->where(static::_ID, $id);
-		$this->db->order_by(static::_ID, "desc");
+		$this->db->where(static::_ID, $id);		
+		
+		if($field) return $response = $this->db->get()->row()->{$field}; 
+		
 		$response = $this->db->get()->row();
 	
 		return $response;

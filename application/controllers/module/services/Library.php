@@ -12,7 +12,7 @@ class Library extends Application
 		
 		$this->template->setSiteLayout(Template::_PUBLIC_TEMPLATE_DIR, Template::_PUBLIC_LAYOUT_DIR, Template::_PUBLIC_MODULE_DIR);
 		
-		$this->template->setTemplate('personal_library_template.php');
+		
 		
 		# Load Page model
 		$this->load->model('page');
@@ -28,12 +28,14 @@ class Library extends Application
 		$this->data['currencies'] = $this->currency->getCurrencies();
 		$this->data['profile'] = $this->user->getUserProfile($this->session->userdata('id'));
 				
-		$this->template->setLeftSideBar('pre_login_left_sidebar_add_event',$this->data); 
+		
 		
 	}
 		
 	public function index()
-	{     
+	{    
+	    $this->template->setTemplate('personal_library_template.php');
+	    $this->template->setLeftSideBar('pre_login_left_sidebar_add_event',$this->data); 
 	    
 	    $this->template->title("Library");
 	    $this->template->render('services/library');
@@ -296,6 +298,10 @@ class Library extends Application
 	
 	public function register_new_event()
 	{
+	    $this->template->setTemplate('public_master_template.php');
+	    $this->template->setLeftSideBar('library_left_menu',$this->data);
+	    $this->template->setRightSideBar('right_sidebar', $this->data);
+	    
 	    if($this->input->post('data_type'))
 	    {   
 	        # Load user event model
@@ -313,7 +319,7 @@ class Library extends Application
 	        $deliveryMethod =  $this->input->post('delivery_method');
 	        $escrowReleased =  $this->input->post('payment_when');
 	        $expiryDate =  $this->input->post('escrow_date_time');
-	        $hasExpiry = $this->input->post('has_date_time') ? $this->input->post('has_date_time') : 0;
+	        $hasExpiry = $this->input->post('has_date_time') ? 0 : 1;
 	        
 	        $escrowType =  $this->input->post('escrow_type');
 	        $minLimit =  $this->input->post('min_limit');
@@ -383,8 +389,60 @@ class Library extends Application
 	        redirect('profile');
 	    }
 	}
-		
 	
+	public function register_event_status()
+	{
+	    if($this->input->post('action'))
+	    {
+	        $eventId = $this->input->post('event-id');
+	        $userId = $this->session->userdata('id');
+	        
+	        # Load user event status model
+	        $this->load->model('user_event_status_model','uesm');
+	        
+	        switch ($this->input->post('action'))
+	        {
+	            case 'decline' :  $status = User_event_status_model::STATUS_DECLINE; break;	            
+	        }
+	        
+	        if($this->uesm->register_event_status($eventId, $userId, $status))
+            $this->message->setFlashMessage(Message::OFFER_DECLINE_SUCCESS, array('id'=>'1'));
+            else {$this->message->setFlashMessage(Message::OFFER_DECLINE_FAILURE);}
+	        
+	        redirect($this->input->post('redirect_url'));
+	        
+	    }
+	}
 	
-	
+	public function yield_event()
+	{
+	    if($this->input->post('action'))
+	    {
+	        $data = array();
+	        
+	        # Load user event status model
+	        $this->load->model('user_event_status_model','uesm');
+	        
+	        # Load user event model
+	        $this->load->model('user_event_model', 'uem');
+	        
+	        # Load user model
+	        $this->load->model('user');
+	        
+	        $eventId = $this->input->post('event-id');
+	        $userId = $this->session->userdata('id');
+	        $status = User_event_status_model::STATUS_YIELD;
+	        
+	        $this->uesm->register_event_status($eventId, $userId, $status);
+	        
+	        $data['eventData'] = $this->uem->get_by_id($eventId);
+	        	        
+	        $data['accounts'] = $this->db->from('user')->get()->result();
+	        
+	        $data['profile'] = $this->user->getUserProfile($userId);
+	        	        
+            $this->template->render('services/pct_transfer', $data);	            
+	    }
+	}
 }
+

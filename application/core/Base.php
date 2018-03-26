@@ -102,7 +102,14 @@ class Base extends CI_Controller
 			$this->load->model('tasks_goals');
 			$this->data['tasks'] = $this->tasks_goals->get_task_by_user($this->session->userdata('id'));
 			$this->data['goals'] = $this->tasks_goals->get_goals_by_user($this->session->userdata('id'));
-			$this->data['communication'] = $this->ulec->get_communication_data($this->session->userdata('id'));
+// 			$this->data['communication'] = $this->ulec->get_communication_data($this->session->userdata('id'));
+			
+			# Load user event model
+			$this->load->model('user_event_model','user_event');
+			$this->load->model('user_event_status_model','user_event_status');
+			$this->load->model('page');
+			
+			$this->data['communication'] = $this->user_event->get_communication_data($this->session->userdata('id'));
 			
 			
 			$this->template->setRightSideBar('right_sidebar', $this->data);
