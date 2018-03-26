@@ -92,13 +92,15 @@
         			<div class="input-group">
     			  		<input class="password" type="password" name="password" placeholder="password">
     			  		<span class="input-group-btn">
-    		        		<button style="height: 43px;" class="btn btn-secondary" name="btn-wiki-search" type="submit">Go</button>
+    		        		<button style="height: 43px;" class="btn btn-secondary" name="btn-wiki-search" type="submit">Login</button>
     		      		</span>
     				</div>
         		</div>
         		
         		
         	</form>
+        	<?php else : ?>
+        	<a class="pull-right btn btn-danger button mar-t-20" href="<?php echo base_url('logout'); ?>">Logout</a>
         	<?php endif; ?>
         </div>
     </div>
