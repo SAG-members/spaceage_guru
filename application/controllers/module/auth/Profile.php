@@ -63,7 +63,17 @@ class Profile extends Application
 				
 				$flag = $this->user->update_profile($this->input->post('user-id'), $this->input->post('firstname'), $this->input->post('lastname'), $this->input->post('secondary-email'), $this->input->post('number'), $this->input->post('country'), $this->input->post('avtarname'), $imageName, $gender, $secretQuestion, $secretAnswer, $whatAreYou, $whatYouWantToBecome, $problemPreventing);
 				$this->user->update_currency($this->input->post('user-id'), $this->input->post('currency'));
-							
+				
+				$homeAddress = $this->input->post('home-address');
+				$homeLat = $this->input->post('home-lat');
+				$homeLng = $this->input->post('home-lng');
+				$workAddress = $this->input->post('work-address');
+				$workLat = $this->input->post('work-lat');
+				$workLng = $this->input->post('work-lng');
+				
+				$this->user->update_user_address($this->input->post('user-id'), $homeAddress, $homeLat, $homeLng, $workAddress, $workLat, $workLng);
+				
+				
 				if($flag) $this->message->setFlashMessage(Message::PROFILE_UPDATE_SUCCESS, array('id'=>1));
 				else $this->message->setFlashMessage(Message::PROFILE_UPDATE_FAILURE);
 				
@@ -91,6 +101,10 @@ class Profile extends Application
 		$response['questionnaire'] = $this->ques->get_user_questionnaire($this->session->userdata('id'));
 		$response['rpq'] = $this->ques->get_user_rpq($this->session->userdata('id'));
 		$response['wpq'] = $this->ques->get_user_wpq($this->session->userdata('id'));
+		
+		# Load pct setting
+		$this->load->model('pct_setting', 'pct');
+		$response['currencyRates'] = $this->pct->get_rates();
 		
 	    #Load currency model
 	    $this->load->model('currency');

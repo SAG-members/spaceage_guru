@@ -3,6 +3,7 @@
 $lockIcon = '';
 
 if($this->session->userdata('user_id')) $lockIcon = '';
+$result = get_lat_lng_by_ip();
 
 ?>
 <style>
@@ -194,6 +195,16 @@ if($this->session->userdata('user_id')) $lockIcon = '';
     			<div class="clearfix"></div>
 			</div>
 			
+			<div class="form-group mar-b-20">
+				<div class="col-md-12">
+					<label style="color: #FFF;">Set Location</label><br>
+					<button type="button" class="btn btn-primary" data-home-lat="" data-home-lng="" data-home-address="">Home Location</button>
+					<button type="button" class="btn btn-primary" data-work-lat="" data-work-lng="" data-work-address="">Work Location</button>
+					<button type="button" class="btn btn-primary">Current Location</button>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			
 			<div class="form-group">
 				<div class="col-md-12">
 					<div id="map" style="height:200px;"></div>
@@ -205,7 +216,15 @@ if($this->session->userdata('user_id')) $lockIcon = '';
     			<div class="col-md-12">
     				<input type="hidden" name="edit_event_id" />
     				<input type="hidden" name="lat">
-    				<input type="hidden" name="lng">    				
+    				<input type="hidden" name="lng">
+    				
+    				<?php if(!empty($result)) :?>
+    				<input type="hidden" name="current_lat" value="<?php echo $result->latitude; ?>">
+    				<input type="hidden" name="current_lng" value="<?php echo $result->longitude; ?>">
+    				<?php else :?>    				
+    				<input type="hidden" name="current_lat">
+    				<input type="hidden" name="current_lng">
+    				<?php endif; ?>
     				<button type="submit" class="btn btn-success" name="update_comment" value="2">Save</button>
 				</div>
 				<div class="clearfix"></div>
@@ -231,11 +250,17 @@ if($this->session->userdata('user_id')) $lockIcon = '';
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEhsWhrYpbiuyOi2czg7P49ZW27Uow51c&libraries=places"></script>
 
 <script>
+
+var positions = "";
+
 $(function(){
 	$('select[name="item_name"]').select2();	
 	initialize();
 	jQuery('input[type="text"][name="escrow_date_time"]').datetimepicker();
+
+	
 });
+
 
 $('button[type="submit"][name="update_comment"]').on('click', function(e){
 	e.preventDefault();
@@ -298,13 +323,27 @@ $('input[type="text"][name="location"]').on('keyup', function(){
     
 });
 
+
+var currentLat = -4.679574;
+var currentLng = 55.491977
+
+if($('input[type="hidden"][name="current_lat"]').val() !="")
+{
+	currentLat = $('input[type="hidden"][name="current_lat"]').val();
+}
+if($('input[type="hidden"][name="current_lng"]').val() !="")
+{
+	currentLng = $('input[type="hidden"][name="current_lng"]').val();
+}
+
 var geocoder;
 var map;
 var infowindow;
 var marker;
-var center = new google.maps.LatLng(-4.679574, 55.491977);
+var center = new google.maps.LatLng(currentLat, currentLng);
 
 geocoder = new google.maps.Geocoder();
+
 function initialize() 
 {
 	var mapOptions = { 
@@ -317,6 +356,20 @@ function initialize()
 
     marker = new google.maps.Marker({ map: map, position: center, draggable: true});
 
+    google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
+    	geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
+			if (status == google.maps.GeocoderStatus.OK) 
+	  		{
+				if (results[0]) 
+	  			{
+					$('input[type="text"][name="location"]').val(results[0].formatted_address);
+					$('input[type="text"][name="address"]').val(results[0].formatted_address);
+					$('input[type="hidden"][name="lat"]').val(marker.getPosition().lat());
+					$('input[type="hidden"][name="lng"]').val(marker.getPosition().lng());
+				}
+			}
+		});
+    });
 
     google.maps.event.addListener(marker, 'dragend', function() {
 		geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {

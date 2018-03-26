@@ -150,20 +150,33 @@
 										<input type="text" class="password" name="avtarname" value="<?php echo $profile->{User::_AVATAR_NAME}?>"/>
 											<!-- col-sm-10 -->
 										
-									</div>
+									</div>									
 									<div class="col-sm-6">
 										<label class="control-label">Currency</label> 
 										<select name="currency" class="password">
 											<option>select</option>
-											<?php if($curriencies) : foreach ($curriencies as $cu) : ?>
-											<?php $selected = ""; if($cu->{Currency::_ID} == $profile->{User::_CURRENCY}){ $selected = "selected"; } ?>
-											
-                                        	<?php if(empty($cu->{Currency::_CURRENCY_SYMBOL})) continue; ?>
-                                        	<option value="<?php echo $cu->{Currency::_ID} ?>" <?php echo $selected; ?>><?php echo $cu->{Currency::_CURRENCY_CODE}." - ".$cu->{Currency::_CURRENCY_SYMBOL}; ?></option>
+											<?php if($currencyRates) : foreach ($currencyRates as $r) : ?>
+											<?php $selected = ""; if($r->{pct_setting::_CURRENCY} == $profile->{User::_CURRENCY}){ $selected = "selected"; } ?>
+											<option <?php echo $selected; ?> value="<?php echo $r->{pct_setting::_CURRENCY} ?>" data-rate="<?php echo $r->{pct_setting::_CONVERSION_RATE}?>"><?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_SYMBOL); ?></option>
                                         	<?php endforeach; endif; ?>
 										</select>
 									</div>
 								</div>
+								
+								<div class="mar-t-10">
+									<label class="control-label">Home Address</label>
+									<input type="text" class="password" name="home-address" value="<?php echo $profile->{User::_HOME_ADDRESS}?>"/>
+									<input type="hidden"  name="home-lat" value="<?php echo $profile->{User::_HOME_LAT}?>">
+									<input type="hidden"  name="home-lng"  value="<?php echo $profile->{User::_HOME_LNG}?>">
+								</div>
+								
+								<div class="mar-t-10">
+									<label class="control-label">Work Address</label>
+									<input type="text" class="password" name="work-address"  value="<?php echo $profile->{User::_WORK_ADDRESS}?>"/>
+									<input type="hidden"  name="work-lat"  value="<?php echo $profile->{User::_WORK_LAT}?>">
+									<input type="hidden" name="work-lng"  value="<?php echo $profile->{User::_WORK_LNG}?>">
+								</div>
+								
 								<?php 
 									$avtar = $profile->{User::_AVATAR_IMAGE} == "" ? '' : '<img src="'.base_url(Template::_PUBLIC_AVTAR_DIR.$profile->{User::_AVATAR_IMAGE}).'" width="120px;" height="120px"/>';?>
 								<div class="mar-t-20">
@@ -371,7 +384,42 @@ $(function(){
 
 	
 });
-
 </script>
 
 
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEhsWhrYpbiuyOi2czg7P49ZW27Uow51c&libraries=places"></script>
+<script>
+
+$('input[type="text"][name="home-address"]').on('keyup', function(){
+	  
+	var places = new google.maps.places.Autocomplete($(this)[0]);
+
+	google.maps.event.addListener(places, 'place_changed', function () 
+	{
+	  	var place = places.getPlace();
+        var address = place.formatted_address;
+        var latitude = place.geometry.location.lat();
+        var longitude = place.geometry.location.lng();
+
+        $('input[type="hidden"][name="home-lat"]').val(latitude);
+        $('input[type="hidden"][name="home-lng"]').val(longitude);
+	});
+});
+
+$('input[type="text"][name="work-address"]').on('keyup', function(){
+	  
+	var places = new google.maps.places.Autocomplete($(this)[0]);
+
+	google.maps.event.addListener(places, 'place_changed', function () 
+	{
+	  	var place = places.getPlace();
+        var address = place.formatted_address;
+        var latitude = place.geometry.location.lat();
+        var longitude = place.geometry.location.lng();
+
+        $('input[type="hidden"][name="work-lat"]').val(latitude);
+        $('input[type="hidden"][name="work-lng"]').val(longitude);
+	});
+});
+
+</script>

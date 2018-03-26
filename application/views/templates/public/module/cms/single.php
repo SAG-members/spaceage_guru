@@ -8,6 +8,7 @@
 <?php endif;?>
 <?php if(!$this->session->userdata('isLoggedIn') && $pageTitle=='Intro')  :?>
 
+<!-- 
 <h2 class="text-center">Login</h2>
 <div class="services_text feedback">
 	<form action="<?php echo base_url('login')?>" method="post"
@@ -25,6 +26,7 @@
 		<button type="submit" name="btn-submit">Login</button>
 	</form>
 </div>
+ -->
 <?php endif;?>
 
 

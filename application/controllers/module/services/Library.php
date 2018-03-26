@@ -243,11 +243,18 @@ class Library extends Application
 			$this->load->library('cometchat_engine');
 			
 			ob_start();
-			$this->cometchat_engine->create_group($lastId, $this->input->post('title'), 3);
+			$this->cometchat_engine->create_group($lastId, $this->input->post('title'), 2);
 			$chatroomData = ob_get_clean();
 			$chatroomDataArr = json_decode($chatroomData, true);
 			
 			$res = $this->cometchat_engine->add_user_to_group($chatroomDataArr['success']['roomid'], $this->session->userdata('id'));
+			
+			# Let's update the created by here
+			
+			$data = array('createdby'=> $this->session->userdata('id'));
+			$this->db->where('id', $chatroomDataArr['success']['roomid']);
+			$this->db->update('cometchat_chatrooms', $data);
+			
 			
 			if($lastId) {$this->message->setFlashMessage(Message::DATA_CREATE_SUCCESS, array('id'=>'1'));}
 			else {$this->message->setFlashMessage(Message::DATA_CREATE_FAILURE);}

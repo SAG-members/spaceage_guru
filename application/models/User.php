@@ -33,6 +33,12 @@ class User extends CI_Model
 	const _STATUS = 'status';
 	const _ADDRESS = 'address';
 	const _COUNTRY = 'country'; 
+	const _HOME_ADDRESS = 'home_address'; 
+	const _HOME_LAT = 'home_lat'; 
+	const _HOME_LNG = 'home_lng'; 
+	const _WORK_ADDRESS = 'work_address'; 
+	const _WORK_LAT = 'work_lat'; 
+	const _WORK_LNG = 'work_lng'; 
 	const _CURRENCY = 'currency'; 
 	const _RECOMMENDOR = '	recommendor';
 	const _IS_LOGGED_IN = 'is_logged_in';
@@ -237,6 +243,27 @@ class User extends CI_Model
 		
 		return $flag;
 	}
+	
+	public function update_user_address($userId, $homeAddress, $homeLat, $homeLng, $workAddress, $workLat, $workLng)
+	{
+	    $data = array(
+	        static::_HOME_ADDRESS => $homeAddress,
+	        static::_HOME_LAT => $homeLat,
+	        static::_HOME_LNG => $homeLng,
+	        static::_WORK_ADDRESS => $workAddress,
+	        static::_WORK_LAT => $workLat,
+	        static::_WORK_LNG => $workLng,
+	    );
+	    
+	    $this->db->where(static::_ID, $userId);
+	    $this->db->update(static::_TABLE, $data);
+	    
+	    return $this->db->affected_rows();
+	    
+	}
+	
+	
+	
 		
 	public function update_user_membership($userId, $membershipId)
 	{

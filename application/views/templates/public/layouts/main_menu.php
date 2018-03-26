@@ -82,7 +82,7 @@
         	<?php if(!$this->session->userdata('id')) : ?>
         	<div class="text-center white-color">
         		<p>
-        			<a class="white-color" href="<?php echo base_url('login'); ?>">LOGIN</a> / 
+        			
         			<a class="white-color" href="<?php echo base_url('register'); ?>">REGISTER</a>
         		</p>
         	</div>

@@ -97,7 +97,11 @@ switch ($page->{Page::_VISIBILITY})
 <?php if(isset($error)):?>
 <div class="alert alert-danger mar-t-20"><?php echo $message;?></div>
 <?php else :?>
-
+<style>
+.services_text p, .services_text h2{
+    background-color:transparent !important;
+}
+</style>
 <h2>Data Type : <?php echo $this->page->get_category($page->{Page::_CATEGORY_ID}); ?></h2>
 <hr />
 <h3><?php echo $page->{Page::_PAGE_TITLE}; ?></h3>

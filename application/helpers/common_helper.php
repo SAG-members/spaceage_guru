@@ -115,8 +115,6 @@ function restructure_price($price)
 }
 
 function get_ip_address() {
-    
-//     return "203.122.26.101";
     // check for shared internet/ISP IP
     if (! empty($_SERVER['HTTP_CLIENT_IP']) && validate_ip($_SERVER['HTTP_CLIENT_IP'])) {
         return $_SERVER['HTTP_CLIENT_IP'];
@@ -147,7 +145,26 @@ function get_ip_address() {
                     
                     // return unreliable ip since all else failed
                     return $_SERVER['REMOTE_ADDR'];
+}
 
-                    
-                    
+function get_lat_lng_by_ip()
+{    
+    $ip = '120.22.53.133'; // Queensland
+//     $ip = get_ip_address();
+    $url = "http://freegeoip.net/json/$ip";
+    $ch  = curl_init();
+    
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    $data = curl_exec($ch);
+    curl_close($ch);
+    
+    if ($data)
+    {
+        $location = json_decode($data);
+        // 		preformatted_data($location);
+        return $location;
+    }
+    
 }
