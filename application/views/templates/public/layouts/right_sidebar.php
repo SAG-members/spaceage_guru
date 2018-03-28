@@ -156,24 +156,8 @@ if($this->session->userdata('user_id')) $lockIcon = '';
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
 				<h4 class="modal-title">Recommend Escrow to Friend</h4>
 			</div>
-			<div class="modal-body" style="overflow-y: scroll; height: 350px;">
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<td>Name</td>
-							<td>Recommend</td>
-						</tr>
-					</thead>
-					<tbody>
-    				<?php if($rightSideData['friends']): foreach ($rightSideData['friends'] as $f):?>
-    				<tr>
-    					<td><?php echo $f->username?></td>
-    					<td class="text-center"><button data-id="<?php echo $f->id ?>" type="button" name="btn_recommend" class="btn btn-warning btn-sm">Recommend</button></td>
-    					
-    				</tr>
-    				<?php endforeach; endif;?>
-				</tbody>
-				</table>
+			<div class="modal-body">
+				<div class="sharethis-inline-share-buttons"></div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -302,7 +286,36 @@ $(document).on('click', 'button[type="button"][name="yield-offer-smart-contract"
 	var redirectPath = window.location.href;
 
 	var newForm = jQuery('<form>', {
-        'action': BASE_URL + 'yield/event',
+        'action': BASE_URL + 'yield/event/'+id,
+        'target': '_top',
+        'method':'post'	
+    }).append(jQuery('<input>', {
+        'name': 'event-id',
+        'type': 'hidden',
+        'value': id,
+    })).append(jQuery('<input>', {
+        'name': 'action',
+        'type': 'hidden',
+        'value': 'yield',
+    })).append(jQuery('<input>', {
+        'name': 'redirect_url',
+        'type': 'hidden',
+        'value': redirectPath,
+    }));
+
+	newForm.appendTo('body').submit();
+});
+
+
+
+$(document).on('click', 'button[type="button"][name="yield-offer-escrow"]', function(e){
+	var id = $(this).data('eventId');
+	
+	
+	var redirectPath = window.location.href;
+
+	var newForm = jQuery('<form>', {
+        'action': BASE_URL + 'yield/escrow/event/'+id,
         'target': '_top',
         'method':'post'	
     }).append(jQuery('<input>', {

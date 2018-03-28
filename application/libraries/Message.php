@@ -76,6 +76,9 @@ class Message
 	const OFFER_APPROVE_SUCCESS = "Offer Approved Successfully";
 	const OFFER_APPROVE_FAILURE = "Error approving offer";
 	
+	# OFFER PAID SUCCESS
+	const OFFER_PAID_SUCCESS = "Offer Paid Successfully"; 
+	
 	
 	# Product Constants
 	
@@ -139,10 +142,10 @@ class Message
 	const PASSWORD_UPDATE_SUCCESS = 'Password Updated Successfully';
 
 	const RSS_SUBSCRIPTION_FAILURE = 'Error in subscription, Please try again later';
-	const RSS_SUBSCRIPTION_SUCCESS = 'Rss Subscription Successfull';
+	const RSS_SUBSCRIPTION_SUCCESS = 'News Feed Subscription Successfull';
 	
 	const RSS_UNSUBSCRIPTION_FAILURE = 'Error in Unsubscribing, Please try again later';
-	const RSS_UNSUBSCRIPTION_SUCCESS = 'Rss Subscription Unsunbscribed Successfull';
+	const RSS_UNSUBSCRIPTION_SUCCESS = 'News Feed Subscription Unsunbscribed Successfull';
 	
 	const PAYMENT_FAILURE = 'Error in payment, Please try again later';
 	const PAYMENT_SUCCESS = 'Payment Successfull';

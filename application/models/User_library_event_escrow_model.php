@@ -245,5 +245,28 @@ class User_library_event_escrow_model extends CI_Model
         
         return $this->db->affected_rows();
     }
-	
+	    
+//     public function create_new_escrow($notes, $sellerId, $buyerId, $fromAccount, $deliveryMethod, $escrowReleased, $address, $dateTime, $price, $buyerId)
+//     {
+//         $dateObj = new DateTime();
+//         $date = $dateObj->format('Y-m-d H:i:s');
+        
+//         $data = array(
+//             static::_ESCROW_NOTES => $notes,
+//             static::_ESCROW_SELLER_ID=>$sellerId,
+//             static::_ESCROW_BUYER_ID=>$buyerId,
+//             static::_ESCROW_FROM_ACCOUNT => $fromAccount,
+//             static::_ESCROW_DELIVERY_METHOD=>$deliveryMethod,
+//             static::_ESCROW_RELEASED=>$escrowReleased,
+//             static::_ESCROW_ADDRESS=>$address,
+//             static::_ESCROW_PRICE => $price,
+//             static::_STATUS=>static::YIELD_OFFER,
+//             static::_DATE_CREATED=>$date,
+//         );
+        
+//         $this->db->insert(static::_TABLE, $data);
+//         return $this->db->insert_id();        
+//     }
+    
+    
 }

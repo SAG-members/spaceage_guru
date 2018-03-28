@@ -217,37 +217,94 @@ class Payment extends Application
             redirect('profile');
         }
         
-        $txnNum = "PCTINT".time();
-        $userId = $this->session->userdata('id');
-        $itemNumber = $this->input->post('item_id');
-        $itemName = $this->input->post('item_name');
-        $itemCategory = $this->input->post('category_id');
-        $grossAmount = $this->input->post('invoice_amount');
-        
-        
-        $profile = $this->user->getUserProfile($userId);
-        $email = $profile->{User::_EMAIL};
-        
-        
-        $this->load->model('psss_purchase_history','psss');
-        
-        $this->psss->create_purchase_history($txnNum, $userId, $itemNumber, $itemName, $itemCategory, $grossAmount, "PCT", $email, 'Internal Wallet');
-        $this->message->setFlashMessage(Message::PAYMENT_SUCCESS, array('id'=>'1'));
-        
-        # Load pct-transaction model
-        $this->load->model('pct_transaction');
-        $result = $this->pct_transaction->create_transaction($userId, 1, $txnNum, 'PSSS Purchase', $grossAmount);
-        
-        
-        # Now since the payment is done, we need to subtract gross amount
-        
-        $profile = $this->user->getUserProfile($userId);
-        $walletAmount = $profile->{user::_PCT_WALLET_AMOUNT};
-        $updatedAmount = ($walletAmount - $grossAmount);
-        
-        $this->user->update_pct_wallet_amount($userId, $updatedAmount);
-        
-        redirect('profile');
+        if($this->input->post('type') && $this->input->post('type')=="escrow-payment")
+        {
+            $userId = $this->session->userdata('id');
+            
+            $eventId = $this->input->post('event-id');
+            $escrowId = $this->input->post('escrow-id');
+            
+            # First step to make the event complete
+            
+            # Load user event model
+            $this->load->model('user_event_model', 'uem');
+            
+            # Load user event escrow model
+            $this->load->model('user_event_escrow_model', 'ueem');
+            
+            # Get event data
+            $eventData = $this->uem->get_by_id($eventId);
+            
+            # Get escrow data
+            $escrowData = $this->ueem->get_by_id($escrowId);
+            
+            $profile = $this->user->getUserProfile($userId);
+            $walletAmount = $profile->{User::_PCT_WALLET_AMOUNT};
+            
+            if($eventData->{User_event_model::_PCT_PRICE} > $walletAmount){
+                $this->message->setFlashMessage(Message::PCT_PAYMENT_TRANSFER_FAILURE_INSUFFICIENT_FUND);
+                redirect('profile');
+            }
+                        
+            $this->db->where(User_event_model::_ID, $eventId);
+            $this->db->update(User_event_model::_TABLE, array(User_event_model::_STATUS => User_event_model::EVENT_COMPLETED));
+            
+            # New step to make the escrow status complete
+            
+            
+            $this->db->where(User_event_escrow_model::_ID, $escrowId);
+            $this->db->update(User_event_escrow_model::_TABLE, array(User_event_escrow_model::_STATUS => User_event_escrow_model::OFFER_COMPLETE));
+            
+            $toUserProfile = $this->user->getUserProfile($escrowData->{User_event_escrow_model::_ESCROW_SELLER_ID});
+            $toUserWalletAmount = $toUserProfile->{User::_PCT_WALLET_AMOUNT};
+            $toUserWalletAmount += $eventData->{User_event_model::_PCT_PRICE};            
+            # Update wallet balances
+            
+            $this->db->where(User::_ID, $escrowData->{User_event_escrow_model::_ESCROW_SELLER_ID})->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $toUserWalletAmount));
+            $this->db->where(User::_ID, $userId)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => ($walletAmount- $eventData->{User_event_model::_PCT_PRICE})));
+            
+            $txnNum = "PCTINT".time();
+            
+            # Load pct-transaction model
+            $this->load->model('pct_transaction');
+            $result = $this->pct_transaction->create_transaction($userId, $escrowData->{User_event_escrow_model::_ESCROW_SELLER_ID}, $txnNum, "Escrow Payment", $eventData->{User_event_model::_PCT_PRICE}, $eventData->{User_event_model::_TOPIC}, $eventData->{User_event_model::_COMMENT});
+            
+            $this->message->setFlashMessage(Message::OFFER_PAID_SUCCESS, array('id'=>1));            
+            redirect('profile');
+        }
+        else 
+        {
+            $txnNum = "PCTINT".time();
+            $userId = $this->session->userdata('id');
+            $itemNumber = $this->input->post('item_id');
+            $itemName = $this->input->post('item_name');
+            $itemCategory = $this->input->post('category_id');
+            $grossAmount = $this->input->post('invoice_amount');
+            
+            
+            $profile = $this->user->getUserProfile($userId);
+            $email = $profile->{User::_EMAIL};
+            
+            
+            $this->load->model('psss_purchase_history','psss');
+            
+            $this->psss->create_purchase_history($txnNum, $userId, $itemNumber, $itemName, $itemCategory, $grossAmount, "PCT", $email, 'Internal Wallet');
+            $this->message->setFlashMessage(Message::PAYMENT_SUCCESS, array('id'=>'1'));
+            
+            # Load pct-transaction model
+            $this->load->model('pct_transaction');
+            $result = $this->pct_transaction->create_transaction($userId, 1, $txnNum, 'PSSS Purchase', $grossAmount);
+            
+            # Now since the payment is done, we need to subtract gross amount
+            
+            $profile = $this->user->getUserProfile($userId);
+            $walletAmount = $profile->{user::_PCT_WALLET_AMOUNT};
+            $updatedAmount = ($walletAmount - $grossAmount);
+            
+            $this->user->update_pct_wallet_amount($userId, $updatedAmount);
+            
+            redirect('profile');
+        }        
     }
     
     public function process_pct_transfer()
@@ -280,8 +337,7 @@ class Payment extends Application
             $this->message->setFlashMessage(Message::PCT_PAYMENT_TRANSFER_FAILURE_INSUFFICIENT_FUND);
             redirect('profile');
         }
-        
-        
+                
         $this->db->where(User::_ID, $toUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $txnPoints));
         $this->db->where(User::_ID, $fromUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => ($walletAmount- $txnPoints)));
         
@@ -289,6 +345,17 @@ class Payment extends Application
         # Load pct-transaction model
         $this->load->model('pct_transaction');
         $result = $this->pct_transaction->create_transaction($fromUser, $toUser, $txnId, $txnType, $txnPoints, $txnTopic, $txnMessage);
+        
+        if($this->input->post('transfer-type') && $this->input->post('transfer-type') == "smart contract")
+        {
+            $this->pct_transaction->update_transaction('Smart Contract Transfer', $this->input->post('event-id'), $result);
+            
+            # Now we have the smart contract done for the event, so let's update event status
+            # Load user event model
+            $this->load->model('user_event_model', 'uem');
+            $this->db->where(User_event_model::_ID, $this->input->post('event-id'))->update(User_event_model::_TABLE, array(User_event_model::_STATUS => User_event_model::EVENT_COMPLETED));
+        }
+        
         
         if($result) $this->message->setFlashMessage(Message::PCT_PAYMENT_TRANSFER_SUCCESS, array('id'=>1));
         else  $this->message->setFlashMessage(Message::PCT_PAYMENT_TRANSFER_FAILURE);

@@ -157,7 +157,11 @@
 											<option>select</option>
 											<?php if($currencyRates) : foreach ($currencyRates as $r) : ?>
 											<?php $selected = ""; if($r->{pct_setting::_CURRENCY} == $profile->{User::_CURRENCY}){ $selected = "selected"; } ?>
-											<option <?php echo $selected; ?> value="<?php echo $r->{pct_setting::_CURRENCY} ?>" data-rate="<?php echo $r->{pct_setting::_CONVERSION_RATE}?>"><?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_SYMBOL); ?></option>
+											<option <?php echo $selected; ?> value="<?php echo $r->{pct_setting::_CURRENCY} ?>" data-rate="<?php echo $r->{pct_setting::_CONVERSION_RATE}?>">
+											<?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_NAME); ?>-
+											<?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_CODE); ?>-
+											<?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_SYMBOL); ?>
+											</option>
                                         	<?php endforeach; endif; ?>
 										</select>
 									</div>
@@ -175,6 +179,24 @@
 									<input type="text" class="password" name="work-address"  value="<?php echo $profile->{User::_WORK_ADDRESS}?>"/>
 									<input type="hidden"  name="work-lat"  value="<?php echo $profile->{User::_WORK_LAT}?>">
 									<input type="hidden" name="work-lng"  value="<?php echo $profile->{User::_WORK_LNG}?>">
+								</div>
+								<?php 
+								$preferredLocationArr = array(
+								    "1"=>"Home",
+								    "2"=>"Work",
+								    "3"=>"Current"
+								);
+								
+								?>
+								<div class="mar-t-10">
+									<label class="control-label">Preferred Event Location</label>
+									<select class="password" name="preferred-event-location">
+										<option value="0">Select</option>
+										<?php if($preferredLocationArr): foreach ($preferredLocationArr as $k => $v) :?>
+										<?php $selected=""; if($k == $profile->{User::_EVENT_DEFAULT_ADDRESS}) $selected="selected"; ?>
+										<option <?php echo $selected; ?> value="<?php echo $k?>"><?php echo $v; ?></option>
+										<?php endforeach; endif;?>
+									</select>
 								</div>
 								
 								<?php 
@@ -201,7 +223,7 @@
 									<!-- Order RSS Feed Button -->
 									<div class="buttonmain">
 										<h2><img src="<?php echo base_url('assets/img/rss.png')?>" height="150" /></h2>
-										<h3>RSS feed to communication field</h3>
+										<h3>News feed to communication field</h3>
 									<!-- 	<p>Simply add an RSS feed URL from any website or blog and have new posts automatically delivered to your inbox.</p> -->
 									    <div class="onoffswitch">
 									        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">

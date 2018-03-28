@@ -1,121 +1,36 @@
 <h2><?php echo $title;?></h2>
-<?php 
-# Load Escrow Data
-
-$address=''; $dateTime = ''; $escrow_released = ''; $price = ''; $notes = ''; $fromAccount = ''; 
-$deliveryMethod= ''; $escrowReleased=''; $category = ''; $title = ''; $commentId = ''; $categoryId = ''; 
-$buyerId = ''; $sellerId = ''; $escrowId = ''; $comment = ''; $sellerApproved = '';
-#pre($data);
-if(isset($data) && !empty($data))
-{
-	$category = $this->page->get_category($data->category_id);
-	$title = $data->title;
-	$commentId = $data->comment_id;
-	$categoryId = $data->category_id;
-}
-
-if(isset($escrowDetails) && !empty($escrowDetails))
-{
-    # Get Category Id
-    $commentData = $this->ulec->get_by_id($escrowDetails[0]->comment_id);
-     
-    $escrow_released = $escrowDetails[0]->escrow_released;    
-    
-    $commentId = $escrowDetails[0]->comment_id;
-    $buyerId = $escrowDetails[0]->escrow_buyer_id;
-    $sellerId = $escrowDetails[0]->escrow_seller_id;
-    $escrowId = $escrowDetails[0]->id;
-    $sellerApproved = $escrowDetails[0]->seller_approved;
-        
-     
-    $comment = !empty($escrowDetails[0]->escrow_notes) ? $escrowDetails[0]->escrow_notes : $commentData->comment;
-    
-    $eventDetail = $this->library_event_model->getLibraryEventById($commentData->event_id);
-    $pageDetail = $this->page->get_by_id($eventDetail->event_data_id);
-    $category = $this->page->get_category($pageDetail->{Page::_CATEGORY_ID});
-    
-    $fromAccount = !empty($escrowDetails[0]->from_account) ? $escrowDetails[0]->from_account : $commentData->from_account;
-    $deliveryMethod = !empty($escrowDetails[0]->delivery_method) ? $escrowDetails[0]->delivery_method : $commentData->delivery_method;
-    $escrowReleased = !empty($escrowDetails[0]->escrow_released) ? $escrowDetails[0]->escrow_released : $commentData->escrow_released;
-    $address = !empty($escrowDetails[0]->address) ? $address = $escrowDetails[0]->address : $commentData->location;
-    
-    $price = $commentData->price; 
-    if(!empty($escrowDetails[0]->escrow_price) && $escrowDetails[0]->escrow_price != '0.00'){
-        $price = $escrowDetails[0]->escrow_price;
-    }
-        
-    $title = $pageDetail->page_title;
-    $categoryId = $pageDetail->category_id;
-    
-    $dateTime = !empty($escrowDetails[0]->date_time) ? $escrowDetails[0]->date_time : $commentData->date_time;
-    
-    $date = new DateTime($dateTime);
-    $date = $date->format('d-m-Y H:i:s');
-}
-
-?>
 <div class="services_text">
 	<form id="create_escrow_form">
-	<?php if(isset($data) || isset($escrowDetails)):  ?>
+	
 		<table class="table table-bordered">
-			<tbody>
-				<tr>
-					<td>Data Type</td>
-					<td>
-						<?php $categoryArr = array(
-						        '18'=>'Audio/Visual',
-						        '17'=>'Article', 
-						        '19'=>'Cures',
-						        '20'=>'Legal Note',
-                                '2'=>'Product', 
-						        '8'=>'Sensation', 
-						        '1'=>'Service', 
-						        '5'=>'Symptom'
-						        
-						        
-						        
-						); ?>
-    					<select class="form-control custom-select-box enable-me" readonly>
-        					<?php if($categoryArr): foreach ($categoryArr as $key => $cat):?>
-        					<?php $selected=""; if($key == $categoryId){$selected="selected='selected'";}?>
-        					<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $cat; ?></option>
-        					<?php endforeach;endif;?>
-    					</select>
-					</td>
-					<td><a class="edit_me pointer">Edit</a> </td>
-				</tr>
+			<tbody>				
 				<tr>
 					<td>Item</td>
-					<td><input type="text" class="form-control custom-text-box enable-me" value="<?php echo $title; ?>" readonly/></td>
+					<td><input type="text" class="form-control custom-text-box enable-me" readonly value="<?php echo $this->page->get_by_id($eventData->{User_event_model::_ITEM_ID}, Page::_PAGE_TITLE); ?>"/></td>
 					<td><a class="edit_me pointer">Edit</a> </td>
 				</tr>
 				<tr>
 					<td>Notes</td>
-					<td><input type="text" name="escrow_notes" class="form-control custom-text-box enable-me" value="<?php echo $comment; ?>" readonly/></td>
+					<td><input type="text" name="escrow_notes" class="form-control custom-text-box enable-me" readonly value="<?php echo $eventData->{User_event_model::_TOPIC}?>"/></td>
 					<td><a class="edit_me pointer">Edit</a> </td>
 				</tr>
 				<tr>
 					<td>Price</td>
-					<td><input name="escrow_price" type="text" class="form-control custom-text-box enable-me" value="<?php echo $price; ?>" readonly/></td>
+					<td><input name="escrow_price" type="text" class="form-control custom-text-box enable-me" readonly value="<?php echo $eventData->{User_event_model::_PCT_PRICE}?>"/></td>
 					<td><a class="edit_me pointer">Edit</a> </td>
 				</tr>
 				<tr>
 					<td>Payment From</td>
 					<?php $paymentArr = array(
-					        '1'=>'PCT Account', 
-					        '2'=>'Cryptonator', 
-					        '3'=>'Paypal', 
-					        '4'=>'Bank Transfer', 
-					        '5'=>'Other CC accounts', 
-					        '6'=>'Cash', 
-					        '7'=>'Shapeshift.io'
+					        '1'=>'PCT Account', 					         
+					        '2'=>'Cash', 					        
 					        
 					); ?>
 					<td>
 					<select class="form-control custom-select-box enable-me" name="payment_from" readonly>
         					<option value="0">Select</option>
         					<?php if($paymentArr): foreach ($paymentArr as $key => $val):?>
-        					<?php $selected = ''; if($key == $fromAccount){$selected="selected='selected'";}?>
+        					<?php $selected = ''; if($key == $eventData->{User_event_model::_PAYMENT_FROM}){$selected="selected='selected'";}?>
         					<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $val; ?></option>
         					<?php endforeach;endif;?>
     					</select>
@@ -129,37 +44,21 @@ if(isset($escrowDetails) && !empty($escrowDetails))
 					<select class="form-control custom-select-box enable-me" name="delivery_method" readonly>
         					<option value="0">Select</option>
         					<?php if($deliveryArr): foreach ($deliveryArr as $key => $val):?>
-        					<?php $selected = ''; if($key == $deliveryMethod){$selected="selected='selected'";}?>
+        					<?php $selected = ''; if($key == $eventData->{User_event_model::_DELIVERY_METHOD}){$selected="selected='selected'";}?>
         					<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $val; ?></option>
         					<?php endforeach;endif;?>
     					</select>
     				</td>
 					<td><a class="edit_me pointer">Edit</a> </td>
-				</tr>
-				<!-- 
-				<tr>
-					<td>Amount of Escrow Released</td>
-					<?php $deliveryArr = array('1'=>'100%', '2'=>'75%', '3'=>'50%', '4'=>'25%', '5'=>'10%', '6'=>'Write'); ?>
-					<td>
-					<select class="form-control custom-select-box enable-me" name="escrow_percent" readonly>
-							<option value="0">Select</option>
-        					<?php if($deliveryArr): foreach ($deliveryArr as $key => $val):?>
-        					
-        					<option value="<?php echo $key; ?>"><?php echo $val; ?></option>
-        					<?php endforeach;endif;?>
-    					</select>
-    				</td>
-					<td><a class="edit_me pointer">Edit</a> </td>
-				</tr>
-				 -->
+				</tr>				
 				<tr>
 					<td>When</td>
-					<?php $deliveryArr = array('1'=>'done/delivered', '2'=>'sent', '3'=>'plans ready', '4'=>'Write'); ?>
+					<?php $deliveryArr = array('1'=>'done/delivered', '2'=>'sent', '3'=>'plans ready', '4'=>'Write to notes'); ?>
 					<td>
 					<select class="form-control custom-select-box enable-me" name="payment_when" readonly>
 							<option value="0">Select</option>
         					<?php if($deliveryArr): foreach ($deliveryArr as $key => $val):?>
-        					<?php $selected = ''; if($key == $escrowReleased){$selected="selected='selected'";}?>
+        					<?php $selected = ''; if($key == $eventData->{User_event_model::_ESCROW_RELEASED}){$selected="selected='selected'";}?>
         					<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $val; ?></option>
         					<?php endforeach;endif;?>
     					</select>
@@ -168,19 +67,33 @@ if(isset($escrowDetails) && !empty($escrowDetails))
 				</tr>
 				<tr>
 					<td>To</td>
-					<td><input type="text" name="escrow_address" class="form-control custom-text-box enable-me" value="<?php echo $address; ?>" readonly/></td> 
+					<td><input type="text" name="escrow_address" class="form-control custom-text-box enable-me" value="<?php echo $eventData->{User_event_model::_ADDRESS}?>" readonly/></td> 
 					<td><a class="edit_me pointer">Edit</a> </td>
 				</tr>
 				<tr>
 					<td>Date Time</td>
-					<td><input type="text" name="escrow_date_time" class="form-control custom-text-box enable-me" value="<?php echo $dateTime; ?>" readonly/></td>
+					<td><input type="text" name="escrow_date_time" class="form-control custom-text-box enable-me"  value="<?php echo $eventData->{User_event_model::_DATE_CREATED}?>" readonly/></td>
 					<td><a class="edit_me pointer">Edit</a> </td>
 				</tr>
 			</tbody>	
 		</table>
-		<div id="map"></div>
+		<div id="map" style="height:300px;"></div>
 		<div class="clearfix"></div>
 		<div class="mar-t-20 mar-b-20">
+<!--     		<div class="col-md-2 padding_none"> -->
+<!--     			<button type="button" name="btn_accept_escrow" class="btn btn-success">Accept</button> -->
+<!--     		</div> -->
+<!--     		<div class="col-md-3 padding_none"> -->
+<!--     			<button type="button" name="btn_save_exit_escrow" class="btn btn-warning">Save and Exit</button> -->
+<!--     		</div> -->
+<!--     		<div class="col-md-2 padding_none"> -->
+<!--     			<button type="button" name="btn_decline_escrow" class="btn btn-danger">Decline</button> -->
+<!--     		</div> -->
+			<?php if (($sellerApproved == 1) && ($this->session->userdata('id') != $sellerId)): ?>			       
+    		<input type="hidden" name="escrow_id" value="<?php echo $escrowId; ?>">        		
+    		<input type="button" name="btn-btn-pay-pct" class="btn btn-primary" value="PCT <?php echo $eventData->{User_event_model::_PCT_PRICE} ?>">        	
+			<?php endif; ?>
+			
 			<?php if(isset($sellerId) && $this->session->userdata('id') == $sellerId && $sellerApproved != 1) :?>
 			<div class="col-md-2 padding_none">
 				<button type="button" name="btn_approve_escrow" class="btn btn-success">Approve</button>
@@ -190,18 +103,14 @@ if(isset($escrowDetails) && !empty($escrowDetails))
 			</div>
 			<div class="col-md-2 padding_none">
 				<button type="button" name="btn_decline_escrow" class="btn btn-danger">Decline</button>
-			</div>
-			<input type="hidden" name="escrow_id" value="<?php echo $escrowId?>"/>
-			<input type="hidden" name="hidden_escrow_id" value="<?php echo $this->uri->segment(3); ?>"/>
+			</div>			
 			<?php elseif ($sellerApproved == 1): ?>
 			<div class="col-md-3 padding_none">
 				<button type="button" name="btn_save_escrow" class="btn btn-warning">Save and Exit</button>
 			</div>
 			<div class="col-md-2 padding_none">
 				<button type="button" name="btn_decline_escrow" class="btn btn-danger">Decline</button>
-			</div>
-			<input type="hidden" name="escrow_id" value="<?php echo $escrowId?>"/>
-			<input type="hidden" name="hidden_escrow_id" value="<?php echo $this->uri->segment(3); ?>"/>
+			</div>			
 			<?php else :?>
 			<div class="col-md-2 padding_none">
 				<button type="button" name="btn_accept_escrow" class="btn btn-success">Accept</button>
@@ -211,103 +120,67 @@ if(isset($escrowDetails) && !empty($escrowDetails))
 			</div>
 			<div class="col-md-2 padding_none">
 				<button type="button" name="btn_decline_escrow" class="btn btn-danger">Decline</button>
-			</div>
-			<input type="hidden" name="escrow_id" value="<?php echo $commentId?>"/>
-			<input type="hidden" name="hidden_escrow_id" value="<?php echo $this->uri->segment(3); ?>"/>
+			</div>			
 			<?php endif;?>
 			
 			
 		</div>
-	<?php elseif ($sellerApproved == 1): ?>
-	
-	<?php else:?>
-		<div class="alert alert-danger mar-t-20">This page is only accessible after you yields an offer</div>
-	<?php endif;?>
+		<input type="hidden" name="hidden_escrow_id" value="<?php echo $escrowId; ?>"/>
 	</form>
-	
-<?php if ($sellerApproved == 1): ?>
-<div class="col-md-12 padding_none mar-t-10">
-    <!--  Pay via Direct Payment to company account -->
-    <div class="panel panel-default ">
-    	<div class="panel-heading">
-       		<h4 class="panel-title ">
-           		<span style="color: #089bd3; cursor:pointer" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Direct Deposit in Company Bank Account</span>
-           		<ul class="nav navbar-right panel_toolbox">
-    					<li><a style="color: #089bd3; cursor:pointer" class="collapse-link"><i class="fa fa-chevron-down"  data-toggle="collapse" data-parent="#accordion" href="#collapseThree"></i></a></li>
-                    </ul>
-                <div class="clearfix"></div>
-       		</h4>
-    	</div>
-    	<div id="collapseThree" class="panel-collapse collapse">
-       		<div class="panel-body">
-       		   <p style="color:#000 !important;">Receiver : Axis Mundi Oü</p>
-       		   <p style="color:#000 !important;">Bank Account : EE977700771002654084</p>
-       		   <p style="color:#000 !important;">BIC/SWIFT: LHVBEE22</p>
-    		   <p style="color:#000 !important;">Bank Name: AS LHV Pank</p>
-    		   <p style="color:#000 !important;">Address: Tartu mnt 2, 10145 Tallinn Estonia</p>
-    		   <p style="color:#000 !important;">User/Member number and purchased item</p>
-    		   <p style="color:#000 !important;">eg. U10565 Membership 1000 &euro;</p>
-    		   <p style="color:#000 !important;">or</p>
-    		   <p style="color:#000 !important;">M10999 Club credit PCT worth of 1000 &euro;</p>
-       		</div>
-       	</div>
-    </div>
-                      
-                      <!-- Pay with Cryptonator -->
-    <div class="panel panel-default ">
-    	<div class="panel-heading">
-       		<h4 class="panel-title ">
-           		<span style="color: #089bd3; cursor:pointer" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Pay With Cryptonator</span>
-    <ul class="nav navbar-right panel_toolbox">
-    		<li><a style="color: #089bd3; cursor:pointer" class="collapse-link" data-parent="#accordion" href="#collapseTwo"><i class="fa fa-chevron-down"  data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"></i></a></li>
-                </ul>
-            <div class="clearfix"></div>
-    	</h4>
-    </div>
-    <div id="collapseTwo" class="panel-collapse collapse">
-    	<div class="panel-body">
-    		
-    		<form method="GET" action="https://api.cryptonator.com/api/merchant/v1/startpayment">
-        		<input type="hidden" name="merchant_id" value="f3d2e6eebd0ef1857dbd12fcd4c6f997">
-        		<input type="hidden" name="item_name" value="Escrow For <?php echo $title; ?>">
-                <input type="hidden" name="invoice_currency" value="eur">
-                <input type="hidden" name="invoice_amount" value="<?php echo $price; ?>" data-type="number">
-        		<input type="hidden" name="language" value="en">
-        		<input type="hidden" name="success_url" value="<?php echo base_url('escrow/payment/success');?>">
-				<input type="hidden" name="failed_url" value="<?php echo base_url('escrow/payment/failure'); ?>">
-        		<input type="submit" name="btn_cryptonaror_submit" class="btn btn-primary" value="Make Payment">
-        	</form>
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    		
-    			       		
-       		</div>
-       	</div>
-    </div>
-    </div>
-	<?php endif;?>
 </div>
 
-
-<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-<script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/src/js/bootstrap-datetimepicker.js"></script>
-
-
-
-<link href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/a549aa8780dbda16f6cff545aeabc3d71073911e/build/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+<link rel="stylesheet" href="<?php echo base_url('assets/css/jquery.datetimepicker.min.css'); ?>">
+<script src="<?php echo base_url(); ?>assets/js/jquery.datetimepicker.full.js"></script>
 
 <script type="text/javascript"
-	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBEhsWhrYpbiuyOi2czg7P49ZW27Uow51c&libraries=places"></script>
-<script>
+	src="https://maps.googleapis.com/maps/api/js?key=<?php echo $this->config->item('google_map_api_key');?>&libraries=places"></script>
+<script type="text/javascript">
+
+$('.edit_me').on('click', function(){
+	$(this).parents('td').siblings('td').find('.enable-me').prop('readonly', false);
+	$(this).parents('td').siblings('td').find('.enable-me').focus();	
+});
+
+$('input[type="text"][name="escrow_address"]').on('keyup', function(){
+	var $this = $(this);
+		  
+	var places = new google.maps.places.Autocomplete($this[0]);
+
+	google.maps.event.addListener(places, 'place_changed', function () 
+	{
+	  	var place = places.getPlace();
+        var address = place.formatted_address;
+        var latitude = place.geometry.location.lat();
+        var longitude = place.geometry.location.lng();
+
+		$this.attr('data-lat', latitude);
+		$this.attr('data-lng', longitude);
+
+		codeAddress(address);
+        
+	});
+});
+
+/* Save and Exit Escrow */
+
+$('button[type="button"][name="btn_save_exit_escrow"]').on('click', function(){
+
+	var result = $('#create_escrow_form').serializeObject();
+
+	var escrowId = $('input[type="hidden"][name="hidden_escrow_id"]').val();
+	
+	var newForm = jQuery('<form>', {
+        'action': BASE_URL+'yield/escrow/save/'+escrowId,
+        'target': '_top',
+        'method':'post'	
+    });
+
+	newForm.append(jQuery('<input>', {'name': 'escrow', 'type': 'hidden', 'value': JSON.stringify(result)}));
+	
+	newForm.appendTo("body").submit();
+});
+
+
 /* Accept Escrow*/
 $('button[type="button"][name="btn_accept_escrow"]').on('click', function(){
 
@@ -345,7 +218,7 @@ $('button[type="button"][name="btn_accept_escrow"]').on('click', function(){
 			    type     : 'warning',
 			    close    : function () {
 			    	var newForm = jQuery('<form>', {
-				        'action': BASE_URL+'user/escrow-offer',
+				        'action': BASE_URL+'yield/escrow/accept/'+escrowId,
 				        'target': '_top',
 				        'method':'post'	
 				    });
@@ -362,7 +235,7 @@ $('button[type="button"][name="btn_accept_escrow"]').on('click', function(){
 		else
 		{
 			var newForm = jQuery('<form>', {
-		        'action': BASE_URL+'user/escrow-offer',
+		        'action': BASE_URL+'yield/escrow/accept/'+escrowId,
 		        'target': '_top',
 		        'method':'post'	
 		    });
@@ -376,7 +249,7 @@ $('button[type="button"][name="btn_accept_escrow"]').on('click', function(){
 });
 
 /* Approve Escrow */
- 
+
 $('button[type="button"][name="btn_approve_escrow"]').on('click', function(){
 
 	
@@ -413,7 +286,7 @@ $('button[type="button"][name="btn_approve_escrow"]').on('click', function(){
 			    type     : 'warning',
 			    close    : function () {
 			    	var newForm = jQuery('<form>', {
-				        'action': BASE_URL+'user/approve-offer',
+				        'action': BASE_URL+'escrow/approve/'+escrowId,
 				        'target': '_top',
 				        'method':'post'	
 				    });
@@ -429,7 +302,7 @@ $('button[type="button"][name="btn_approve_escrow"]').on('click', function(){
 		else
 		{
 			var newForm = jQuery('<form>', {
-		        'action': BASE_URL+'user/approve-offer',
+		        'action': BASE_URL+'escrow/approve/'+escrowId,
 		        'target': '_top',
 		        'method':'post'	
 		    });
@@ -440,97 +313,31 @@ $('button[type="button"][name="btn_approve_escrow"]').on('click', function(){
 		}
 	});
 	
-	
-	
 });
 
 
-
-
-/* Save and Exit Escrow */
+/* Make Payment*/
  
-$('button[type="button"][name="btn_save_exit_escrow"]').on('click', function(){
+$('input[type="button"][name="btn-btn-pay-pct"]').on('click', function(){
 
-	var result = $('#create_escrow_form').serializeObject();
-	
+	var escrowId = $('input[type="hidden"][name="hidden_escrow_id"]').val();
+
 	var newForm = jQuery('<form>', {
-        'action': BASE_URL+'user/save-offer',
+        'action': BASE_URL+'escrow/pay/'+escrowId,
         'target': '_top',
         'method':'post'	
     });
-
-	newForm.append(jQuery('<input>', {'name': 'escrow', 'type': 'hidden', 'value': JSON.stringify(result)}));
-	
+    	
 	newForm.appendTo("body").submit();
 });
 
-
-/* Decline Escrow*/
-$('button[type="button"][name="btn_decline_escrow"]').on('click', function(){
-
-	var commentId = $('input[type="hidden"][name="hidden_escrow_id"]').val();
-	
-	var newForm = jQuery('<form>', {
-        'action': BASE_URL+'user/decline-offer',
-        'target': '_top',
-        'method':'post'	
-    });
-
-	newForm.append(jQuery('<input>', {'name': 'escrow_id', 'type': 'hidden', 'value': commentId}));
-		
-	newForm.appendTo("body").submit();
-});
-
-
-$('.edit_me').on('click', function(){
-	$(this).parents('td').siblings('td').find('.enable-me').prop('readonly', false);
-});
-
-
-
-$('input[type="text"][name="escrow_address"]').on('keyup', function(){
-	var $this = $(this);
-		  
-	var places = new google.maps.places.Autocomplete($this[0]);
-
-	google.maps.event.addListener(places, 'place_changed', function () 
-	{
-	  	var place = places.getPlace();
-        var address = place.formatted_address;
-        var latitude = place.geometry.location.lat();
-        var longitude = place.geometry.location.lng();
-
-		$this.attr('data-lat', latitude);
-		$this.attr('data-lng', longitude);
-
-		
-        
-	});
-});
 
 $(function(){
-	$('input[type="text"][name="escrow_date_time"]').datetimepicker({inline: true, format: 'd/MM/YYYY HH:mm'});
-	$('.bootstrap-datetimepicker-widget').show();
-
-	<?php if(!empty($date)):?>
-	$('input[type="text"][name="escrow_date_time"]').data("DateTimePicker").date('<?php echo $date; ?>');
-	<?php endif;?>
-
 	var address = $('input[type="text"][name="escrow_address"]').val();
 	codeAddress(address);
-//		if(address.length > 1){ codeAddress(address); } 
 
-
-	/* Check the user membership status*/
-	console.log("dasfdasfdasf");
-	var membershipStatus = "<?php echo $this->session->userdata('membershipLevel');?>";
-
-	if(membershipStatus <= 3)
-	{
-		$('select[name="payment_from"] option[value="6"]').prop('disabled', true);
-	}
+	jQuery('input[type="text"][name="escrow_date_time"]').datetimepicker();
 });
-
 
 var geocoder;
 var map;
@@ -672,12 +479,8 @@ function geocodePosition(pos)
 	});
 }
 
-
-
-
-
 initialize();
-</script>
-<style>
-	#map{ height: 200px; }
-</style>
+
+
+</script>	
+	

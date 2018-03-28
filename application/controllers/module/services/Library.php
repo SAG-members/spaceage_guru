@@ -33,12 +33,44 @@ class Library extends Application
 	}
 		
 	public function index()
-	{    
+	{   
+	    $data = array();
+	    
+	    $userId = $this->session->userdata('id');
+	    
 	    $this->template->setTemplate('personal_library_template.php');
 	    $this->template->setLeftSideBar('pre_login_left_sidebar_add_event',$this->data); 
 	    
-	    $this->template->title("Library");
-	    $this->template->render('services/library');
+	    # Load page model
+	    $this->load->model('page');
+	    
+	    # Load user event model
+	    $this->load->model('user_event_model', 'uem');
+	    
+	    # Load user event status model
+	    $this->load->model('user_event_status_model', 'uesm');
+	    
+	    # Get Created offers
+	    $data['createdOffer'] = $this->uem->get_by_user($userId);
+	    
+	    # Get Incomplete Offers
+	    $data['incompleteOffers'] = $this->uem->get_incomplete_offers($userId);
+	    
+	    # Get Declined Offers
+	    $data['declinedOffers'] = $this->uesm->get_by_user_and_status($userId, User_event_status_model::STATUS_DECLINE);
+	    
+	    # Get offers recommended to friends
+	    
+	    
+	    # Get Smart contract offers
+	    
+	    # Get completed offers
+	    $data['completedOffers'] = $this->uem->get_completed_offers($userId);
+	    	    
+	    # Get escrow offers
+	    
+	    $this->template->title("Add Event");
+	    $this->template->render('services/new_calendar', $data);
 	}
 	
 	/*
@@ -421,35 +453,215 @@ class Library extends Application
 	    }
 	}
 	
-	public function yield_event()
-	{
-	    if($this->input->post('action'))
-	    {
-	        $data = array();
+	public function yield_event($eventId)
+	{	 	   
+        $data = array();
 	        
-	        # Load user event status model
-	        $this->load->model('user_event_status_model','uesm');
+        # Load user event status model
+        $this->load->model('user_event_status_model','uesm');
 	        
-	        # Load user event model
-	        $this->load->model('user_event_model', 'uem');
-	        
-	        # Load user model
-	        $this->load->model('user');
-	        
-	        $eventId = $this->input->post('event-id');
-	        $userId = $this->session->userdata('id');
-	        $status = User_event_status_model::STATUS_YIELD;
-	        
-	        $this->uesm->register_event_status($eventId, $userId, $status);
-	        
-	        $data['eventData'] = $this->uem->get_by_id($eventId);
+        # Load user event model
+        $this->load->model('user_event_model', 'uem');
+        
+        # Update event status to pending
+        $this->uem->update_status($eventId, User_event_model::EVENT_PENDING);
+        
+        # Load user model
+        $this->load->model('user');
 	        	        
-	        $data['accounts'] = $this->db->from('user')->get()->result();
-	        
-	        $data['profile'] = $this->user->getUserProfile($userId);
-	        	        
-            $this->template->render('services/pct_transfer', $data);	            
-	    }
+        $userId = $this->session->userdata('id');
+        $status = User_event_status_model::STATUS_YIELD_SMART_CONTRACT;
+        
+        # Check if event status already exists
+        $result = $this->uesm->get_by_id($eventId, $userId);
+        if(empty($result)) $this->uesm->register_event_status($eventId, $userId, $status);
+        
+        $data['eventData'] = $this->uem->get_by_id($eventId);
+        	        
+        $data['accounts'] = $this->db->from('user')->get()->result();
+        
+        $data['profile'] = $this->user->getUserProfile($userId);
+        	        
+        $this->template->render('services/pct_transfer', $data);	            
+	    
 	}
+	
+	public function yield_escrow($eventId)
+	{
+	    $data = array();
+	    
+	    # Load user event status model
+	    $this->load->model('user_event_status_model','uesm');
+	    
+	    # Load user event model
+	    $this->load->model('user_event_model', 'uem');
+	    
+	    # Load user event escrow model
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    
+	    # Update event status to pending
+	    $this->uem->update_status($eventId, User_event_model::EVENT_PENDING);
+	    
+	    # Load user model
+	    $this->load->model('user');
+	    
+	    $userId = $this->session->userdata('id');
+	    $status = User_event_status_model::STATUS_YIELD_ESCROW;
+	    
+	    # Check if event status already exists
+	    $result = $this->uesm->get_by_id($eventId, $userId);
+	    
+	    if(empty($result)) $this->uesm->register_event_status($eventId, $userId, $status);
+	    
+	    $data['eventData'] = $this->uem->get_by_id($eventId);
+	    
+	    $data['accounts'] = $this->db->from('user')->get()->result();
+	    
+	    $data['profile'] = $this->user->getUserProfile($userId);
+	    
+	    # Now since we are doing the escrow, let's store the details in esrow table
+	    	    
+	    $criteria = array(User_event_escrow_model::_EVENT_ID => $eventId);
+	    $result = $this->ueem->get_by_criteria($criteria);
+	    
+	    $data['escrowId'] = ""; $data['sellerId'] = ""; $data['sellerApproved'] = "";
+	    
+	    if(!empty($result))
+	    {
+	        $data['escrowId'] = $result[0]->{User_event_escrow_model::_ID};
+	        $data['sellerId'] = $result[0]->{User_event_escrow_model::_ESCROW_SELLER_ID};
+	        $data['sellerApproved'] = $result[0]->{User_event_escrow_model::_SELLER_APPROVED};
+	    }
+	    else
+	    {
+	        $data['escrowId'] = $this->ueem->yield_offer($eventId, $data['eventData']->{User_event_model::_USER_ID}, $userId);
+	        $eventEscrowData = $this->ueem->get_by_id($data['escrowId']);
+	        
+	        $data['sellerId'] = $eventEscrowData->{User_event_escrow_model::_ESCROW_SELLER_ID};
+	        $data['sellerApproved'] = $eventEscrowData->{User_event_escrow_model::_SELLER_APPROVED};
+	    }
+	    	    
+	    $this->template->title('Create Escrow');
+	    $this->template->render('services/escrow_create_view', $data);
+	}
+	
+	public function accept_escrow($escrowId)
+	{
+	    $escrow = json_decode($this->input->post('escrow'), true);
+	    $escrowId = $this->uri->segment('4');
+	    
+	    if(empty($escrow))
+	    {
+	        $this->message->setFlashMessage(Message::GENERAL_ERROR);
+	        redirect(base_url('profile'));
+	    }
+	    
+	    
+	    # Load model
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    $result = $this->ueem->accept_offer($escrowId, $escrow['escrow_notes'], $escrow['payment_from'], $escrow['delivery_method'], $escrow['payment_when'], $escrow['escrow_address'], $escrow['escrow_price']);
+	    
+	    if($result) {$this->message->setFlashMessage(Message::OFFER_ACCEPT_SUCCESS, array('id'=>'1'));}
+	    else {$this->message->setFlashMessage(Message::OFFER_ACCEPT_FAILURE    );}
+	    
+	    redirect(base_url('escrow-list'));
+	}
+	
+	public function save_escrow($escrowId)
+	{
+	    $escrow = json_decode($this->input->post('escrow'), true);
+	    $escrowId = $this->uri->segment('4');
+	    
+	    if(empty($escrow))
+	    {
+	        $this->message->setFlashMessage(Message::GENERAL_ERROR);
+	        redirect(base_url('profile'));
+	    }
+	    
+	    
+	    # Load model
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    $result = $this->ueem->save_offer($escrowId, $escrow['escrow_notes'], $escrow['payment_from'], $escrow['delivery_method'], $escrow['payment_when'], $escrow['escrow_address'], $escrow['escrow_price']);
+	    	    
+	    if($result) {$this->message->setFlashMessage(Message::OFFER_SAVED_SUCCESS, array('id'=>'1'));}
+	    else {$this->message->setFlashMessage(Message::OFFER_SAVED_FAILURE);}
+	    
+	    redirect(base_url('escrow-list'));
+	}
+	
+	public function approve_escrow($escrowId)
+	{	    
+	    # Load model
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    $result = $this->ueem->approve_offer($escrowId);
+	    
+	    if($result) {$this->message->setFlashMessage(Message::OFFER_APPROVE_SUCCESS, array('id'=>'1'));}
+	    else {$this->message->setFlashMessage(Message::OFFER_APPROVE_FAILURE);}
+	    
+	    redirect($_SERVER['HTTP_REFERER']);
+	}
+	
+	public function pay_escrow($escrowId)
+	{
+	    $data = array();
+	    
+	    # Load user model
+	    $this->load->model('user');
+	    $userId = $this->session->userdata('id');
+	    
+	    # Load user escrow event model
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    $escrowData = $this->ueem->get_by_id($escrowId);
+	    
+	    # Load user event model
+	    $this->load->model('user_event_model','uem');
+	    
+	    # Load page model
+	    $this->load->model('page');
+	    
+	    $data['eventData'] = $this->uem->get_by_id($escrowData->{User_event_escrow_model::_EVENT_ID});
+	    	    
+	    $data['profile'] = $this->user->getUserProfile($userId);
+	    $data['escrowId'] = $escrowId;
+	    
+	    $this->template->title("Pay Via Internal PCT Wallet");
+	    $this->template->render('escrow-payment-internal-pct-wallet', $data);
+	}
+	
+	public function escrow_list()
+	{
+	    $response = array();
+	    
+	    $userId = $this->session->userdata('id');
+	    
+	    # Load page view to be used
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    
+	    # Load user event status model
+	    $this->load->model('user_event_status_model', 'uesm');
+	    
+	    # Load Library Event Model
+	    $this->load->model('user_event_model','uem');
+	    
+	    # Load page model
+	    $this->load->model('page');
+	    
+	    # Get Saved Escrow Data
+	    $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId .') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::YIELD_OFFER;
+	    $response['data']['yielded_escrow'] = $this->ueem->get_by_criteria($criteria);
+	    
+	    # Get Saved Escrow Data
+	    $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId .') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::SAVE_AND_EXIT;
+	    $response['data']['saved_escrow'] = $this->ueem->get_by_criteria($criteria);
+	    
+	    # Get Accepted Escrow Data
+	    $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId . ') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::ACCEPT_OFFER;
+	    $response['data']['accepted_escrow'] = $this->ueem->get_by_criteria($criteria);
+	    	    
+	    $this->template->title('Escrow List');
+	    $this->template->render('services/escrow_view', $response);
+	}
+	
+	
 }
 

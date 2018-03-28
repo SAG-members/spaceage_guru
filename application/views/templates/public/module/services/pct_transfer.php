@@ -37,7 +37,9 @@
 				<label>Password</label>
 				<input type="password" class="password" name="user-password">
 			</div>
-			<div class="form-group">									
+			<div class="form-group">	
+				<input type="hidden" name="event-id" value="<?php echo $eventData->{User_event_model::_ID}?>"/>
+				<input type="hidden" name="transfer-type" value="smart contract"/>								
 				<input type="submit" class="btn-round-red password" name="pct-transfer-points-submit-btn">
 			</div>
 		</form>

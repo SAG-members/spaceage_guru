@@ -1069,38 +1069,20 @@ class Public_ajax_controller extends CI_Controller
 	private function validateEscrowCountry($payload)
 	{
 	    $response = array();
-	    
-// 	    if(empty($payload['escrow_id']) || empty($payload['comment_id']))
-// 	    {
-// 	       $response = array('flag'=>0, 'message'=>'Please provide escorw id or comment id first'); 
-// 	       return $response; 
-// 	    }
-	    
-	    if(isset($payload['comment_id']))
-	    {
-	        # Load user library event comment model
-	        $this->load->model('library_event_comment_model', 'comment_model');
-	        $commentData = $this->comment_model->get_by_id($payload['comment_id']);
-	        
-	        $eventId = $commentData->{Library_event_comment_model::_EVENT_ID};
-	    }
-	    else 
-	    {
-	        # Load user library event escrow model
-	        $this->load->model('user_library_event_escrow_model','escrow_model');
-	        $escrowDetail = $this->escrow_model->get_by_id($payload['escrow_id']);
-	        
-	        $eventId = $escrowDetail[0]->event_id;
-	    }
-	    	    	    
+        
+	    # Load user library event escrow model
+        $this->load->model('user_event_escrow_model','ueem');
+        $escrowData = $this->ueem->get_by_id($payload['escrow_id']);
+        
+        $eventId = $escrowData->event_id;
+	   	    	    	    
 	    # With the escrow id, let's get the event id or comment id to get data id and based on data id we can get 2nd and 3rd country restrication
-	    	    
 	    
-	    # Load user library events
-	    $this->load->model('Library_event_model', 'library_event');
-	    $eventDetail = $this->library_event->getLibraryEventById($eventId);
+	    # Load user events
+	    $this->load->model('user_event_model', 'user_event');
+	    $eventDetail = $this->user_event->get_by_id($eventId);
 	    
-	    $dataId = $eventDetail->event_data_id;
+	    $dataId = $eventDetail->item_id;
 	    
 	    # Load page model
 	    $this->load->model('page');

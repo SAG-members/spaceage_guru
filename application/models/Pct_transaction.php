@@ -11,6 +11,7 @@ class Pct_transaction extends CI_Model
     const _ID = 'id';
     const _FROM_USER = 'from_user';
     const _TO_USER = 'to_user';
+    const _EVENT_ID = 'event_id';
     const _TXN_ID = 'txn_id';
     const _TXN_TYPE = 'txn_type';
     const _TXN_POINTS = 'txn_points';
@@ -39,6 +40,13 @@ class Pct_transaction extends CI_Model
         
         $this->db->insert(static::_TABLE, $data);
         return $this->db->insert_id();
+    }
+    
+    public function update_transaction($type, $eventId, $id)
+    {
+        $data = array(static::_TXN_TYPE => $type, static::_EVENT_ID => $eventId);
+        $this->db->where(static::_ID, $id);
+        $this->db->update(static::_TABLE, $data);
     }
     
     public function get_transactions($userId)

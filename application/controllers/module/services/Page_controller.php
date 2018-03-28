@@ -225,22 +225,23 @@ class Page_controller extends Application {
 	    # Now we have reached the escrow page
 	    # Let us check if we have the escrow_id in the session or not
 	    
-	    $this->load->model('user_library_event_comment_model', 'ulec');
+	    $this->load->model('user_event_status_model', 'uesm');
 	    $this->load->model('user_library_event_escrow_model', 'escrow');
-	    $this->load->model('library_event_model');
+	    $this->load->model('user_event_model','uem');
 	    $this->load->model('page');
 	    	    
 	    if($this->uri->segment(3))
 	    {
-	        $escrowId = $this->uri->segment(3);
+	        $eventId = $this->uri->segment(3);
 	        $userId = $this->session->userdata('id');
 	        	       
-	        $response['escrowDetails'] = $this->escrow->get_by_id($escrowId);
+	        $response['eventData'] = $this->uem->get_by_id($eventId);
+	        
+	        $criteria = array(User_library_event_escrow_model::_EVENT_ID => $eventId, User_library_event_escrow_model::_ESCROW_BUYER_ID => $userId);
+	        $result = $this->escrow->get_by_criteria($criteria);
+	        $response['escrowId'] = $result[0]->{User_library_event_escrow_model::_ID};
 	    }
-	    
-	    # Load escrow model
-	    $this->load->model('user_library_event_escrow_model', 'escrow');
-	    
+	    	    
 	    # Set Additional Script
 	    $additionalScripts = array('plugin/jquery_toastmessage/jquery.toastmessage.js');
 	    $additionalStyles = array('jquery_toastmessage/jquery.toastmessage.css');
@@ -265,11 +266,11 @@ class Page_controller extends Application {
 		# Load page view to be used
 		$this->load->model('User_library_event_escrow_model', 'escrow');
 		
-		# Load library event comment model
-		$this->load->model('library_event_comment_model', 'ulecm');
+		# Load user event status model
+		$this->load->model('user_event_status_model', 'uesm');
 		
 		# Load Library Event Model
-		$this->load->model('library_event_model');
+		$this->load->model('user_event_model','uem');
 		
 		# Load page model
 		$this->load->model('page');
@@ -285,8 +286,6 @@ class Page_controller extends Application {
 		# Get Accepted Escrow Data
 		$criteria = '('.User_library_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_library_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId . ') AND ' .User_library_event_escrow_model::_STATUS.' = '.User_library_event_escrow_model::ACCEPT_OFFER;
 		$response['data']['accepted_escrow'] = $this->escrow->get_by_criteria($criteria);
-				
-		$this->load->model('user_library_event_escrow_model', 'escrow');
 		
 		$this->template->title('Escrow List');
 		$this->template->render('services/escrow_view', $response);

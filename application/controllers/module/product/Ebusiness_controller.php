@@ -46,30 +46,28 @@ class Ebusiness_controller extends Application
         $this->load->model('user');
         
         # Load page view to be used
-        $this->load->model('User_library_event_escrow_model', 'escrow');
+        $this->load->model('User_event_escrow_model', 'ueem');
         
         # Load library event comment model
-        $this->load->model('library_event_comment_model', 'ulecm');
+        $this->load->model('user_event_status_model', 'uesm');
         
         # Load Library Event Model
-        $this->load->model('library_event_model');
+        $this->load->model('user_event_model','uem');
         
         # Load page model
         $this->load->model('page');
         
         # Get Saved Escrow Data
-        $criteria = '('.User_library_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_library_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId .') AND ' .User_library_event_escrow_model::_STATUS.' = '.User_library_event_escrow_model::YIELD_OFFER;
-        $response['data']['yielded_escrow'] = $this->escrow->get_by_criteria($criteria);
+        $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId .') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::YIELD_OFFER;
+        $response['data']['yielded_escrow'] = $this->ueem->get_by_criteria($criteria);
         
         # Get Saved Escrow Data
-        $criteria = '('.User_library_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_library_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId .') AND ' .User_library_event_escrow_model::_STATUS.' = '.User_library_event_escrow_model::SAVE_AND_EXIT;
-        $response['data']['saved_escrow'] = $this->escrow->get_by_criteria($criteria);
+        $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId .') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::SAVE_AND_EXIT;
+        $response['data']['saved_escrow'] = $this->ueem->get_by_criteria($criteria);
         
         # Get Accepted Escrow Data
-        $criteria = '('.User_library_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_library_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId . ') AND ' .User_library_event_escrow_model::_STATUS.' = '.User_library_event_escrow_model::ACCEPT_OFFER;
-        $response['data']['accepted_escrow'] = $this->escrow->get_by_criteria($criteria);
-        
-        $this->load->model('user_library_event_escrow_model', 'escrow');
+        $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId . ') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::ACCEPT_OFFER;
+        $response['data']['accepted_escrow'] = $this->ueem->get_by_criteria($criteria);
        
         $response['profile'] = $this->user->getUserProfile($userId);
         

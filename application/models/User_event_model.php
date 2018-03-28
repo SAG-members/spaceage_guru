@@ -29,7 +29,13 @@ class User_event_model extends CI_Model
 	const _ADDRESS = 'address';
 	const _LAT = 'lat';
 	const _LNG = 'lng';
+	const _STATUS = 'status';
 	const _DATE_CREATED = 'date_created';
+	
+	
+	const EVENT_CREATED = 1;
+	const EVENT_PENDING = 2;
+	const EVENT_COMPLETED = 3;
 	
 	public function __construct()
 	{
@@ -42,11 +48,29 @@ class User_event_model extends CI_Model
 	    return $this->db->insert_id();
 	}
 	
-	public function get_by_id($id)
+	public function get_by_id($id, $field=null)
 	{
 	    $this->db->from(static::_TABLE);
 	    $this->db->where(static::_ID, $id);
+	    if($field) return $this->db->get()->row()->{$field};
 	    return $this->db->get()->row();
+	}
+	
+	public function get_by_user($userId, $status = null)
+	{
+	    $this->db->from(static::_TABLE);
+	    $this->db->where(static::_USER_ID, $userId);	
+	    if($status) $this->db->where(static::_STATUS, static::EVENT_COMPLETED);
+	    return $this->db->get()->result();
+	}
+	
+	public function update_status($eventId, $status)
+	{
+	    $data = array(static::_STATUS => $status);
+	    
+	    $this->db->where(static::_ID, $eventId);
+	    $this->db->update(static::_TABLE, $data);
+	    return $this->db->affected_rows();
 	}
 	
 	public function get_communication_data($userId)
@@ -68,5 +92,26 @@ class User_event_model extends CI_Model
 	    return $response;
 	}
 	
+	public function get_incomplete_offers($userId)
+	{
+	    $this->db->select('A.id, A.user_id, A.topic, A.comment, A.item_id, A.image, A.pct_price, A.price, A.expiry_date, A.has_expiry_date, A.address, A.date_created, B.status');
+	    $this->db->from("user_events as A");
+	    $this->db->join("user_events_status as B", "B.event_id = A.id");
+	    $this->db->where("A.status", 2);
+	    $this->db->where("(B.status = 2");
+	    $this->db->or_where("B.status = 3)");
+	    $this->db->where("B.user_id", $userId);
+	    return $this->db->get()->result();	    
+	}
 	
+	public function get_completed_offers($userId)
+	{
+	    $this->db->select('A.id, A.user_id, A.topic, A.comment, A.item_id, A.image, A.pct_price, A.price, A.expiry_date, A.has_expiry_date, A.address, A.date_created, B.status');
+	    $this->db->from("user_events as A");
+	    $this->db->join("user_events_status as B", "B.event_id = A.id");
+	    $this->db->where("A.status", static::EVENT_COMPLETED);	   
+	    $this->db->where("B.user_id", $userId);
+	    return $this->db->get()->result();
+	}
+		
 }

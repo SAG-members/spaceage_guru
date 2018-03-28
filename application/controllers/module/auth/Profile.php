@@ -73,6 +73,11 @@ class Profile extends Application
 				
 				$this->user->update_user_address($this->input->post('user-id'), $homeAddress, $homeLat, $homeLng, $workAddress, $workLat, $workLng);
 				
+				$preferredLocation = $this->input->post('preferred-event-location');
+				if($this->input->post('preferred-event-location') == 0) $preferredLocation = "";
+				
+				$this->user->set_event_default_address($this->input->post('user-id'), $preferredLocation);
+				
 				
 				if($flag) $this->message->setFlashMessage(Message::PROFILE_UPDATE_SUCCESS, array('id'=>1));
 				else $this->message->setFlashMessage(Message::PROFILE_UPDATE_FAILURE);

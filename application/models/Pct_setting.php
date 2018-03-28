@@ -23,6 +23,8 @@ class pct_setting extends CI_Model
     
     public function set_pct_rate($pctRate, $currency, $conversionRate)
     {
+        $this->update_pct_rate_status($currency);
+        
         $data = array(
             static::_PCT_RATE => $pctRate,
             static::_CURRENCY => $currency,
@@ -34,11 +36,24 @@ class pct_setting extends CI_Model
         return $this->db->insert_id();
     }
     
-    public function get_rates()
+    public function get_rates($admin=false)
     {
         $this->db->from(static::_TABLE); 
+        if(!$admin)$this->db->where(static::_STATUS, 1);
         $this->db->order_by(static::_DATE_CREATED, "DESC");
+        
         return $this->db->get()->result();        
     }
+    
+    public function update_pct_rate_status($currency)
+    {
+        $data = array(static::_STATUS => 0);
+        $this->db->where(static::_CURRENCY, $currency);
+        $this->db->update(static::_TABLE, $data);
+        
+        return $this->db->affected_rows();
+    }
+    
+    
     
 }

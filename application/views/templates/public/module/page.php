@@ -896,7 +896,7 @@ switch ($page->{Page::_VISIBILITY})
 	<h2>
 		<img src="<?php echo base_url('assets/img/rss.png')?>" height="150" />
 	</h2>
-	<h3>RSS feed to communication field</h3>
+	<h3>News feed to communication field</h3>
 	<!-- 	<p>Simply add an RSS feed URL from any website or blog and have new posts automatically delivered to your inbox.</p> -->
 	<div class="onoffswitch">
 		<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
@@ -914,39 +914,6 @@ switch ($page->{Page::_VISIBILITY})
 <hr/>
 <?php if(!$page->{Page::_PRICELESS} && $page->{Page::_PRICE} !=0 ) :?>
 <div class ="row mar-b-20">
-
-	<div class="col-md-4">
-		<!--  Pay via paypal form starts here -->
-		<div>
-		<h3>Paypal</h3><br/>
-		<form method="post" action="<?php echo base_url('pay')?>">
-			<button type="submit" class="btn btn-primary">EUR <?php echo restructure_price($page->{Page::_PRICE})?></button>
-			<input type="hidden" name="item_id" value="<?php echo $page->{Page::_ID}?>"/>
-			<input type="hidden" name="item_name" value="<?php echo $page->{Page::_PAGE_TITLE}?>"/>
-			<input type="hidden" name="category_id" value="<?php echo $page->{Page::_CATEGORY_ID}?>"/>
-			<input type="hidden" name="price" value="<?php echo restructure_price($page->{Page::_PRICE})?>"/>
-			<input type="hidden" name="mode" value="paypal"/>
-		</form>
-		</div>
-		<!--  Pay via paypal form ends here -->
-	</div>
-	
-	<div class="col-md-4">
-    	<!--  Pay via cryptonator form starts here -->
-    	<div>
-        	<h3>Cryptonator</h3><br/>        	        		
-        	<form method="GET" action="https://api.cryptonator.com/api/merchant/v1/startpayment">
-        		<input type="hidden" name="merchant_id" value="f3d2e6eebd0ef1857dbd12fcd4c6f997">
-        		<input type="hidden" name="item_name" value="<?php echo $page->{Page::_PAGE_TITLE}?>">
-        		<input type="hidden" name="invoice_currency" value="eur">
-        		<input type="hidden" name="invoice_amount" value="<?php echo restructure_price($page->{Page::_PRICE})?>" data-type="number">
-        		<input type="hidden" name="language" value="en">
-        		<input type="submit" class="btn btn-primary" value="EUR <?php echo restructure_price($page->{Page::_PRICE})?>">
-        	</form>
-    	
-    	</div>
-	</div>
-	
 	
 	<!-- Pay via Internal PCT Wallet -->
 	<div class="col-md-4">

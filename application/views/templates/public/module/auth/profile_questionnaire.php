@@ -50,7 +50,7 @@
 
 				<section class="idealsteps-step" id="step-2">
 					<h3 id="heading_q_4">
-						4. Why is statement <?php echo $criteria = !empty($questionnaire[3]->answer) ? $questionnaire[3]->answer : 'Criteria';?> important for you? </h3>
+						4. Why is statement <?php echo $criteria = !empty($questionnaire[2]->answer) ? $questionnaire[2]->answer : 'Criteria';?> important for you? </h3>
 						<input type="hidden" name="hidden-question-4" value="Why is statement Criteria important for you?"/>
 					<textarea name="question4" cols="" rows="" placeholder="Write here"><?php if($questionnaire) { echo $questionnaire[3]->answer;}?></textarea>
 					<h3>
@@ -459,8 +459,21 @@ $('textarea[name="question3"]').on('keyup', function(){
 
 $('textarea[name="question5"]').on('keyup', function(){
 
-	var headingq5 = $('input[type="hidden"][name="hidden-question-5"]').val();
+	var headingq5 = $('input[type="hidden"][name="hidden-question-12"]').val();
+// 	var headingq5 = $('textarea[name="question5"]').val();
+	
+	console.log(headingq5);
 	$('#heading_q_12').html('12. '+headingq5.replace('Criteria', $(this).val()));
+// 	$('#heading_q_13').html('13. '+headingq5.replace('Criteria', $(this).val()));
+});
+
+$('textarea[name="question4"]').on('keyup', function(){
+
+	var headingq5 = $('input[type="hidden"][name="hidden-question-13"]').val();
+// 	var headingq5 = $('textarea[name="question5"]').val();
+	
+	console.log(headingq5);
+// 	$('#heading_q_12').html('12. '+headingq5.replace('Criteria', $(this).val()));
 	$('#heading_q_13').html('13. '+headingq5.replace('Criteria', $(this).val()));
 });
 

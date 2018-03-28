@@ -16,7 +16,7 @@ class Pct_controller extends Application
 	{
 	    $data = array();
 	    
-	    $data['pctConversions'] = $this->pct->get_rates();
+	    $data['pctConversions'] = $this->pct->get_rates(true);
 	    $data['currencies'] = $this->currency->getCurrencies();
 	    
 		$this->template->title('Manage PCT Rates');

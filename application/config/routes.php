@@ -412,11 +412,13 @@ $route['transfer/pct'] = 'module/payment/payment/process_pct_transfer';
 #$route['update-wallet-balance'] = 'welcome/updateWalletBalance';
 $route['add/new/event'] = 'module/services/library/register_new_event';
 $route['decline/event'] = 'module/services/library/register_event_status';
-$route['yield/event'] = 'module/services/library/yield_event';
-
-
-
-
+$route['yield/event/(:num)'] = 'module/services/library/yield_event/$1';
+$route['yield/escrow/event/(:num)'] = 'module/services/library/yield_escrow/$1';
+$route['yield/escrow/save/(:num)'] = 'module/services/library/save_escrow/$1';
+$route['yield/escrow/accept/(:num)'] = 'module/services/library/accept_escrow/$1';
+$route['escrow/approve/(:num)'] = 'module/services/library/approve_escrow/$1';
+$route['escrow/pay/(:num)'] = 'module/services/library/pay_escrow/$1';
+$route['escrow-list'] = 'module/services/library/escrow_list';
 
 
 

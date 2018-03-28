@@ -23,8 +23,10 @@
 									<thead>
 										<tr role="row">											
 											<th>PCT Rate</th>											
+											<th>Country Code</th>
 											<th>Country Symbol</th>
 											<th>Conversion Rate</th>
+											<th>Status</th>
 											<th>Date Created</th>												
 										</tr>
 									</thead>
@@ -32,8 +34,10 @@
 									<?php if($pctConversions): foreach ($pctConversions as $pct):?>
 									<tr>										
 										<td><?php echo $pct->{pct_setting::_PCT_RATE};?></td>										
+										<td><?php echo $this->currency->get_by_id($pct->{pct_setting::_CURRENCY}, Currency::_CURRENCY_CODE)?></td>
 										<td><?php echo $this->currency->get_by_id($pct->{pct_setting::_CURRENCY}, Currency::_CURRENCY_SYMBOL)?></td>
 										<td><?php echo $pct->{pct_setting::_CONVERSION_RATE};?></td>
+										<td><?php echo $pct->{pct_setting::_STATUS} ? "Active" :  "Inactive";?></td>
 										<td><?php echo $pct->{pct_setting::_DATE_CREATED};?></td>										
 									</tr>
 									<?php endforeach; endif;?>

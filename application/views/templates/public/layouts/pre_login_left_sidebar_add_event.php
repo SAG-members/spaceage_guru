@@ -94,7 +94,10 @@ $result = get_lat_lng_by_ip();
                                 <select name="price_currency" style="height: 32px;">
                                 	<?php if($leftSideData['currencyRates']): foreach ($leftSideData['currencyRates'] as $r) : ?>
                                 		<?php $selected = ""; if($r->{pct_setting::_CURRENCY} == $leftSideData['profile']->{User::_CURRENCY}) $selected = "selected";?>
-                                		<option <?php echo $selected; ?> value="<?php echo $r->{pct_setting::_CURRENCY} ?>" data-rate="<?php echo $r->{pct_setting::_CONVERSION_RATE}?>"><?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_SYMBOL); ?></option>
+                                		<option <?php echo $selected; ?> value="<?php echo $r->{pct_setting::_CURRENCY} ?>" data-rate="<?php echo $r->{pct_setting::_CONVERSION_RATE}?>">
+                                		<?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_NAME); ?>-
+                                		<?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_SYMBOL); ?>
+                                		</option>
                                 	<?php endforeach; endif;?>
                                 	
                                 	
@@ -195,16 +198,6 @@ $result = get_lat_lng_by_ip();
     			<div class="clearfix"></div>
 			</div>
 			
-			<div class="form-group mar-b-20">
-				<div class="col-md-12">
-					<label style="color: #FFF;">Set Location</label><br>
-					<button type="button" class="btn btn-primary" data-home-lat="" data-home-lng="" data-home-address="">Home Location</button>
-					<button type="button" class="btn btn-primary" data-work-lat="" data-work-lng="" data-work-address="">Work Location</button>
-					<button type="button" class="btn btn-primary">Current Location</button>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-			
 			<div class="form-group">
 				<div class="col-md-12">
 					<div id="map" style="height:200px;"></div>
@@ -218,13 +211,27 @@ $result = get_lat_lng_by_ip();
     				<input type="hidden" name="lat">
     				<input type="hidden" name="lng">
     				
-    				<?php if(!empty($result)) :?>
-    				<input type="hidden" name="current_lat" value="<?php echo $result->latitude; ?>">
-    				<input type="hidden" name="current_lng" value="<?php echo $result->longitude; ?>">
-    				<?php else :?>    				
-    				<input type="hidden" name="current_lat">
-    				<input type="hidden" name="current_lng">
-    				<?php endif; ?>
+    				<?php if($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} != 0):?>
+    					<?php if($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} == 1) :?>
+        					<input type="hidden" name="current_lat" value="<?php echo $leftSideData['profile']->{User::_HOME_LAT}; ?>">
+        					<input type="hidden" name="current_lng" value="<?php echo $leftSideData['profile']->{User::_HOME_LNG}; ?>">	
+    					<?php elseif ($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} == 2) :?>
+    						<input type="hidden" name="current_lat" value="<?php echo $leftSideData['profile']->{User::_WORK_LAT}; ?>">
+    						<input type="hidden" name="current_lng" value="<?php echo $leftSideData['profile']->{User::_WORK_LNG}; ?>">
+    					<?php elseif ($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} == 3) :?>
+        					<input type="hidden" name="current_lat" value="<?php echo $result->latitude; ?>">
+    						<input type="hidden" name="current_lng" value="<?php echo $result->longitude; ?>">
+    					<?php endif;?>    					
+    				<?php else :?>
+    					<?php if(!empty($result)) :?>
+        				<input type="hidden" name="current_lat" value="<?php echo $result->latitude; ?>">
+        				<input type="hidden" name="current_lng" value="<?php echo $result->longitude; ?>">
+        				<?php else :?>    				
+        				<input type="hidden" name="current_lat">
+        				<input type="hidden" name="current_lng">
+        				<?php endif; ?>    				
+    				<?php endif;?>   				
+    				
     				<button type="submit" class="btn btn-success" name="update_comment" value="2">Save</button>
 				</div>
 				<div class="clearfix"></div>
@@ -499,6 +506,19 @@ function convert_rate()
 
 	$('input[type="text"][name="price"]').val(convertedVal);
 }
+
+$('button[type="button"][name="home-location"]').on('click', function(e){
+	console.log(e);
+// 	e.preventDefault();
+
+	var lat = $(this).data('homeLat');
+	var lng = $(this).data('homeLng');
+	var address = $(this).data('homeAddress');
+	
+});
+
+
+
 
 
 </script>

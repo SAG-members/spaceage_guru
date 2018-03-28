@@ -23,8 +23,10 @@ class Currency extends CI_Model
 	}
 
 	public function getCurrencies()
-	{
+	{   
+	    $this->db->select('ANY_VALUE(id) id, ANY_VALUE(name) name, ANY_VALUE(code) code, ANY_VALUE(currency_name) currency_name, ANY_VALUE(currency_symbol) currency_symbol, ANY_VALUE(currency_code) currency_code');
 		$this->db->from(static::_TABLE);
+		$this->db->group_by(static::_CURRENCY_CODE);
 		return $this->db->get()->result();
 		
 	}

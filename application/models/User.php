@@ -40,7 +40,8 @@ class User extends CI_Model
 	const _WORK_LAT = 'work_lat'; 
 	const _WORK_LNG = 'work_lng'; 
 	const _CURRENCY = 'currency'; 
-	const _RECOMMENDOR = '	recommendor';
+	const _RECOMMENDOR = 'recommendor';
+	const _EVENT_DEFAULT_ADDRESS = 'event_default_address';
 	const _IS_LOGGED_IN = 'is_logged_in';
 	const _LOGGED_COOKIE = 'logged_cookie';
 	const _DATE_CREATED = 'date_created';
@@ -69,6 +70,10 @@ class User extends CI_Model
 	const GENDER_MALE = 1;
 	const GENDER_FEMALE = 2;
 	const GENDER_TRANSGENDER = 3;
+	
+	const EVENT_HOME_LOCATION = 1;
+	const EVENT_WORK_LOCATION = 2;
+	const EVENT_CURRENT_LOCATION = 3;
 	
 	public function __construct()
 	{
@@ -262,8 +267,18 @@ class User extends CI_Model
 	    
 	}
 	
-	
-	
+	public function set_event_default_address($userId, $preferedAddress)
+	{
+	    $data = array(
+	        static::_EVENT_DEFAULT_ADDRESS => $preferedAddress
+	    );
+	    
+	    $this->db->where(static::_ID, $userId);
+	    $this->db->update(static::_TABLE, $data);
+	    
+	    return $this->db->affected_rows();
+	}
+		
 		
 	public function update_user_membership($userId, $membershipId)
 	{

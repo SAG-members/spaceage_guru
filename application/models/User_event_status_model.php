@@ -15,9 +15,10 @@ class User_event_status_model extends CI_Model
 	const _DATE_CREATED = 'date_created';
 	
 	const STATUS_DECLINE = 1;
-	const STATUS_YIELD = 2;
-	const STATUS_RECOMMEND = 3;
-	
+	const STATUS_YIELD_SMART_CONTRACT = 2;
+	const STATUS_YIELD_ESCROW = 3;
+	const STATUS_RECOMMEND = 4;
+		
 	public function __construct()
 	{
 		parent::__construct();		
@@ -42,5 +43,15 @@ class User_event_status_model extends CI_Model
 	    $this->db->where(static::_USER_ID, $userId);
 	    return $this->db->get()->num_rows();
 	}
+	
+	public function get_by_user_and_status($userId, $status)
+	{
+	    $this->db->from(STATIC::_TABLE);	    
+	    $this->db->where(static::_USER_ID, $userId);
+	    $this->db->where(static::_STATUS, $status);
+	    return $this->db->get()->result();
+	}
+	
+	
 	
 }

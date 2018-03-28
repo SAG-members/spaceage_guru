@@ -168,3 +168,17 @@ function get_lat_lng_by_ip()
     }
     
 }
+
+function read_more($content, $limit=100, $wordToShow)
+{
+    if (strlen($content) > $limit)
+    {
+        # Truncate string
+        $stringCut = substr($content, 0, $wordToShow);
+        
+        # Make sure it ends in a word so assassinate doesn't become ass...
+        $content = substr($stringCut, 0, strrpos($stringCut, ' ') ? strrpos($stringCut, ' ') : $wordToShow);
+    }
+    
+    return $content;
+}
