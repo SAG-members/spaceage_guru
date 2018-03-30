@@ -182,3 +182,9 @@ function read_more($content, $limit=100, $wordToShow)
     
     return $content;
 }
+
+function get_color($index)
+{
+	$color=array('White','Red','Orange','Gold','Green','Blue','Pink','Indigo','Red','Violet','Rainbow');
+	return $color[$index];
+}

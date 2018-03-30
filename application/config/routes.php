@@ -299,7 +299,12 @@ $route['admin/data/edit/(:num)'] = 'admin/module/service/page_controller/edit_da
 
 # Number Game Routes
 $route['admin/number-game'] = 'admin/module/service/number_game_controller';
+$route['admin/number-game/add'] = 'admin/module/service/number_game_controller/create_number';
+$route['admin/number-game/edit/(:num)'] = 'admin/module/service/number_game_controller/edit_number';
 
+$route['admin/publish-number'] = 'admin/module/service/number_game_controller/publish';
+$route['admin/unpublish-number'] = 'admin/module/service/number_game_controller/unpublish';
+$route['admin/delete-number'] = 'admin/module/service/number_game_controller/delete';
 
 # Symptom Routes
 $route['admin/symptoms'] = 'admin/module/service/symptom_controller';

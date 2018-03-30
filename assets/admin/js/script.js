@@ -162,6 +162,26 @@ $(function(){
 	
 	
 	/*=====================================================================================================*/
+
+		/* Spiritual Section */
+	/*=====================================================================================================*/
+	
+	$('.delete-spiritual').on('click', ManageSpiritual.deleteSpiritualModal);
+	
+	$('button[type="button"][name="btn-confirm-spiritual-delete"]').on('click', ManageSpiritual.confirmDeleteSpiritual);
+	
+	$('.select-all-spiritual').on('change', ManageSpiritual.selectAllSpiritual);
+	
+	$('.select-one-spiritual').on('change', ManageSpiritual.selectOneSpiritual);
+	
+	/* Publish Service */
+	$('button[type="button"][name="btn-publish-spiritual"]').on('click', ManageSpiritual.publishSpiritual);
+	
+	/* Un-Publish Service */
+	$('button[type="button"][name="btn-unpublish-spiritual"]').on('click', ManageSpiritual.unPublishSpiritual);
+	
+	
+	/*=====================================================================================================*/
 	
 	/* Country Section */
 	/*=====================================================================================================*/
@@ -1105,6 +1125,99 @@ ManageProduct = {
 		        'type': 'hidden',
 		        'value': 2,
 		    		
+		    }));
+			
+			newForm.appendTo("body").submit();
+		},
+}
+
+
+ManageSpiritual = {
+		spiritualIds : [],
+		deleteSpiritualModal : function(e)
+		{  
+			var spiritualId = $(this).data('spiritualId');
+			var spiritual = $(this).data('spiritual');						
+			$('#manage_spiritual_modal').find('.modal-title').html("Confirm Delete ?");
+			$('#manage_spiritual_modal').find('.modal-body').html("<p>"+spiritual+"</p>");
+			$('#manage_spiritual_modal').find('.modal-body').append('<input type="hidden" name="spiritual-id" value="'+spiritualId+'"/>');
+			$('#manage_spiritual_modal').modal('show');
+		},
+		confirmDeleteSpiritual : function(e)
+		{
+			var spiritualId = $(this).parents('.modal-content').find('input[type="hidden"][name="spiritual-id"]').val();
+			
+			var newForm = jQuery('<form>', {
+		        'action': BASE_URL + 'admin/delete-number',
+		        'target': '_top',
+		        'method':'post'	
+		    }).append(jQuery('<input>', {
+		        'name': 'ids',
+		        'type': 'hidden',
+		        'value': spiritualId,
+		    }));
+			
+			newForm.appendTo("body").submit();
+		},
+		selectAllSpiritual : function(e)
+		{
+			ManageSpiritual.spiritualIds = [];
+			$(".select-one-spiritual").prop('checked', $(this).prop("checked"));
+			
+			if($(this).prop("checked")){$(".select-one-spiritual").each(function(){ ManageSpiritual.spiritualIds.push($(this).data('spiritualId')); });}
+			else { ManageSpiritual.spiritualIds = []; }
+			
+			console.log(ManageSpiritual.spiritualIds);
+		},
+		selectOneSpiritual : function(e)
+		{
+			if(false == $(this).prop("checked")) 
+			{
+				spiritualId = $(this).data('spiritualId')
+				$('.select-all-spiritual').prop('checked', false); 
+				ManageSpiritual.spiritualIds = $.grep(ManageSpiritual.spiritualIds, function(v){
+					return v != spiritualId;
+				});
+				
+			}
+		    if ($('.select-one-spiritual:checked').length == $('.select-one-spiritual').length ) 
+		    {
+		    	$(".select-all-spiritual").prop('checked', true);
+		    }
+		    
+		    if($(this).prop("checked")) ManageSpiritual.spiritualIds.push($(this).data('spiritualId'));
+		    
+		    console.log(ManageSpiritual.spiritualIds);
+		},
+		publishSpiritual : function(e)
+		{
+			if(ManageSpiritual.spiritualIds.length == 0 ) {Util.showWarningMessage('Please select some spiritual first'); return false;}
+			var newForm = jQuery('<form>', {
+		        'action': BASE_URL + 'admin/publish-number',
+		        'target': '_top',
+		        'method':'post'	
+		    }).append(jQuery('<input>', {
+		        'name': 'ids',
+		        'type': 'hidden',
+		        'value': ManageSpiritual.spiritualIds,
+		    }));
+			
+			
+			newForm.appendTo("body").submit();
+			
+		},
+		unPublishSpiritual : function(e)
+		{
+			console.log(ManageSpiritual.spiritualIds);
+			if(ManageSpiritual.spiritualIds.length == 0) {Util.showWarningMessage('Please select some spiritual first'); return false;}
+			var newForm = jQuery('<form>', {
+		        'action': BASE_URL + 'admin/unpublish-number',
+		        'target': '_top',
+		        'method':'post'	
+		    }).append(jQuery('<input>', {
+		        'name': 'ids',
+		        'type': 'hidden',
+		        'value': ManageSpiritual.spiritualIds,
 		    }));
 			
 			newForm.appendTo("body").submit();

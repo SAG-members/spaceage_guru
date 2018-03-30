@@ -297,6 +297,22 @@ class Message
 	const PCT_RATE_ADDED_SUCCESS = "PCT rate added successfully";
 	const PCT_RATE_ADDED_FAILURE = "OOPS ! unable to add rate, please try again later";
 	const PCT_RATE_ADDED_MESSAGE = "Please provide pct rate, currency and conversion rate";
+
+		# SPIRITUAL CONSTANTS
+	const SPIRITUAL_CREATE_SUCCESS = 'Spiritual Created Successfully';
+	const SPIRITUAL_CREATE_FAILURE = 'Error Creating Spiritual';
+	
+	const SPIRITUAL_UPDATE_SUCCESS = 'Spiritual Updated Successfully';
+	const SPIRITUAL_UPDATE_FAILURE = 'Error Updating Spiritual';
+	
+	const SPIRITUAL_DELETE_SUCCESS = 'Spiritual Deleted Successfully';
+	const SPIRITUAL_DELETE_FAILURE = 'Error Deleting Spiritual';
+
+	const SPIRITUAL_PUBLISH_SUCCESS = 'Spiritual Publish Successfully';
+	const SPIRITUAL_PUBLISH_FAILURE = 'Error Publish Spiritual';
+	
+	const SPIRITUAL_UNPUBLISH_SUCCESS = 'Spiritual UnPublish Successfully';
+	const SPIRITUAL_UNPUBLISH_FAILURE = 'Error UnPublish Spiritual';
 	
 	private $CI;
 	public function __construct()

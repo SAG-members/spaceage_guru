@@ -73,12 +73,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
+if($_SERVER['SERVER_NAME']=='localhost'){
+        $hostname ="localhost";
+        $username ="root";
+        $password ="";
+        $database ="block";
+    }else{
+        $hostname ="localhost";
+        $username ="root";
+        $password ="xantatech";
+        $database ="spaceage_guru";
+    }
+
 $db['default'] = array(
     'dsn'	=> '',
     'hostname' => 'localhost',
-    'username' => 'root',
-    'password' => 'xantatech',
-    'database' => 'spaceage_guru',
+    'username' => $username,
+    'password' => $password,
+    'database' => $database,
     'dbdriver' => 'mysqli',
     'dbprefix' => '',
     'pconnect' => FALSE,
