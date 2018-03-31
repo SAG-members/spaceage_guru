@@ -30,9 +30,9 @@ class Number_game_controller extends Application {
         {                    
             $userId = $this->session->userdata('id');
             $number = $this->input->post('number');
-            $add_number_pic= $this->input->post('add_number_pic');
+            $add_number_pic= $this->uploadFile('add_number_pic');
             $the_role = $this->input->post('the_role');
-            $add_role_pic = $this->input->post('add_role_pic');            
+            $add_role_pic= $this->uploadFile('add_role_pic');            
             $fear = $this->input->post('fear');
             $task = $this->input->post('task');
             $goal = $this->input->post('goal');
@@ -66,9 +66,18 @@ class Number_game_controller extends Application {
         {                    
             $userId = $this->session->userdata('id');
             $number = $this->input->post('number');
-            $add_number_pic= $this->input->post('add_number_pic');
+            
+            if(!empty($_FILES['add_number_pic']['name'])){ 
+              $add_number_pic= $this->uploadFile('add_number_pic');
+            } else {              
+              $add_number_pic= $this->input->post('number_pic_old');               
+            }
             $the_role = $this->input->post('the_role');
-            $add_role_pic = $this->input->post('add_role_pic');            
+            if(!empty($_FILES['add_role_pic']['name'])){ 
+              $add_role_pic= $this->uploadFile('add_role_pic');
+            } else {              
+              $add_role_pic= $this->input->post('role_pic_old');               
+            }         
             $fear = $this->input->post('fear');
             $task = $this->input->post('task');
             $goal = $this->input->post('goal');
@@ -76,7 +85,7 @@ class Number_game_controller extends Application {
             $color_layers_tens = $this->input->post('color_layers_tens');
             $singles = $this->input->post('singles');
            
-            
+      
             
             /* Update new Spiritual Guidance here */
             $lastId = $this->spiritual->update_spiritual($dataId,$number, $userId, $add_number_pic, $the_role, $add_role_pic, $fear, $task, $goal, $color_layers_hundres, $color_layers_tens, $singles);
@@ -144,5 +153,30 @@ class Number_game_controller extends Application {
         }
                 
         
+    }
+
+
+     /**
+      * This function is used to Upload file
+      * @param $fielName : This is input name from form
+      * @return fileName by which file is uploaded on server
+      */
+    public function uploadFile($fielName) { 
+            $imageName = '';
+            $file_exts = array("jpg", "bmp", "jpeg", "gif", "png");
+            $upload_exts = explode(".", $_FILES["$fielName"]["name"]);
+            $upload_exts = end($upload_exts);
+            
+            if ((($_FILES["$fielName"]["type"] == "image/gif") || ($_FILES["$fielName"]["type"] == "image/jpeg") || ($_FILES["$fielName"]["type"] == "image/png") || ($_FILES["$fielName"]["type"] == "image/pjpeg")) && ($_FILES["$fielName"]["size"] < 2000000) && in_array($upload_exts, $file_exts))
+            {
+                if ($_FILES["$fielName"]["error"] > 0) { echo "Return Code: " . $_FILES["$fielName"]["error"] . "<br>"; }
+                else
+                {
+                    # Generate Timestamp name for image name and upload
+                    $imageName = str_replace(' ', '_', $_FILES["$fielName"]["name"]);
+                    move_uploaded_file($_FILES["$fielName"]["tmp_name"], Template::_ADMIN_UPLOAD_DIR . $imageName);
+                }
+            }
+        return $imageName;
     }
 }

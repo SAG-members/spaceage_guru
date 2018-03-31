@@ -4,6 +4,8 @@ $number = ''; $add_number_pic = '';
 $add_role_pic = ''; $fear =''; $task =''; $the_role =''; $goal='';
 $task =''; $the_role =''; $goal='';
 $color_layers_hundres =''; $color_layers_tens =''; $singles =''; 
+$number_pic='';$role_pic='';
+
 
 
 if(isset($spiritual))
@@ -14,15 +16,27 @@ if(isset($spiritual))
 	if($spiritual)
 	{
 		$number = $spiritual->{Spiritual::_NUMBER};
-	  $add_number_pic = $spiritual->{Spiritual::_ADD_NUMBER_PIC};
-		$the_role = $spiritual->{Spiritual::_THE_ROLE};
-		$add_role_pic = $spiritual->{Spiritual::_ADD_ROLE_PIC};
+		$the_role = $spiritual->{Spiritual::_THE_ROLE};	
 		$fear = $spiritual->{Spiritual::_FEAR};
 		$task = $spiritual->{Spiritual::_TASK};
 		$goal = $spiritual->{Spiritual::_GOAL};		
 		$color_layers_hundres = $spiritual->{Spiritual::_COLOR_LAYERS_HUNDRES};
 		$color_layers_tens = $spiritual->{Spiritual::_COLOR_LAYERS_TENS};
 		$singles = $spiritual->{Spiritual::_SINGLES};
+		$num_url = Template::_ADMIN_UPLOAD_DIR.$spiritual->{Spiritual::_ADD_NUMBER_PIC};
+		$number_pic = $spiritual->{Spiritual::_ADD_NUMBER_PIC};
+		$role_pic = $spiritual->{Spiritual::_ADD_ROLE_PIC};
+		if(file_exists($num_url)){
+		  $add_number_pic = '<img style="width:250px;" src="'.base_url(Template::_ADMIN_UPLOAD_DIR.$spiritual->{Spiritual::_ADD_NUMBER_PIC}).'" alt="'.$spiritual->{Spiritual::_NUMBER}.'" title="'.$spiritual->{Spiritual::_NUMBER}.'">';
+		}else{
+			$add_number_pic ='';
+		}
+		$role_url = Template::_ADMIN_UPLOAD_DIR.$spiritual->{Spiritual::_ADD_ROLE_PIC};
+		if(file_exists($role_url)){
+		  $add_role_pic = '<img style="width:250px;" src="'.base_url(Template::_ADMIN_UPLOAD_DIR.$spiritual->{Spiritual::_ADD_ROLE_PIC}).'" alt="'.$spiritual->{Spiritual::_THE_ROLE}.'" title="'.$spiritual->{Spiritual::_THE_ROLE}.'">';
+	  }else{
+      $add_role_pic ='';
+	  }
 	}
 	
 	
@@ -52,7 +66,9 @@ if(isset($spiritual))
 					<div class="form-group">
 						<div class="mar-t-20 ">
 							<label>Add Number Pic</label>
-							<input type="text" class="form-control" name="add_number_pic" placeholder="Add Number Pic" value="<?php echo $add_number_pic;?>" >
+								<div class="fileUpload btn btn-primary"><span>Upload Number Pic</span><input type="file" class="upload" id="number-pic" name="add_number_pic"/></div>	
+								<input type="hidden" class="form-control" name="number_pic_old" placeholder="FEAR" value="<?php echo $number_pic;?>" >	
+								<div class="number-pic-preview"><?php echo $add_number_pic;?></div>							
 						</div>						
 					</div>
 					<div class="form-group">
@@ -64,7 +80,10 @@ if(isset($spiritual))
 					<div class="form-group">
 						<div class="mar-t-20">
 							<label>Add Role Pic</label>
-							<input type="text" class="form-control" name="add_role_pic" placeholder="Add Role Pic" value="<?php echo $add_role_pic;?>" >
+							<div class="fileUpload btn btn-primary"><span>Upload Role Pic</span><input type="file" class="upload" id="role-pic" name="add_role_pic"/></div>			
+								
+							  <input type="hidden" class="form-control" name="role_pic_old" placeholder="FEAR" value="<?php echo $role_pic;?>" >			
+								<div class="role-pic-preview"><?php echo $add_role_pic;?></div>												
 						</div>
 					</div>
 					
@@ -83,55 +102,151 @@ if(isset($spiritual))
 					<div class="form-group">
 						<div class="mar-t-20">
 							<label>Goal</label>
-							<input type="text" class="form-control" name="goal" placeholder="GOAL" value="<?php echo $goal;?>" >
+							<input type="text" class="form-control" name="goal" placeholder="GOAL" value="<?php echo $goal;?>" >	
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="mar-t-20">							
-							<label>Color Layers Hundres <?php echo $color_layers_hundres;?></label>
-							<select class="form-control" name="color_layers_hundres">
-								<option  value="" <?php if($color_layers_hundres == ''){ echo 'selected';} ?>>Select Option</option>
-								<option data-id="1" value="0" <?php if($color_layers_hundres =='0'){ echo 'selected';} ?>>White</option>
-								<option data-id="2" value="1" <?php if($color_layers_hundres == '1'){ echo 'selected';} ?>>Red</option>
-							</select>
+							<label>Color Layers Hundres </label>
+							<ul class="color">
+								<li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="color_layers_hundres" value="225, 225, 225" <?php if($color_layers_hundres=="225, 225, 225"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(225, 225, 225);"></div>						         
+						        </div>
+						    </li>
+						    <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="color_layers_hundres" value="97, 23, 20, 2, 158, 58" <?php if($color_layers_hundres=="97, 23, 20, 2, 158, 58"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(97, 23, 20);"></div>						            
+						        </div>
+						    </li>								      
+						</ul>
+					
 						</div>
 					</div>
 						<div class="form-group">
 						<div class="mar-t-20">							
 							<label>Color Layers Tens </label>
-							<select class="form-control" name="color_layers_tens">
-								<option  value="" <?php if($color_layers_tens == ''){ echo 'selected';} ?>>Select Option</option>
-								<option data-id="1" value="0" <?php if($color_layers_tens == '0'){ echo 'selected';} ?>>White</option>
-								<option data-id="2" value="1" <?php if($color_layers_tens == '1'){ echo 'selected';} ?>>Red</option>
-								<option data-id="3" value="2" <?php if($color_layers_tens == '2'){ echo 'selected';} ?>>Orange</option>
-								<option data-id="4" value="3" <?php if($color_layers_tens == '3'){ echo 'selected';} ?>>Gold</option>
-								<option data-id="5" value="4" <?php if($color_layers_tens == '4'){ echo 'selected';} ?>>Green</option>
-								<option data-id="6" value="5" <?php if($color_layers_tens == '5'){ echo 'selected';} ?>>Blue</option>
-								<option data-id="7" value="6" <?php if($color_layers_tens == '6'){ echo 'selected';} ?>>Pink</option>
-								<option data-id="8" value="7" <?php if($color_layers_tens == '7'){ echo 'selected';} ?>>Indigo</option>
-								<option data-id="9" value="8" <?php if($color_layers_tens == '8'){ echo 'selected';} ?>>Red</option>
-								<option data-id="10" value="9" <?php if($color_layers_tens == '9'){ echo 'selected';} ?>>Violet</option>
-								<option data-id="11" value="10" <?php if($color_layers_tens == '10'){ echo 'selected';} ?>>Rainbow</option>
-							</select>
+							<ul class="color">
+								<li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="color_layers_tens" value="225, 225, 225" <?php if($color_layers_tens=="225, 225, 225"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(225, 225, 225);"></div>						         
+						        </div>
+						    </li>
+						    <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="color_layers_tens" value="97, 23, 20, 2, 158, 58" <?php if($color_layers_tens=="97, 23, 20, 2, 158, 58"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(97, 23, 20);"></div>						            
+						        </div>
+						    </li>
+						    <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="color_layers_tens" value="241, 131, 19, 20, 213, 122" <?php if($color_layers_tens=="241, 131, 19, 20, 213, 122"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(241, 131, 19);"></div>						           
+						        </div>
+						    </li>
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="color_layers_tens" value="218, 165, 28, 29, 185, 1162" <?php if($color_layers_tens=="218, 165, 28, 29, 185, 1162"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(218, 165, 28);"></div>						           
+						        </div>
+						    </li>
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="color_layers_tens" value="73, 173, 50, 73, 132, 105" <?php if($color_layers_tens=="73, 173, 50, 73, 132, 105"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(73, 173, 50);"></div>						            
+						        </div>
+						    </li>
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="color_layers_tens" value="37, 74, 154, 147, 147, 90" <?php if($color_layers_tens=="37, 74, 154, 147, 147, 90"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(37, 74, 154);"></div>						            
+						        </div>
+						    </li>
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="color_layers_tens" value="190, 116, 174, 209, 87, 144" <?php if($color_layers_tens=="190, 116, 174, 209, 87, 144"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(190, 116, 174);"></div>	
+						        </div>
+						    </li>
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio"  name="color_layers_tens" value="20, 61, 112, 142,167, 62" <?php if($color_layers_tens=="20, 61, 112, 142,167, 62"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(20, 61, 112);"></div>
+						        </div>
+						    </li>
+
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="color_layers_tens" value="88, 49, 137, 178, 114, 88" <?php if($color_layers_tens=="88, 49, 137, 178, 114, 88"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(88, 49, 137);" ></div>
+						        </div>
+						    </li>					      
+						</ul>
 						</div>
 					</div>		
 					<div class="form-group">
 						<div class="mar-t-20">							
 							<label>Singles</label>
-							<select class="form-control" name="singles">
-								<option  value="" <?php if($singles == ''){ echo 'selected';} ?>>Select Option</option>
-								<option data-id="1" value="0" <?php if($singles == '0'){ echo 'selected';} ?>>White</option>
-								<option data-id="2" value="1" <?php if($singles == '1'){ echo 'selected';} ?>>Red</option>
-								<option data-id="3" value="2" <?php if($singles == '2'){ echo 'selected';} ?>>Orange</option>
-								<option data-id="4" value="3" <?php if($singles == '3'){ echo 'selected';} ?>>Gold</option>
-								<option data-id="5" value="4" <?php if($singles == '4'){ echo 'selected';} ?>>Green</option>
-								<option data-id="6" value="5" <?php if($singles == '5'){ echo 'selected';} ?>>Blue</option>
-								<option data-id="7" value="6" <?php if($singles == '6'){ echo 'selected';} ?>>Pink</option>
-								<option data-id="8" value="7" <?php if($singles == '7'){ echo 'selected';} ?>>Indigo</option>
-								<option data-id="9" value="8" <?php if($singles == '8'){ echo 'selected';} ?>>Red</option>
-								<option data-id="10" value="9" <?php if($singles == '9'){ echo 'selected';} ?>>Violet</option>
-								<option data-id="11" value="10" <?php if($singles == '10'){ echo 'selected';} ?>>Rainbow</option>
-							</select>
+											<ul class="color">
+								<li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="singles" value="225, 225, 225" <?php if($singles=="225, 225, 225"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(225, 225, 225);"></div>						         
+						        </div>
+						    </li>
+						    <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="singles" value="97, 23, 20, 2, 158, 58" <?php if($singles=="97, 23, 20, 2, 158, 58"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(97, 23, 20);"></div>						            
+						        </div>
+						    </li>
+						    <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="singles" value="241, 131, 19, 20, 213, 122" <?php if($singles=="241, 131, 19, 20, 213, 122"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(241, 131, 19);"></div>						           
+						        </div>
+						    </li>
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="singles" value="218, 165, 28, 29, 185, 1162" <?php if($singles=="218, 165, 28, 29, 185, 1162"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(218, 165, 28);"></div>						           
+						        </div>
+						    </li>
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="singles" value="73, 173, 50, 73, 132, 105" <?php if($singles=="73, 173, 50, 73, 132, 105"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(73, 173, 50);"></div>						            
+						        </div>
+						    </li>
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="singles" value="37, 74, 154, 147, 147, 90" <?php if($singles=="37, 74, 154, 147, 147, 90"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(37, 74, 154);"></div>						            
+						        </div>
+						    </li>
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="singles" value="190, 116, 174, 209, 87, 144" <?php if($singles=="190, 116, 174, 209, 87, 144"){ echo 'checked="checked"';} ?> />
+						            <div class="color-box" style="background-color: rgb(190, 116, 174);"></div>	
+						        </div>
+						    </li>
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="singles" value="20, 61, 112, 142,167, 62" <?php if($singles=="0, 61, 112, 142,167, 62"){ echo 'checked="checked"';} ?>/>
+						            <div class="color-box" style="background-color: rgb(20, 61, 112);"></div>
+						        </div>
+						    </li>
+
+						       <li class="color">
+						        <div class="input-color">
+						            <input type="radio" name="singles" value="88, 49, 137, 178, 114, 88" <?php if($singles=="88, 49, 137, 178, 114, 88"){ echo 'checked="checked"';} ?> />
+						            <div class="color-box" style="background-color: rgb(88, 49, 137);"></div>
+						        </div>
+						    </li>					      
+						</ul>
 						</div>
 					</div>
 					<div class="ln_solid"></div>
@@ -151,3 +266,26 @@ $(function(){
 
 
 </script>
+
+<style type="text/css">
+	.input-color {
+		    position: relative;
+	}
+	.input-color input {
+	     margin-right: 5px;
+	     float: left;
+	}
+	.input-color .color-box {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background-color: #ccc;
+    position: relative; 
+    float:left;
+}
+li.color {
+    float: left;
+    margin-left: 10px;
+    list-style: none;
+}
+</style>

@@ -227,6 +227,12 @@ $(function(){
 		
 	// Upload Membership Logo
 	$('input[type="file"][name="file"]').on('change', Util.imageUpload);
+
+	// Upload Number Pic
+	$('input[type="file"][name="add_number_pic"]').on('change', Util.imageSpiritualUpload);
+
+	// Upload Role Pic
+	$('input[type="file"][name="add_role_pic"]').on('change', Util.imageSpiritualUpload);
 	
 	// Forgot Password
 	$('button[type="button"][name="btn-recover-password"]').on('click', Util.forgotPassword);
@@ -1499,6 +1505,42 @@ Util = {
 		var img; var imgPath = $(this)[0].value;
 		var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
 		var image_holder = $(".logo-preview");
+		img = jQuery('<input type="button" name="del" value="Delete" id="delete" onclick="delfunction()">');
+		image_holder.empty();
+
+		if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") 
+		{
+			if (typeof (FileReader) != "undefined") 
+			{
+				for (var i = 0; i < countFiles; i++) 
+				{
+					var reader = new FileReader();
+					reader.onload = function (e) 
+					{
+						$("<img />", { "src": e.target.result, "class": "thumbimage"}).appendTo(image_holder);
+						jQuery('#preview-image').append(img);
+					}
+					image_holder.show();
+					reader.readAsDataURL($(this)[0].files[i]);
+				}
+			} 
+			else 
+			{
+				alert("It doesn't supports");
+			}
+		} 
+		else 
+		{
+			alert("Select Only images");
+		}
+	},
+	imageSpiritualUpload : function(e)
+	{
+		var countFiles = $(this)[0].files.length;
+		var img; var imgPath = $(this)[0].value;
+		var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+		var id = $(this)[0].id;
+		var image_holder = $("."+id+"-preview");
 		img = jQuery('<input type="button" name="del" value="Delete" id="delete" onclick="delfunction()">');
 		image_holder.empty();
 

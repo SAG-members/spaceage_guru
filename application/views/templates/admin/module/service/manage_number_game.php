@@ -60,16 +60,19 @@
 									<tr>
 										<td><input type="checkbox" name="select-one-spiritual[]" class="select-one-spiritual" data-spiritual-id="<?php echo $spiritual->{Spiritual::_ID};?>"/></td>
 										<td><a href="<?php echo base_url('admin/products/edit/'.$spiritual->{Spiritual::_ID});?>"><?php echo $spiritual->{Spiritual::_NUMBER};?></a></td>
-										<td><?php echo $spiritual->{Spiritual::_ADD_NUMBER_PIC};?></td>
+										<td><?php $num_url =Template::_ADMIN_UPLOAD_DIR.$spiritual->{Spiritual::_ADD_NUMBER_PIC};
+	                 	if(file_exists($num_url)){ echo '<img style="width:80px;" src="'.base_url(Template::_ADMIN_UPLOAD_DIR.$spiritual->{Spiritual::_ADD_NUMBER_PIC}).'" alt="'.$spiritual->{Spiritual::_NUMBER}.'" title="'.$spiritual->{Spiritual::_NUMBER}.'">'; }?></td>
 										<td><?php echo $spiritual->{Spiritual::_THE_ROLE};?></td>
-										<td><?php echo $spiritual->{Spiritual::_ADD_ROLE_PIC};?></td>
+										<td><?php $role_url = Template::_ADMIN_UPLOAD_DIR.$spiritual->{Spiritual::_ADD_ROLE_PIC};
+		                 if(file_exists($role_url)){ echo '<img style="width:80px;" src="'.base_url(Template::_ADMIN_UPLOAD_DIR.$spiritual->{Spiritual::_ADD_ROLE_PIC}).'" alt="'.$spiritual->{Spiritual::_THE_ROLE}.'" title="'.$spiritual->{Spiritual::_THE_ROLE}.'">';} ?>
+										</td>
 										<td><?php echo $spiritual->{Spiritual::_FEAR};?></td>
 										<td><?php echo $spiritual->{Spiritual::_TASK};?></td>
 										<td><?php echo $spiritual->{Spiritual::_GOAL};?></td>		
 										<td><?php echo $spiritual->{Spiritual::_DATE_CREATED};?></td>						
-										<td><?php echo get_color($spiritual->{Spiritual::_COLOR_LAYERS_HUNDRES});?></td>										
-										<td><?php echo get_color($spiritual->{Spiritual::_COLOR_LAYERS_TENS});?></td>										
-										<td><?php echo get_color($spiritual->{Spiritual::_SINGLES});?></td>										
+										<td><?php $h = explode(',',$spiritual->{Spiritual::_COLOR_LAYERS_HUNDRES}); ?><div class="color-box" style="background-color: rgb(<?= $h[0]?>, <?= $h[1]?>, <?= $h[2]?>);"></div></td>										
+										<td><?php $t = explode(',',$spiritual->{Spiritual::_COLOR_LAYERS_TENS});?><div class="color-box" style="background-color: rgb(<?= $t[0]?>, <?= $t[1]?>, <?= $t[2]?>);"></div></td>										
+										<td><?php $s = explode(',',$spiritual->{Spiritual::_SINGLES});?><div class="color-box" style="background-color: rgb(<?= $s[0]?>, <?= $s[1]?>, <?= $s[2]?>);"></div></td>										
 										<td><a class="delete-spiritual" data-toggle="tooltip" alt="Delete Spiritual"
 												title="Delete Spiritual" data-spiritual-id="<?php echo $spiritual->{Spiritual::_ID}?>"
 												data-spiritual="<?php echo $spiritual->{Spiritual::_NUMBER};?>"><i
@@ -114,3 +117,16 @@
 </div>
 
 <!-- Data Modal Ends Here -->
+
+<style type="text/css">
+
+	.color-box {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background-color: #ccc;
+    position: relative; 
+    float:left;
+}
+
+</style>
