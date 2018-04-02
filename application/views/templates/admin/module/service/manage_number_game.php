@@ -76,7 +76,7 @@
 										<td><a class="delete-spiritual" data-toggle="tooltip" alt="Delete Spiritual"
 												title="Delete Spiritual" data-spiritual-id="<?php echo $spiritual->{Spiritual::_ID}?>"
 												data-spiritual="<?php echo $spiritual->{Spiritual::_NUMBER};?>"><i
-													class="fa fa-trash fa-2x" aria-hidden="true"></i></a>
+													class="fa fa-trash fa-2x" aria-hidden="true" ></i></a>
 												&nbsp;
 												<a href="<?php echo base_url('admin/number-game/edit/'.$spiritual->{Spiritual::_ID});?>" data-spiritual-id="<?php echo $spiritual->{Spiritual::_ID}?>" data-toggle="tooltip" class="edit-product" alt="Edit Product"
 												title="Edit Product"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a> 
@@ -128,5 +128,8 @@
     position: relative; 
     float:left;
 }
-
+a.delete-spiritual {
+    cursor: pointer;
+    z-index:10;
+}
 </style>

@@ -163,12 +163,26 @@ class Number_game_controller extends Application {
       */
     public function uploadFile($fielName) { 
             $imageName = '';
-            $file_exts = array("jpg", "bmp", "jpeg", "gif", "png");
+            //$file_exts = array("jpg", "bmp", "jpeg", "gif", "png","JPG", "BMP", "JPEG", "GIF", "PNG");
+            $file_exts = array("jpg", "bmp", "jpeg", "gif", "png", "pjpeg","JPG", "BMP", "JPEG", "GIF", "PNG","PJPEG");
             $upload_exts = explode(".", $_FILES["$fielName"]["name"]);
             $upload_exts = end($upload_exts);
             
-            if ((($_FILES["$fielName"]["type"] == "image/gif") || ($_FILES["$fielName"]["type"] == "image/jpeg") || ($_FILES["$fielName"]["type"] == "image/png") || ($_FILES["$fielName"]["type"] == "image/pjpeg")) && ($_FILES["$fielName"]["size"] < 2000000) && in_array($upload_exts, $file_exts))
-            {
+            /*if ((($_FILES["$fielName"]["type"] == "image/gif") || ($_FILES["$fielName"]["type"] == "image/jpeg") || ($_FILES["$fielName"]["type"] == "image/png") || ($_FILES["$fielName"]["type"] == "image/pjpeg")) && ($_FILES["$fielName"]["size"] < 2000000) && in_array($upload_exts, $file_exts)) {*/
+      if ((
+                ($_FILES["$fielName"]["type"] == "image/jpg") || 
+                ($_FILES["$fielName"]["type"] == "image/bmp") || 
+                ($_FILES["$fielName"]["type"] == "image/jpeg") || 
+                ($_FILES["$fielName"]["type"] == "image/gif") ||
+                ($_FILES["$fielName"]["type"] == "image/png") ||
+                ($_FILES["$fielName"]["type"] == "image/pjpeg") ||
+                ($_FILES["$fielName"]["type"] == "image/JPG") || 
+                ($_FILES["$fielName"]["type"] == "image/BMP") || 
+                ($_FILES["$fielName"]["type"] == "image/JPEG") || 
+                ($_FILES["$fielName"]["type"] == "image/GIF") || 
+                ($_FILES["$fielName"]["type"] == "image/PNG") || 
+                ($_FILES["$fielName"]["type"] == "image/PJPEG")
+            ) && ($_FILES["$fielName"]["size"] < 2000000) && in_array($upload_exts, $file_exts)) {
                 if ($_FILES["$fielName"]["error"] > 0) { echo "Return Code: " . $_FILES["$fielName"]["error"] . "<br>"; }
                 else
                 {
@@ -180,3 +194,5 @@ class Number_game_controller extends Application {
         return $imageName;
     }
 }
+
+
