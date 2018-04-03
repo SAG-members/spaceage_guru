@@ -5,6 +5,37 @@ $lockIcon = '';
 if($this->session->userdata('user_id')) $lockIcon = '';
 $result = get_lat_lng_by_ip();
 
+$topic=""; $item ="";
+$comment = ""; $image = ""; $pctPrice = ""; $price = ""; $paymentFrom = ""; $deliveryMethod = ""; $when = "";
+$dateTime = ""; $escrowType = ""; $escrowMax = ""; $escrowMin = ""; $location = "";
+$id = "";
+
+if(!empty($eventData))
+{
+    $id = $eventData->{User_event_model::_ID};
+    
+    
+    $topic = $eventData->{User_event_model::_TOPIC};
+    $item = $eventData->{User_event_model::_ITEM_ID};    
+    $comment = $eventData->{User_event_model::_COMMENT};
+    $image = $eventData->{User_event_model::_IMAGE}; 
+    $pctPrice = $eventData->{User_event_model::_PCT_PRICE}; 
+    $price = $eventData->{User_event_model::_PRICE}; 
+    $paymentFrom = $eventData->{User_event_model::_PAYMENT_FROM}; 
+    $deliveryMethod = $eventData->{User_event_model::_DELIVERY_METHOD}; 
+    $when = $eventData->{User_event_model::_ESCROW_RELEASED};
+    $dateTime = $eventData->{User_event_model::_EXPIRY_DATE}; 
+    $escrowType = $eventData->{User_event_model::_ESCROW_TYPE}; 
+    $escrowMax = $eventData->{User_event_model::_ESCROW_MAX_LIMIT}; 
+    $escrowMin = $eventData->{User_event_model::_ESCROW_MIN_LIMIT}; 
+    $location = $eventData->{User_event_model::_LOCATION};
+}
+
+
+
+
+
+
 ?>
 <style>
 .select2-selection{
@@ -32,31 +63,23 @@ $result = get_lat_lng_by_ip();
   opacity: 1;
 }
 </style>
-<div class="leftmain">
-	<ul class="left-menu-items">
-		<li class="text-center menu-li-style"><a href="<?php echo base_url();?>">HOME</a></li>		
-		<li class="text-center menu-li-style">
-			<i class="pull-left <?php echo $lockIcon; ?>"></i> Data
-			<a class="pull-right add-pss" href="<?php echo base_url('user/dashboard#myProducts');?>" title="View My Data" alt="View My Data"><i class="fa fa-bars"></i> </a>
-			<a class="pull-right add-pss" href="<?php echo base_url('user/add/data');?>" title="Add Data" alt="Add Data"><i class="fa fa-plus"></i> </a>			
-		</li>		
-	</ul>
-	
-	<h4 class="modal-title">Add Event</h4>
-	<form name="newEvent" method="post" action="<?php echo base_url('add/new/event'); ?>" enctype="multipart/form-data">
+<div class="">
+	<h4 class="modal-title">Edit Event</h4>
+	<form name="newEvent" method="post" action="<?php echo base_url('edit/event/'.$id); ?>" enctype="multipart/form-data">
 	<div class="form-group font-10 mar-t-10">
 		<div clas="col-md-12">
 			<div class="form-group">
         		<div class="col-md-6">
         			<label style="color: #FFF;">Topic</label> 
-        			<input type="text" name="data_type" class="form-control">
+        			<input type="text" name="data_type" class="form-control" value="<?php echo $topic; ?>">
         		</div>
         		<div class="col-md-6">
         			<label style="color: #FFF;">Item</label> 
         			<select class="form-control" name="item_name" >
         				<option value="0">Select</option>
-        				<?php if($leftSideData['datas']) : foreach ($leftSideData['datas'] as $d):?>
-        				<option value="<?php echo $d->{Page::_ID} ?>"><?php echo $d->{Page::_PAGE_TITLE} ?></option>
+        				<?php if($datas) : foreach ($datas as $d):?>
+        				<?php $selected= ""; if($item == $d->{Page::_ID}) $selected="selected"; ?>
+        				<option value="<?php echo $d->{Page::_ID} ?>" <?php echo $selected; ?>><?php echo $d->{Page::_PAGE_TITLE} ?></option>
         				<?php endforeach; endif; ?>
         			</select>        									  		
         		</div>
@@ -66,7 +89,7 @@ $result = get_lat_lng_by_ip();
 			<div class="form-group">    		   		
         		<div class="col-md-12">
     				<label style="color: #FFF;">Event Comment</label>
-    				<textarea name="event_comment" class="form-control" rows="3" ></textarea>
+    				<textarea name="event_comment" class="form-control" rows="3" ><?php echo $comment; ?></textarea>
     			</div>
     			<div class="clearfix"></div>
 			</div>
@@ -81,7 +104,7 @@ $result = get_lat_lng_by_ip();
         			<div class="col-md-6">
             			<label style="color: #FFF;">Target Price</label>
             			<div class="input-group">
-            				<input type="text" name="pct_price" class="form-control">
+            				<input type="text" name="pct_price" class="form-control"  value="<?php echo $pctPrice; ?>">
             				<span class="input-group-addon">PCT</span>
             			</div> 
             			
@@ -89,11 +112,11 @@ $result = get_lat_lng_by_ip();
             		<div class="col-md-6">
             			<label style="color: #FFF;">&nbsp;</label> 
             			<div class="input-group">
-            				<input type="text" name="price" class="form-control" readonly>
+            				<input type="text" name="price" class="form-control" value="<?php echo $price; ?>" readonly>
             				<div class="input-group-addon" style="padding: 0;">
                                 <select name="price_currency" style="height: 32px;">
-                                	<?php if($leftSideData['currencyRates']): foreach ($leftSideData['currencyRates'] as $r) : ?>
-                                		<?php $selected = ""; if($r->{pct_setting::_CURRENCY} == $leftSideData['profile']->{User::_CURRENCY}) $selected = "selected";?>
+                                	<?php if($currencyRates): foreach ($currencyRates as $r) : ?>
+                                		<?php $selected = ""; if($r->{pct_setting::_CURRENCY} == $profile->{User::_CURRENCY}) $selected = "selected";?>
                                 		<option <?php echo $selected; ?> value="<?php echo $r->{pct_setting::_CURRENCY} ?>" data-rate="<?php echo $r->{pct_setting::_CONVERSION_RATE}?>">
                                 		<?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_NAME); ?>-
                                 		<?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_SYMBOL); ?>
@@ -116,7 +139,7 @@ $result = get_lat_lng_by_ip();
         			<?php $paymentArr = array('1'=>'PCT Account', '2'=>'Cash'); ?>
     				<select class="form-control" name="payment_from">    					
     					<?php if($paymentArr): foreach ($paymentArr as $key => $val):?>
-    					<option value="<?php echo $key; ?>"><?php echo $val; ?></option>
+    					<option value="<?php echo $key; ?>" <?php if($key == $paymentFrom) echo "selected"; ?>><?php echo $val; ?></option>
     					<?php endforeach;endif;?>
     				</select>						  		
         		</div> 
@@ -126,7 +149,7 @@ $result = get_lat_lng_by_ip();
     				<?php $deliveryArr = array('1'=>'By Seller', '2'=>'By Post', '3'=>'Pickup by Buyer from given location', '4'=>'Mental'); ?>
     				<select class="form-control" name="delivery_method">    					
     					<?php if($deliveryArr): foreach ($deliveryArr as $key => $val):?>
-    					<option value="<?php echo $key; ?>"><?php echo $val; ?></option>
+    					<option value="<?php echo $key; ?>"  <?php if($key == $deliveryMethod) echo "selected"; ?>><?php echo $val; ?></option>
     					<?php endforeach;endif;?>
     				</select>
     			</div>
@@ -139,7 +162,7 @@ $result = get_lat_lng_by_ip();
         			<?php $deliveryArr = array('1'=>'done/delivered', '2'=>'sent', '3'=>'plans ready', '4'=>'Write to notes'); ?>
     				<select class="form-control" name="payment_when">    					
     					<?php if($deliveryArr): foreach ($deliveryArr as $key => $val):?>
-    					<option value="<?php echo $key; ?>"><?php echo $val; ?></option>
+    					<option value="<?php echo $key; ?>" <?php if($key == $when) echo "selected"; ?>><?php echo $val; ?></option>
     					<?php endforeach;endif;?>
     				</select>					  		
         		</div> 
@@ -149,7 +172,7 @@ $result = get_lat_lng_by_ip();
     				<?php if($this->session->userdata('membershipLevel') > 3) :?>
     				<input type="checkbox" name="has_date_time" checked data-toggle="toggle">  
     				<?php endif; ?>
-    				<input type="text" name="escrow_date_time" class="form-control"/>
+    				<input type="text" name="escrow_date_time" class="form-control" value="<?php echo $dateTime; ?>"/>
     			</div>   		
     			<div class="clearfix"></div>
     		</div>
@@ -162,7 +185,7 @@ $result = get_lat_lng_by_ip();
 					<select class="form-control" name="escrow_type">
 						<option value="0">Select</option>
     					<?php if($deliveryArr): foreach ($deliveryArr as $key => $val):?>
-    					<option value="<?php echo $key; ?>"><?php echo $val; ?></option>
+    					<option value="<?php echo $key; ?>" <?php if($key == $escrowType) echo "selected"; ?>><?php echo $val; ?></option>
     					<?php endforeach;endif;?>
 					</select>				  		
         		</div> 
@@ -171,11 +194,11 @@ $result = get_lat_lng_by_ip();
         			<div class="row">
         			<div class="col-md-6">
             			<label style="color: #FFF;">Escrow Limit</label> 
-            			<input type="text" name="min_limit" class="form-control" placeholder="Minimum">
+            			<input type="text" name="min_limit" class="form-control" placeholder="Minimum"  value="<?php echo $escrowMin; ?>">
             		</div>
             		<div class="col-md-6">
             			<label style="color: #FFF;">&nbsp;</label> 
-            			<input type="text" name="max_limit" class="form-control" placeholder="Maximum">						  		
+            			<input type="text" name="max_limit" class="form-control" placeholder="Maximum"  value="<?php echo $escrowMax; ?>">						  		
             		</div>			
             		</div>		
             		<div class="clearfix"></div>	  		
@@ -186,14 +209,14 @@ $result = get_lat_lng_by_ip();
     		<div class="form-group" >
     			<div class="col-md-12">
     				<label style="color: #FFF;">Location</label> 
-    				<input type="text" name="location" class="form-control" placeholder="Enter your location here" >
+    				<input type="text" name="location" class="form-control" placeholder="Enter your location here"  value="<?php echo $location; ?>">
 				</div>
 				<div class="clearfix"></div>
 			</div>
 			<div class="form-group">
 				<div class="col-md-12">
     				<label style="color: #FFF;">Address</label> 
-    				<input type="text" name="address" class="form-control">
+    				<input type="text" name="address" class="form-control" value="<?php echo $location; ?>">
     			</div>
     			<div class="clearfix"></div>
 			</div>
@@ -211,14 +234,14 @@ $result = get_lat_lng_by_ip();
     				<input type="hidden" name="lat">
     				<input type="hidden" name="lng">
     				
-    				<?php if($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} != 0):?>
-    					<?php if($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} == 1) :?>
-        					<input type="hidden" name="current_lat" value="<?php echo $leftSideData['profile']->{User::_HOME_LAT}; ?>">
-        					<input type="hidden" name="current_lng" value="<?php echo $leftSideData['profile']->{User::_HOME_LNG}; ?>">	
-    					<?php elseif ($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} == 2) :?>
-    						<input type="hidden" name="current_lat" value="<?php echo $leftSideData['profile']->{User::_WORK_LAT}; ?>">
-    						<input type="hidden" name="current_lng" value="<?php echo $leftSideData['profile']->{User::_WORK_LNG}; ?>">
-    					<?php elseif ($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} == 3) :?>
+    				<?php if($profile->{User::_EVENT_DEFAULT_ADDRESS} != 0):?>
+    					<?php if($profile->{User::_EVENT_DEFAULT_ADDRESS} == 1) :?>
+        					<input type="hidden" name="current_lat" value="<?php echo $profile->{User::_HOME_LAT}; ?>">
+        					<input type="hidden" name="current_lng" value="<?php echo $profile->{User::_HOME_LNG}; ?>">	
+    					<?php elseif ($profile->{User::_EVENT_DEFAULT_ADDRESS} == 2) :?>
+    						<input type="hidden" name="current_lat" value="<?php echo $profile->{User::_WORK_LAT}; ?>">
+    						<input type="hidden" name="current_lng" value="<?php echo $profile->{User::_WORK_LNG}; ?>">
+    					<?php elseif ($profile->{User::_EVENT_DEFAULT_ADDRESS} == 3) :?>
         					<input type="hidden" name="current_lat" value="<?php echo $result->latitude; ?>">
     						<input type="hidden" name="current_lng" value="<?php echo $result->longitude; ?>">
     					<?php endif;?>    					
@@ -516,10 +539,6 @@ $('button[type="button"][name="home-location"]').on('click', function(e){
 	var address = $(this).data('homeAddress');
 	
 });
-
-
-
-
 
 </script>
 

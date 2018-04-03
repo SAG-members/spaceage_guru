@@ -416,6 +416,9 @@ $route['transfer/pct'] = 'module/payment/payment/process_pct_transfer';
 # Update wallet balance 
 #$route['update-wallet-balance'] = 'welcome/updateWalletBalance';
 $route['add/new/event'] = 'module/services/library/register_new_event';
+
+$route['edit/event/(:num)'] = 'module/services/library/edit_event/$1';
+
 $route['decline/event'] = 'module/services/library/register_event_status';
 $route['yield/event/(:num)'] = 'module/services/library/yield_event/$1';
 $route['yield/escrow/event/(:num)'] = 'module/services/library/yield_escrow/$1';

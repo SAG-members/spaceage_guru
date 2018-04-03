@@ -662,6 +662,114 @@ class Library extends Application
 	    $this->template->render('services/escrow_view', $response);
 	}
 	
-	
+    public function edit_event($eventId)
+    {
+        $response = array();
+        
+        $userId = $this->session->userdata('id');
+        
+        # Load User Event Model
+        $this->load->model('user_event_model','uem');
+        $response['eventData'] = $this->uem->get_by_id($eventId);
+        
+        # Load personal library data
+        $response['datas'] = $this->page->get_data_created_and_purchased_by_user($this->session->userdata('id'));
+        
+        $response['currencyRates'] = $this->pct->get_rates();
+        $response['currencies'] = $this->currency->getCurrencies();
+        $response['profile'] = $this->user->getUserProfile($userId);
+        
+        
+        if($this->input->post('data_type'))
+        {
+            # Load user event model
+            $this->load->model('user_event_model', 'event');
+            
+            $userId = $this->session->userdata('id');
+            $topic = $this->input->post('data_type');
+            $itemId = $this->input->post('item_name');
+            $priceCurrency =  $this->input->post('price_currency');
+            $comment =  $this->input->post('event_comment');
+            $image =  "";
+            $pctPrice =  $this->input->post('pct_price');
+            $price =  $this->input->post('price');
+            $paymentFrom =  $this->input->post('payment_from');
+            $deliveryMethod =  $this->input->post('delivery_method');
+            $escrowReleased =  $this->input->post('payment_when');
+            $expiryDate =  $this->input->post('escrow_date_time');
+            $hasExpiry = $this->input->post('has_date_time') ? 0 : 1;
+            
+            $escrowType =  $this->input->post('escrow_type');
+            $minLimit =  $this->input->post('min_limit');
+            $maxLimit =  $this->input->post('max_limit');
+            $location =  $this->input->post('location');
+            $address =  $this->input->post('address');
+            $lat =  $this->input->post('lat');
+            $lng =  $this->input->post('lng');
+            
+            if($_FILES)
+            {
+                # Get Image and Create Thumb and upload
+                
+                $file_exts = array("jpg", "bmp", "jpeg", "gif", "png");
+                $upload_exts = explode(".", $_FILES["file"]["name"]);
+                $upload_exts = end($upload_exts);
+                
+                if ((($_FILES["file"]["type"] == "image/gif") || ($_FILES["file"]["type"] == "image/jpeg") || ($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/pjpeg")) && ($_FILES["file"]["size"] < 2000000) && in_array($upload_exts, $file_exts))
+                {
+                    if ($_FILES["file"]["error"] > 0) {  }
+                    else
+                    {
+                        $extensionArr = explode($_FILES["file"]["type"]);
+                        $extension = $extensionArr[1];
+                        
+                        # Generate Timestamp name for image name and upload
+                        $image = md5($_FILES["file"]["name"].microtime()).$extension;
+                        move_uploaded_file($_FILES["file"]["tmp_name"], Template::_PUBLIC_DATA_DOCUMENT_DIR . $image);
+                        
+                    }
+                }
+            }
+            
+            $data = array(                
+                User_event_model::_TOPIC => $topic,
+                User_event_model::_ITEM_ID => $itemId,
+                User_event_model::_COMMENT => $comment,
+                User_event_model::_IMAGE => $image,
+                User_event_model::_PCT_PRICE => $pctPrice,
+                User_event_model::_PRICE => $price,
+                User_event_model::_PRICE_CURRENCY => $priceCurrency,
+                User_event_model::_PAYMENT_FROM => $paymentFrom,
+                User_event_model::_DELIVERY_METHOD => $deliveryMethod,
+                User_event_model::_ESCROW_RELEASED => $escrowReleased,
+                User_event_model::_EXPIRY_DATE => $expiryDate,
+                User_event_model::_HAS_EXPIRY => $hasExpiry,
+                User_event_model::_ESCROW_TYPE => $escrowType,
+                User_event_model::_ESCROW_MIN_LIMIT => $minLimit,
+                User_event_model::_ESCROW_MAX_LIMIT => $maxLimit,
+                User_event_model::_LOCATION => $location,
+                User_event_model::_ADDRESS => $address,
+                User_event_model::_LAT => $lat,
+                User_event_model::_LNG => $lng,
+                
+            );
+            
+            if($this->event->update_event($eventId, $data))
+            {
+                $this->message->setFlashMessage(Message::EVENT_UPDATE_SUCCESS, array('id'=>1));
+            }
+            else
+            {
+                $this->message->setFlashMessage(Message::EVENT_UPDATE_FAILURE);
+            }
+            
+            redirect(base_url('timeline'));
+        
+        }
+        
+        $this->template->title('Edit Event');
+        $this->template->render('services/event_edit', $response);
+        
+    }
 }
 

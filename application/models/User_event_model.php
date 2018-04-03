@@ -48,6 +48,13 @@ class User_event_model extends CI_Model
 	    return $this->db->insert_id();
 	}
 	
+	public function update_event($eventId, $data)
+	{	    
+	    $this->db->where(static::_ID, $eventId);
+	    $this->db->update(static::_TABLE, $data);
+	    return $this->db->affected_rows();
+	}
+	
 	public function get_by_id($id, $field=null)
 	{
 	    $this->db->from(static::_TABLE);

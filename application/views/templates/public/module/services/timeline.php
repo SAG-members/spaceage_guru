@@ -36,7 +36,7 @@
     		?>
     		
     	</td>
-    	<td></td>    	
+    	<td><a href="<?php echo base_url("edit/event/".$o->{User_event_model::_ID}); ?>">Edit</a></td>    	
     </tr>
     <?php endforeach; ?>
     </tbody>
