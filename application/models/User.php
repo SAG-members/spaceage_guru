@@ -42,6 +42,7 @@ class User extends CI_Model
 	const _CURRENCY = 'currency'; 
 	const _RECOMMENDOR = 'recommendor';
 	const _EVENT_DEFAULT_ADDRESS = 'event_default_address';
+	const _OFFER_IN_RADIUS = 'offer_in_radius';
 	const _IS_LOGGED_IN = 'is_logged_in';
 	const _LOGGED_COOKIE = 'logged_cookie';
 	const _DATE_CREATED = 'date_created';
@@ -271,6 +272,18 @@ class User extends CI_Model
 	{
 	    $data = array(
 	        static::_EVENT_DEFAULT_ADDRESS => $preferedAddress
+	    );
+	    
+	    $this->db->where(static::_ID, $userId);
+	    $this->db->update(static::_TABLE, $data);
+	    
+	    return $this->db->affected_rows();
+	}
+	
+	public function set_offer_in_radius($userId, $offerInRadius)
+	{
+	    $data = array(
+	        static::_OFFER_IN_RADIUS => $offerInRadius
 	    );
 	    
 	    $this->db->where(static::_ID, $userId);

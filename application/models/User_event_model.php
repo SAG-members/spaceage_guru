@@ -29,6 +29,7 @@ class User_event_model extends CI_Model
 	const _ADDRESS = 'address';
 	const _LAT = 'lat';
 	const _LNG = 'lng';
+	const _OFFER_RANGE = 'offer_range';
 	const _STATUS = 'status';
 	const _DATE_CREATED = 'date_created';
 	

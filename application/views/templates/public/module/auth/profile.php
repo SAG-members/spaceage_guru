@@ -199,7 +199,24 @@
 									</select>
 								</div>
 								
-								<?php 
+								
+								<div class="form-group">
+									<label class="control-label">Search offers in Range (in kilometer)</label>
+								<div class="row">
+                					<div class="col-md-10">
+                						<div class="slidecontainer mar-t-15">
+                    						<input type="range" min="0" max="6371" value="<?php echo $profile->{User::_OFFER_IN_RADIUS}?>" class="slider" id="myRange">
+                    					</div>
+                					</div>    					
+                					<div class="col-md-2">
+                						<input type="text" class="form-control" name="kms-range" readonly value="<?php echo $profile->{User::_OFFER_IN_RADIUS}?>">
+                					</div>
+                				</div>
+                					<div class="clearfix"></div>
+                				</div>
+								
+								<?php
+								
 									$avtar = $profile->{User::_AVATAR_IMAGE} == "" ? '' : '<img src="'.base_url(Template::_PUBLIC_AVTAR_DIR.$profile->{User::_AVATAR_IMAGE}).'" width="120px;" height="120px"/>';?>
 								<div class="mar-t-20">
 									<div class="avtar-image-box">
@@ -442,6 +459,14 @@ $('input[type="text"][name="work-address"]').on('keyup', function(){
         $('input[type="hidden"][name="work-lat"]').val(latitude);
         $('input[type="hidden"][name="work-lng"]').val(longitude);
 	});
+});
+
+//Update the current slider value (each time you drag the slider handle)
+$("#myRange").on('input', function() {
+    var $this = $(this);
+
+    $("input[type='text'][name='kms-range']").val($this.val());	
+    
 });
 
 </script>

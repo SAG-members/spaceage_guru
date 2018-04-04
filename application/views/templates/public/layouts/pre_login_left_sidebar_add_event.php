@@ -200,12 +200,13 @@ $result = get_lat_lng_by_ip();
 			
 			<div class="form-group">
 				<div class="col-md-12">
-					<div id="map" style="height:200px;"></div>
+					<div id="map" style="height:400px;"></div>
 				</div>
 				<div class="clearfix"></div>
 			</div>
     		
     		<div class="form-group">
+    			<div class="row">
     			<div class="col-md-12">
     				<input type="hidden" name="edit_event_id" />
     				<input type="hidden" name="lat">
@@ -230,9 +231,26 @@ $result = get_lat_lng_by_ip();
         				<input type="hidden" name="current_lat">
         				<input type="hidden" name="current_lng">
         				<?php endif; ?>    				
-    				<?php endif;?>   				
+    				<?php endif;?>  
     				
+    				<div class="form-group">
+    					
+    					<div class="col-md-10">
+    						<label class="control-label">Set offer range (in kilometer)</label>
+    						<div class="slidecontainer mar-t-15">
+        						<input type="range" min="1" max="20037.5" value="0" class="slider" id="myRange">
+        					</div>
+    					</div>    					
+    					<div class="col-md-2">
+    						<input type="text" class="form-control" name="kms-range" readony>
+    					</div>
+    					<div class="clearfix"></div>
+    				</div>
+    				
+    				 				
+    				<div class="mar-t-20"></div>
     				<button type="submit" class="btn btn-success" name="update_comment" value="2">Save</button>
+				</div>
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -254,7 +272,7 @@ $result = get_lat_lng_by_ip();
 <link rel="stylesheet" href="<?php echo base_url('assets/css/jquery.datetimepicker.min.css'); ?>">
 <script src="<?php echo base_url(); ?>assets/js/jquery.datetimepicker.full.js"></script>
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEhsWhrYpbiuyOi2czg7P49ZW27Uow51c&libraries=places"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php echo $this->config->item('google_map_api_key'); ?>&libraries=places"></script>
 
 <script>
 
@@ -267,7 +285,6 @@ $(function(){
 
 	
 });
-
 
 $('button[type="submit"][name="update_comment"]').on('click', function(e){
 	e.preventDefault();
@@ -290,18 +307,7 @@ $('button[type="submit"][name="update_comment"]').on('click', function(e){
 	$('form[name="newEvent"]').submit();
 	
 		
-// 	var topic = $('input[type="text"][name="data_type"]').val();
-// 	var itemName = $('select[name="item_name"]').val();
-// 	var eventComment = $('textarea[name="event_comment"]').val();
-// 	var pctPrice = $('input[type="text"][name="pct_price"]').val();
-// 	var price = $('input[type="text"][name="price"]').val();
-// 	var priceCurrency = $('select[name="price-currency"]').val();
-// 	var paymentFrom = $('select[name="payment_from"]').val();
-// 	var deliveryMethod = $('select[name="delivery_method"]').val();
-// 	var paymentWhen = $('select[name="payment_when"]').val();
-// 	var escrowDateTime = $('select[name="escrow_date_time"]').val();
-// 	var hasDateTime = $('input[type="checkbox"][name="has_date_time"]').val();
-// 	var escrowType = $('input[type="text"][name="escrow_type"]').val();
+
 	
 });
 
@@ -348,6 +354,7 @@ var map;
 var infowindow;
 var marker;
 var center = new google.maps.LatLng(currentLat, currentLng);
+var circle;
 
 geocoder = new google.maps.Geocoder();
 
@@ -362,6 +369,8 @@ function initialize()
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
     marker = new google.maps.Marker({ map: map, position: center, draggable: true});
+
+    get_circle_in_map(100, marker);
 
     google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
     	geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
@@ -426,8 +435,7 @@ function codeAddress(address)
         		position: results[0].geometry.location,
         		draggable: true 
       		});
-
-
+    		
       		google.maps.event.addListener(marker, 'dragend', function() {
       			geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
       				if (status == google.maps.GeocoderStatus.OK) 
@@ -469,6 +477,7 @@ function createMarker(place)
 		infowindow.setContent(place.name);
 		infowindow.open(map, this);
 	});
+
 }
 
 function moveBus( map, marker ) {
@@ -518,6 +527,39 @@ $('button[type="button"][name="home-location"]').on('click', function(e){
 });
 
 
+$(function(){
+	console.log("Tesw");
+	$("input[type='text'][name='kms-range']").val($("#myRange").val());
+
+	
+});
+
+// Update the current slider value (each time you drag the slider handle)
+$("#myRange").on('input', function() {
+    var $this = $(this);
+
+    $("input[type='text'][name='kms-range']").val($this.val());
+
+    removeCircles();	
+    get_circle_in_map($this.val(), marker);
+});
+
+
+function get_circle_in_map(radius, marker)
+{	
+	circle = new google.maps.Circle({
+    	map: map,
+        radius:  radius*1000,    // 10 miles in metres
+        strokeOpacity:0.3
+    });
+    
+    circle.bindTo('center', marker, 'position');
+}
+
+function removeCircles()
+{
+	circle.setMap(null);	
+}
 
 
 

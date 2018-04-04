@@ -21,9 +21,14 @@ class Profile extends Application
 					
 	public function index()
 	{
-		if($this->input->post('country') && $this->input->post('user-id'))
+	    $response = array();
+	    
+		if($this->input->post('user-id'))
 		{
-			if($this->input->post('user-id') != $this->session->userdata('id')){ $this->message->setFlashMessage(Message::PROFILE_UPDATE_FAILURE); }
+			if($this->input->post('user-id') != $this->session->userdata('id')){ 
+			    $this->message->setFlashMessage(Message::PROFILE_UPDATE_FAILURE); 
+			    redirect(base_url('profile'));
+			}
 			else 
 			{
 			    
@@ -78,7 +83,10 @@ class Profile extends Application
 				
 				$this->user->set_event_default_address($this->input->post('user-id'), $preferredLocation);
 				
-				
+				$offerInRadius = $this->input->post('kms-range') ? $this->input->post('kms-range') : "";
+								
+				$this->user->set_offer_in_radius($this->input->post('user-id'), $offerInRadius);
+								
 				if($flag) $this->message->setFlashMessage(Message::PROFILE_UPDATE_SUCCESS, array('id'=>1));
 				else $this->message->setFlashMessage(Message::PROFILE_UPDATE_FAILURE);
 				

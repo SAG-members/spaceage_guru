@@ -367,6 +367,7 @@ class Library extends Application
 	        $address =  $this->input->post('address');
 	        $lat =  $this->input->post('lat');
 	        $lng =  $this->input->post('lng');
+	        $offerInRange = $this->input->post('kms-range') ? $this->input->post('kms-range') : 0;
 	        
 	        if($_FILES)
 	        {
@@ -413,7 +414,7 @@ class Library extends Application
 	            User_event_model::_ADDRESS => $address,
 	            User_event_model::_LAT => $lat,
 	            User_event_model::_LNG => $lng,
-	            
+	            User_event_model::_OFFER_RANGE => $offerInRange,
 	        );
 	        
 	        if($this->event->register_new_event($data))
@@ -706,6 +707,7 @@ class Library extends Application
             $address =  $this->input->post('address');
             $lat =  $this->input->post('lat');
             $lng =  $this->input->post('lng');
+            $offerInRange = $this->input->post('kms-range') ? $this->input->post('kms-range') : 0;
             
             if($_FILES)
             {
@@ -751,7 +753,7 @@ class Library extends Application
                 User_event_model::_ADDRESS => $address,
                 User_event_model::_LAT => $lat,
                 User_event_model::_LNG => $lng,
-                
+                User_event_model::_OFFER_RANGE => $offerInRange,
             );
             
             if($this->event->update_event($eventId, $data))
