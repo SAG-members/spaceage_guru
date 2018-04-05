@@ -64,6 +64,7 @@ class Page extends CI_Model
 	const _CATEGORY_AUDIO_VISUAL = 18;
 	const _CATEGORY_CURES = 19;
 	const _CATEGORY_LEAGAL_NOTE = 20;
+	const _CATEGORY_PCT = 21;
 	
 	
 	public function __construct()

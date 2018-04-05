@@ -477,6 +477,10 @@ class Library extends Application
         $result = $this->uesm->get_by_id($eventId, $userId);
         if(empty($result)) $this->uesm->register_event_status($eventId, $userId, $status);
         
+        
+        # Load pct setting model
+        $this->load->model('pct_setting');
+                
         $data['eventData'] = $this->uem->get_by_id($eventId);
         	        
         $data['accounts'] = $this->db->from('user')->get()->result();

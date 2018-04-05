@@ -2820,7 +2820,7 @@ class Webservice_controller extends CI_Controller
 			# since we have mulpile items associated with data we need to send all those back Ex data, submodilities, files and likes and dislikes
 			
 			$this->load->model('page');
-			$result = $this->page->get_data('', '', '', $this->input->post('user_id'));
+			$result = $this->page->get_user_data($this->input->post('user_id'));
 			$response = array('flag'=>1, 'data'=>$result);
 		}
 		else

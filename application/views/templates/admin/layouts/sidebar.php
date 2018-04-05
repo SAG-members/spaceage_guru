@@ -54,7 +54,7 @@
 					<ul class="nav child_menu">
 						
 						<li><a href="<?php echo base_url('admin/feedbacks');?>"><i class="fa fa-universal-access" aria-hidden="true"></i> Feedback </a></li>
-						<li><a href="<?php echo base_url('admin/paypal-setting');?>"><i class="fa fa-cc-paypal" aria-hidden="true"></i> Setting </a></li>
+						<!-- <li><a href="<?php //echo base_url('admin/paypal-setting');?>"><i class="fa fa-cc-paypal" aria-hidden="true"></i> Setting </a></li> -->						
 						<li><a href="<?php echo base_url('admin/change-password');?>"><i class="fa fa-lock" aria-hidden="true"></i> Change Password </a></li>
 					</ul>
 				</li>

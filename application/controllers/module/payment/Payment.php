@@ -363,4 +363,86 @@ class Payment extends Application
         redirect(base_url('e-business'));
     }
     
+    public function quick_paypal_pct_payment()
+    {               
+        $returnURL = base_url('quick/pay/success'); //payment success url
+        $cancelURL = base_url('payment/cancel'); //payment cancel url
+        $notifyURL = base_url('payment/ipn'); /// ipn url
+        
+        
+        # Load modal pct setting
+        $this->load->model('pct_setting');
+        
+        # Get PCT_EUR Rate
+        $sql = "SELECT * FROM pct_setting where real_currency in(SELECT id from currency where currency_code='EUR') AND status = 1";
+        $rateSetting = $this->db->query($sql)->row();
+        
+        $rate = 1;
+        if(!empty($rateSetting)){
+            $rate = $rateSetting->{pct_setting::_CONVERSION_RATE};
+        }
+        
+        $convertedAmount =  (int)$this->input->post('pct-amount')*$rate;
+        $amount = $this->input->post('pct-amount');
+        $redirectURL = $this->input->post('redirect-url');
+        
+        
+        $custom = "type=quick-pct-payment&amount=$amount&redirectUrl=$redirectURL";
+        
+        $this->paypal_lib->add_field('return', $returnURL);
+        $this->paypal_lib->add_field('cancel_return', $cancelURL);
+        $this->paypal_lib->add_field('notify_url', $notifyURL);
+        $this->paypal_lib->add_field('item_name', $this->input->post('item_name'));
+        $this->paypal_lib->add_field('item_number',  $this->input->post('item_id'));
+        $this->paypal_lib->add_field('custom',  $custom);
+        $this->paypal_lib->add_field('amount',  $convertedAmount);        
+        $this->paypal_lib->image(base_url('assets/img/logo.png'));
+        
+        $this->paypal_lib->paypal_auto_form();
+    }
+    
+    public function quick_paypal_pct_payment_success()
+    {
+        # Now since the payment is successfull, let's store the information and also add pct amount to wallet
+        
+        $this->load->model('page');
+        
+        # Load user subscription model
+        $this->load->model('user_subscription', 'subscription');
+        
+        $txnId = $this->input->post('txn_id');
+        $userId = $this->session->userdata('id');
+        $itemId = $this->input->post('item_number');
+        $itemName = $this->input->post('item_name');
+        $categoryId = Page::_CATEGORY_PCT;
+        $gross = $this->input->post('mc_gross');
+        $currency = $this->input->post('mc_currency');
+        
+        $date = new DateTime();
+        $date = $date->format('Y-m-d H:i:s');
+                
+        $this->subscription->create_subscription($txnId, $userId, $itemId, $itemName, $categoryId, $gross, $currency, "", $date, $date, 'Paypal', static::_SUBSCRIPTION_TYPE_PAID);
+        
+        parse_str($this->input->post('custom'));
+        
+        # Points to be added to wallet
+        $creditPoints = $amount;
+        
+        # Get current Wallet points
+        $userProfile = $this->user->getUserProfile($userId);
+        
+        $walletPoints = $userProfile->{User::_PCT_WALLET_AMOUNT};
+        
+        $amount = $walletPoints == 0 ? $creditPoints : ($creditPoints + $walletPoints);
+        
+        # Update wallet amount
+        $this->user->update_pct_wallet_amount($userId, $amount);
+                
+        $this->message->setFlashMessage(Message::PAYMENT_SUCCESS, array('id'=>'1'));
+        
+        redirect($redirectUrl);
+               
+        
+    }
+    
 }

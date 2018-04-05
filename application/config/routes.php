@@ -429,8 +429,10 @@ $route['escrow/pay/(:num)'] = 'module/services/library/pay_escrow/$1';
 $route['escrow-list'] = 'module/services/library/escrow_list';
 
 
-
-
+# quick pct payment
+$route['quick/pay'] = 'module/payment/payment/quick_paypal_pct_payment';
+$route['quick/pay/success'] = 'module/payment/payment/quick_paypal_pct_payment_success';
+$route['quick/pay'] = 'module/payment/payment/quick_paypal_pct_payment';
 
 
 
