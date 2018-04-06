@@ -96,8 +96,6 @@
     		      		</span>
     				</div>
         		</div>
-        		
-        		
         	</form>
         	<?php else : ?>
         	<a class="pull-right btn btn-danger button mar-t-20" href="<?php echo base_url('logout'); ?>">Logout</a>

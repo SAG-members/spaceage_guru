@@ -48,12 +48,13 @@ class Country extends CI_Model
 		
 	}
 	
-	public function get_by_id($id)
+	public function get_by_id($id, $field=null)
 	{
 	    $response = array();
 	    
 	    $this->db->from(Country::_TABLE);
 	    $this->db->where(static::_ID, $id);
+	    if($field) return $this->db->get()->row()->{$field};
 	    return $this->db->get()->row();
 	    
 	}

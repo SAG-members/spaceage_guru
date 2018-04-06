@@ -38,10 +38,10 @@ class Logout extends Base
 			$this->session->sess_destroy();
 
 			$this->message->setFlashMessage(Message::LOGOUT_SUCCESS, array('id'=>'1'));
-			redirect(base_url('login'));
+			redirect(base_url());
 		}
 		
-		redirect(base_url('login'));
+		redirect(base_url());
 	}
 	
 }

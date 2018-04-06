@@ -23,5 +23,7 @@ class Cms_page_controller extends Base
 		$this->template->render('cms/single.php', $data);
 	}
 	
+	
+	
 		
 }

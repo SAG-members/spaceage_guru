@@ -628,9 +628,11 @@ class Webservice_controller extends CI_Controller
 		else
 		{
 			$this->load->model('user');
-			
+			$this->load->model('country');
+						
 			$result = $this->user->getUserProfile($userId);
 			$result->membership_name = $this->user->get_user_membership($result->{User::_USER_MEMBERSHIP_LEVEL});
+			$result->country = $this->country->get_by_id($result->{User::_COUNTRY}, Country::_COUNTRY_NAME);
 			
 			if($result)
 			{

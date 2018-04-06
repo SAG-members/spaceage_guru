@@ -1,0 +1,70 @@
+@charset "utf-8";
+
+/* CSS Document */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Raleway', sans-serif !important;
+    font-size: 13px;
+    color: #3a3a3a;
+    font-weight: 400;
+}
+
+
+.main_wrap { width:100%; height:auto; margin:auto; max-width:1200px;}
+header { width:100%; height:auto; float:left; background:url(../images/head-bg.png); background-size:cover; padding:10px 0px;}
+.head-right-main { color:#fff; padding-top:19px;}
+.midbgmain { width:100%; height:auto; float:left; background:url(../images/mid-bg.png); background-size:cover; min-height:775px; position:relative;}
+.dnamain { width:auto; height:auto; position:absolute; right:40px; top:-37px;}
+.bottom-main { width:100%; height:auto; float:left;}
+.botttom-main { width:100%; height:auto; float:left; background:url(../images/bottom-bg.png); background-size:cover;  position:relative;}
+.bottom_pic {
+    width: auto;
+    height: auto;
+    position: absolute;
+    top:390px;
+    left: 349px;
+    right: 0px;
+    margin: auto;
+}
+
+.head-right-main input,button { color:#333; font-size:12px; min-height:25px;}
+.head-right-main a { color:#fff;}
+.head-right-main a:hover { color:#CCC;}
+
+
+.head-right-main span { width:100%; height:auto; float:left; text-align:right;}
+
+
+.hide1 { display:block; }
+
+.moon { width:124px; height:124px; text-align:center; padding-top:32px;}
+.head-right-main button { color:#000;}
+
+.head-right-main input, button { margin-bottom:13px;}
+.santa { width:auto; height:auto; float:right;}
+
+
+
+.btd { background:none !important; border:none !important;}
+
+.btd.dropdown-toggle { padding:0px !important;}
+.left-dropdown { left:0px !important;}
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
