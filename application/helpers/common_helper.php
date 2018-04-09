@@ -188,3 +188,4 @@ function get_color($index)
 	$color=array('White','Red','Orange','Gold','Green','Blue','Pink','Indigo','Red','Violet','Rainbow');
 	return $color[$index];
 }
+

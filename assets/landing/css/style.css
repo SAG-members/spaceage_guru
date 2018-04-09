@@ -9,10 +9,11 @@ body {
     font-size: 13px;
     color: #3a3a3a;
     font-weight: 400;
+	
 }
 
 
-.main_wrap { width:100%; height:auto; margin:auto; max-width:1200px;}
+.main_wrap { width:100%; height:auto; margin:auto; max-width:1304px;}
 header { width:100%; height:auto; float:left; background:url(../images/head-bg.png); background-size:cover; padding:10px 0px;}
 .head-right-main { color:#fff; padding-top:19px;}
 .midbgmain { width:100%; height:auto; float:left; background:url(../images/mid-bg.png); background-size:cover; min-height:775px; position:relative;}
@@ -23,8 +24,8 @@ header { width:100%; height:auto; float:left; background:url(../images/head-bg.p
     width: auto;
     height: auto;
     position: absolute;
-    top:390px;
-    left: 349px;
+    top: 470px;
+    left: 469px;
     right: 0px;
     margin: auto;
 }
@@ -37,7 +38,7 @@ header { width:100%; height:auto; float:left; background:url(../images/head-bg.p
 .head-right-main span { width:100%; height:auto; float:left; text-align:right;}
 
 
-.hide1 { display:block; }
+.hide1 { display:block; width:100%; height:auto;}
 
 .moon { width:124px; height:124px; text-align:center; padding-top:32px;}
 .head-right-main button { color:#000;}

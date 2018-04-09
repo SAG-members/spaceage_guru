@@ -16,6 +16,9 @@ class Landing_controller extends Base
 	{
 	    $data = array();
 	    
+	    # Load cms model
+	    $this->load->model('cms');
+	    
 	    $this->template->title('Sparring humankind to space age');
 		$this->template->render('landing', $data);
 	}

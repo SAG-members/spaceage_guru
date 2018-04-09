@@ -638,11 +638,11 @@ function getWikiSearchResult(e)
 				html +='<tbody>';
 					
 				$(data.result).each(function(k,v){
-					var regex = /(<([^>]+)>)/ig
-					// Check Description Length
-//						var result = body.replace(regex, "");
-					description = v.page_description.replace(regex,"");
-					if(description.length > 100) {description = description.substring(0,100);};
+//					var regex = /(<([^>]+)>)/ig
+//					// Check Description Length
+////						var result = body.replace(regex, "");
+//					description = v.page_description.replace(regex,"");
+//					if(description.length > 100) {description = description.substring(0,100);};
 					html +='<tr>';
 						html +='<td><a href="'+BASE_URL+'user/data/'+v.page_slug+'">'+v.page_title+'</a></td>';
 //						html +='<td>'+description+'</td>';

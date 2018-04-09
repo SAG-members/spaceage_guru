@@ -163,7 +163,7 @@ class Page extends CI_Model
 	{
 		$response = array();
 		
-		$this->db->select('page_title, page_description, page_slug, tag, category_id');
+		$this->db->select('page_title, page_slug, tag, category_id');
 		$this->db->from(static::_TABLE);
 		$this->db->where(static::_STATUS, 1);
 				

@@ -22,6 +22,11 @@
 header { width:100%; height:auto; float:left; background:url(<?php echo base_url('assets')?>/img/head-bg.png); background-size:cover; padding:10px 0px;}
 .midbgmain { width:100%; height:auto; float:left; background:url(<?php echo base_url('assets')?>/img/mid-bg.png); background-size:cover; min-height:775px; position:relative;}
 .botttom-main { width:100%; height:auto; float:left; background:url(<?php echo base_url('assets')?>/img/bottom-bg.png); background-size:cover;  position:relative;}
+.dropdown-menu>li>a { display: inline-block !important;}
+.dropdown-menu { min-width:210px !important;}
+
+ul.dropdown-menu li{}
+
 </style>
 <body>
 <div class="main_wrap">
@@ -35,35 +40,9 @@ header { width:100%; height:auto; float:left; background:url(<?php echo base_url
 					?>
 					<div class="moon" style="background:url(<?php echo $backgroungImage;?>) no-repeat;">
 					<?php if(!$this->session->userdata('id')) : ?>
-        			<a title="We are building a global spiritual platform to earn your livelyhood while doing things that one loves to do.
-                    At the same we are searching and creating new optimal flows and emotions which we record as
-                    vibrations and mathematic formulas to our blockchain and together in our community seek the solutions
-                    to heal the inpurities and abnormalities in the human DNA, at the same we use the communitys
-                    processing power to ignite hidden genes in the users DNA to bring us to the next level combining our
-                    timelines. And living as one." alt="We are building a global spiritual platform to earn your livelyhood while doing things that one loves to do.
-                    At the same we are searching and creating new optimal flows and emotions which we record as
-                    vibrations and mathematic formulas to our blockchain and together in our community seek the solutions
-                    to heal the inpurities and abnormalities in the human DNA, at the same we use the communitys
-                    processing power to ignite hidden genes in the users DNA to bring us to the next level combining our
-                    timelines. And living as one.">WHAT</a><br>
-					<a href="We are a global company based on Talinn,Estonia ; Helsinki, Finland and London, England. Our target
-					market is the following 35 key countries:
-					US, (California, Arizona, Hawaiji) ; Mexico ; Peru ; Bolivia ; Brazil ; Australia ; Indonesia ; New-
-					Zealand ; England ; Russia ; Denmark ; India ; Nepal ; Thailand ; Egypt ; Israel ; Jordan ; Ethiopia ;
-					Hungary ; Afganistan ; Iran ; Pakistan ; China (Tibet area) ; Japan ; South-Africa ; Zimbabwe ; Algeria ;
-					Bermuda ; Easter Island ; Spain ; Germany ; Turkey ; Italy ; Thailand
-					From which each has its own significant meaning in the greater plan." title="We are a global company based on Talinn,Estonia ; Helsinki, Finland and London, England. Our target
-					market is the following 35 key countries:
-					US, (California, Arizona, Hawaiji) ; Mexico ; Peru ; Bolivia ; Brazil ; Australia ; Indonesia ; New-
-					Zealand ; England ; Russia ; Denmark ; India ; Nepal ; Thailand ; Egypt ; Israel ; Jordan ; Ethiopia ;
-					Hungary ; Afganistan ; Iran ; Pakistan ; China (Tibet area) ; Japan ; South-Africa ; Zimbabwe ; Algeria ;
-					Bermuda ; Easter Island ; Spain ; Germany ; Turkey ; Italy ; Thailand
-					From which each has its own significant meaning in the greater plan.">WHERE</a><br>
-					<a href="<?php echo base_url('register'); ?>" alt="After you register you get your own number account and access to the program, The registration takes
-                    about 1-2 minutes and ignites the communitys algorithm to aid you to achieve and get everything you
-                    want and to place it on your timeline!" title="After you register you get your own number account and access to the program, The registration takes
-                    about 1-2 minutes and ignites the communitys algorithm to aid you to achieve and get everything you
-                	want and to place it on your timeline!">HOW
+        			<a alt="<?php echo strip_tags($this->cms->get_by_slug('what', Cms::_CONTENT))?>" title="<?php echo strip_tags($this->cms->get_by_slug('what', Cms::_CONTENT))?>" href="<?php echo base_url('what')?>" target="_blank">WHAT</a><br>
+					<a alt="<?php echo strip_tags($this->cms->get_by_slug('where', Cms::_CONTENT))?>" title="<?php echo strip_tags($this->cms->get_by_slug('where', Cms::_CONTENT))?>"  href="<?php echo base_url('where')?>"  target="_blank">WHERE</a><br>
+					<a alt="<?php echo strip_tags($this->cms->get_by_slug('how', Cms::_CONTENT))?>" title="<?php echo strip_tags($this->cms->get_by_slug('how', Cms::_CONTENT))?>"  href="<?php echo base_url('how')?>"  target="_blank">HOW
                 	</a>
         			<?php else :?>
         			<div class="dropdown">
@@ -76,7 +55,7 @@ header { width:100%; height:auto; float:left; background:url(<?php echo base_url
                         	<li><a href="<?php echo base_url('feedback'); ?>">Feedback</a></li>
                         	<li><a href="<?php echo base_url('faq'); ?>">FAQ</a></li>
                         	<li><a href="<?php echo base_url('e-business'); ?>">E-Business</a></li>
-                        	<li><a href="<?php echo base_url('logout'); ?>">Logout</a></li>
+                        	
                       	</ul>
                     </div>
         			<?php endif; ?>
@@ -105,8 +84,21 @@ header { width:100%; height:auto; float:left; background:url(<?php echo base_url
               				<ul class="dropdown-menu">
                 				<li><a href="<?php echo base_url('timeline'); ?>">Timeline</a></li>
             					<li><a href="<?php echo base_url('profile'); ?>">Profile</a></li>
-                				<li><a href="<?php echo base_url('whitepaper'); ?>">Whitepaper</a></li>                				
-                				<li><a href="<?php echo base_url('user/dashboard')?>">Personal Channel</a></li>                				
+                				<li><a href="<?php echo base_url('whitepaper'); ?>">Whitepaper</a></li>
+                				<li>
+                					<a href="<?php echo base_url('whitepaper'); ?>">Tasks</a>
+                					<a class="pull-right"  href="<?php echo base_url('profile')?>"><i class="fa fa-plus"></i></a>
+                				</li>
+                				<li>
+                					<a href="<?php echo base_url('whitepaper'); ?>">Goals & Dreams</a>
+                					<a class="pull-right"  href="<?php echo base_url('profile')?>"><i class="fa fa-plus"></i></a>
+                				</li>
+                				<li>
+                    				<a href="<?php echo base_url('user/dashboard')?>">Personal Channel</a>
+                    				<a class="pull-right" href="<?php echo base_url('user/add/data')?>"><i class="fa fa-plus"></i></a>                    				
+                				</li>
+                				<li><a href="<?php echo base_url('user/dashboard')?>">Communication</a></li>
+                				<li><a href="<?php echo base_url('user/dashboard')?>">Chat</a></li>                				
               				</ul>
             			</div>
             		</div>

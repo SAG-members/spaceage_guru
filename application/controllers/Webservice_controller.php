@@ -3019,7 +3019,7 @@ class Webservice_controller extends CI_Controller
 		
 		# Load Results From Products Based On Search
 		$this->load->model('page');
-		$result = $this->page->search_data($membeshipLevel, $search, $categories, $tags);
+		$result = $this->page->search_data(trim($membeshipLevel), trim($search), trim($categories), trim($tags));
 		
 		if($result)$response = array('flag'=>1, 'result'=>$result);
 		else $response = array('flag'=>0, 'message'=>'No Result Found');

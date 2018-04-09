@@ -78,6 +78,10 @@ $route['intro'] = 'cms_page_controller';
 $route['lean-canvas-spaceage-guru'] = 'cms_page_controller';
 $route['club-laws'] = 'cms_page_controller';
 $route['whitepaper'] = 'cms_page_controller';
+$route['what'] = 'cms_page_controller';
+$route['where'] = 'cms_page_controller';
+$route['how'] = 'cms_page_controller';
+    
 // $route['timeline'] = 'cms_page_controller';
 #$route['introduction-to-spageage-guru'] = 'cms_page_controller';
 

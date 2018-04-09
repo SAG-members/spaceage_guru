@@ -39,13 +39,14 @@ class Cms extends CI_Model
 		return $response;
 	}
 	
-	public function get_by_slug($slug)
+	public function get_by_slug($slug, $field=null)
 	{
 		$response = array();
 		
 		$this->db->select('*');
 		$this->db->from(static::_TABLE);
 		$this->db->where(static::_SLUG,$slug);
+		if($field) return $this->db->get()->row()->{$field};
 		$response = $this->db->get()->row();
 		
 		return $response;
