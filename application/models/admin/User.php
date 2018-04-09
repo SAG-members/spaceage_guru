@@ -7,50 +7,74 @@ class User extends CI_Model
 	 * line of changes applies to whole class.
 	 */
 	
-	const _TABLE = 'user';
-	const _ID = 'id';
-	const _F_NAME = 'f_name';
-	const _M_NAME = 'm_name';
-	const _L_NAME = 'l_name';
-	const _USERNAME = 'username';
-	const _EMAIL = 'email';
-	const _SECONDARY_EMAIL = 'secondary_email';
-	const _PASSWORD = 'password';
-	const _SECRET_QUESTION = 'secret_question';	 
-	const _SECRET_QUESTION_ANSWER = 'secret_question_answer';
-	const _AVATAR_NAME = 'avatar_name';
-	const _AVATAR_IMAGE = 'avatar_image';
-	const _WHAT_ARE_YOU = 'what_are_you';
-	const _WHAT_YOU_WANT_TO_BECOME = 'what_you_want_to_become';
-	const _USER_GROUP = 'user_group';
-	const _USER_MEMBERSHIP_LEVEL = 'membership_level';
-	const _MOBILE = 'mobile';
-	const _STATUS = 'status';
-	const _ADDRESS = 'address';
-	const _COUNTRY = 'country'; 
-	const _RECOMMENDOR = 'recommendor';
-	const _IS_LOGGED_IN = 'is_logged_in';
-	const _LOGGED_COOKIE = 'logged_cookie';
-	const _DATE_CREATED = 'date_created';
-	const _LAST_LOGIN = 'last_login';
-	const _MODIFIED_BY = 'modified_by';
-	const _MODIFIED_DATE = 'modified_date';
-	
-	const USER_GROUP_LEVEL_ADMINISTRATOR = 1;
-	const USER_GROUP_LEVEL_USER = 2;
-	
-	const VISIBILITY_SIGNED_USER = 1;
-	const VISIBILITY_REGISTERED_USER = 2;
-	const VISIBILITY_UPGRADED_USER = 3;
-	const VISIBILITY_MEMBERSHIP_A_USER = 4;
-	const VISIBILITY_MEMBERSHIP_B_USER = 5;
-	const VISIBILITY_MEMBERSHIP_C_USER = 6;
-	
-	const USER_LOGGED_IN = 1;
-	const USER_LOGGED_OUT = 0;
-	
-	const USER_ACTIVE = 1;
-	const USER_INACTIVE = 0;
+    const _TABLE = 'user';
+    const _ID = 'id';
+    const _PCT_WALLET_AMOUNT = 'pct_wallet_amount';
+    const _F_NAME = 'f_name';
+    const _M_NAME = 'm_name';
+    const _L_NAME = 'l_name';
+    const _E_WALLET_ADDRESS = 'e_wallet_address';
+    const _USERNAME = 'username';
+    const _EMAIL = 'email';
+    const _SECONDARY_EMAIL = 'secondary_email';
+    const _PASSWORD = 'password';
+    const _SECRET_QUESTION = 'secret_question';
+    const _SECRET_QUESTION_ANSWER = 'secret_question_answer';
+    const _AVATAR_NAME = 'avatar_name';
+    const _AVATAR_IMAGE = 'avatar_image';
+    const _GENDER = 'gender';
+    const _WHAT_ARE_YOU = 'what_are_you';
+    const _WHAT_YOU_WANT_TO_BECOME = 'what_you_want_to_become';
+    const _WHAT_DO_YOU_NEED = 'what_do_you_need';
+    const _PROBLEM_PREVENTING = 'problem_preventing';
+    const _USER_GROUP = 'user_group';
+    const _USER_MEMBERSHIP_LEVEL = 'membership_level';
+    const _MOBILE = 'mobile';
+    const _STATUS = 'status';
+    const _ADDRESS = 'address';
+    const _COUNTRY = 'country';
+    const _HOME_ADDRESS = 'home_address';
+    const _HOME_LAT = 'home_lat';
+    const _HOME_LNG = 'home_lng';
+    const _WORK_ADDRESS = 'work_address';
+    const _WORK_LAT = 'work_lat';
+    const _WORK_LNG = 'work_lng';
+    const _CURRENCY = 'currency';
+    const _RECOMMENDOR = 'recommendor';
+    const _EVENT_DEFAULT_ADDRESS = 'event_default_address';
+    const _OFFER_IN_RADIUS = 'offer_in_radius';
+    const _IS_LOGGED_IN = 'is_logged_in';
+    const _LOGGED_COOKIE = 'logged_cookie';
+    const _DATE_CREATED = 'date_created';
+    const _LAST_LOGIN = 'last_login';
+    const _SUGGESTION_REQUIRED = 'suggestion_required';
+    const _MODIFIED_BY = 'modified_by';
+    const _MODIFIED_DATE = 'modified_date';
+    
+    const USER_GROUP_LEVEL_ADMINISTRATOR = 1;
+    const USER_GROUP_LEVEL_USER = 2;
+    
+    const VISIBILITY_SIGNED_USER = 1;
+    const VISIBILITY_REGISTERED_USER = 2;
+    const VISIBILITY_UPGRADED_USER = 3;
+    const VISIBILITY_MEMBERSHIP_A_USER = 4;
+    const VISIBILITY_MEMBERSHIP_B_USER = 5;
+    const VISIBILITY_MEMBERSHIP_C_USER = 6;
+    
+    
+    const USER_LOGGED_IN = 1;
+    const USER_LOGGED_OUT = 0;
+    
+    const USER_ACTIVE = 1;
+    const USER_INACTIVE = 0;
+    
+    const GENDER_MALE = 1;
+    const GENDER_FEMALE = 2;
+    const GENDER_TRANSGENDER = 3;
+    
+    const EVENT_HOME_LOCATION = 1;
+    const EVENT_WORK_LOCATION = 2;
+    const EVENT_CURRENT_LOCATION = 3;
 	
 	public function __construct()
 	{

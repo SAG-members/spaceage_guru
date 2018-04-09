@@ -131,6 +131,8 @@ class Webservice_controller extends CI_Controller
 	const AJAX_GET_TRANSACTION_HISTORY = 'transaction_history';
 	const AJAX_GET_WALLET_AMOUNT = 'wallet_amount';
 	
+	const AJAX_GET_COMMUNICATION_OFFERS = 'get_offers';
+	
 	
 	public function __construct()
 	{
@@ -268,6 +270,9 @@ class Webservice_controller extends CI_Controller
 			case self::AJAX_PCT_WALLET_PAYMENT : $response = $this->process_pct_payment($payload); break;
 			case self::AJAX_GET_TRANSACTION_HISTORY : $response = $this->get_transaction_history($payload); break;
 			case self::AJAX_GET_WALLET_AMOUNT : $response = $this->get_wallet_amount($payload); break;
+			
+			
+			case self::AJAX_GET_COMMUNICATION_OFFERS : $response = $this->get_communication_offers($payload); break;
 		}
 		
 		echo json_encode($response);
@@ -3691,6 +3696,50 @@ class Webservice_controller extends CI_Controller
 	        $response = array('flag'=>0, 'message'=>'No Such User exists');
 	    }
 	    	    
+	    return $response;
+	}
+	
+	public function get_communication_offers($payload)
+	{
+	    $response = array();
+	    
+	    if(empty($this->input->post('user_id')))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    
+	    # Load user event model
+	    $this->load->model('user_event_model','user_event');
+	    $this->load->model('user_event_status_model','user_event_status');
+	    $this->load->model('page');
+	    
+	    $userId = $this->input->post('user_id');
+	    	    
+	    $communicationData = $this->user_event->get_communication_data($userId);
+	    
+	    if(!empty($communicationData))
+	    {
+	        foreach ($communicationData as $c)
+	        {
+	            $output = array();
+	            if($this->user_event_status->get_by_id($c->id, $userId) > 0) continue;
+	            
+	            $output['id'] = $c->id;
+	            $output['title'] = $this->page->get_by_id($c->item_id, Page::_PAGE_TITLE);
+	            $output['comment'] = $c->comment;
+	            $output['address'] = $c->address;
+	            $output['price'] = $c->pct_price;
+	            $output['hasExpiry'] = $c->has_expiry_date;
+	            $output['expiryDate'] = $c->expiry_date;
+	            
+	            
+	            $response[] = $output;
+	        }
+	        
+	        $response = array('flag'=>1, 'offers'=>$response);
+	    }
+	    
 	    return $response;
 	}
 	

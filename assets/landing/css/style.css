@@ -13,7 +13,7 @@ body {
 }
 
 
-.main_wrap { width:100%; height:auto; margin:auto; max-width:1304px;}
+.main_wrap { width:100%; height:auto; margin:auto; max-width:1920px; overflow:hidden;}
 header { width:100%; height:auto; float:left; background:url(../images/head-bg.png); background-size:cover; padding:10px 0px;}
 .head-right-main { color:#fff; padding-top:19px;}
 .midbgmain { width:100%; height:auto; float:left; background:url(../images/mid-bg.png); background-size:cover; min-height:775px; position:relative;}
@@ -24,8 +24,8 @@ header { width:100%; height:auto; float:left; background:url(../images/head-bg.p
     width: auto;
     height: auto;
     position: absolute;
-    top: 470px;
-    left: 469px;
+    top: 55%;
+    left: 36%;
     right: 0px;
     margin: auto;
 }
@@ -52,6 +52,16 @@ header { width:100%; height:auto; float:left; background:url(../images/head-bg.p
 
 .btd.dropdown-toggle { padding:0px !important;}
 .left-dropdown { left:0px !important;}
+
+.nav {
+    position: relative;
+    right: 20px;
+    width: 100%;
+    z-index: 9;
+    top: 30%;
+    padding-left: 10px;
+    width: 100%;
+}
 
 
 

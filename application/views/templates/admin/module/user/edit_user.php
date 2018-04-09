@@ -87,7 +87,7 @@
 									<div class="col-md-6">
 										<label>User Type</label>
 										<?php $u =  new User();?>
-										<select class="form-control" name="user_type">
+										<select class="form-control mar-b-20" name="user_type">
 											<?php for($i=1; $i<=2; $i++):?>
 												<?php $selected = ''; if($user->{User::_USER_GROUP} == $i) $selected='selected="selected"';?>
 												<option value="<?php echo $i?>" <?php echo $selected;?>><?php echo $u->get_user_level($i)?></option>
@@ -97,7 +97,7 @@
 									</div>
 									<div class="col-md-6">
 										<label>Membership Type</label> 
-										<select class="form-control" name="membership_type">
+										<select class="form-control mar-b-20" name="membership_type">
 											<?php for($i=1; $i<=6; $i++):?>
 												<?php $selected = ''; if($user->{User::_USER_MEMBERSHIP_LEVEL} == $i) $selected='selected="selected"';?>
 												<option value="<?php echo $i?>" <?php echo $selected;?>><?php echo $u->get_user_membership($i)?></option>
@@ -109,11 +109,22 @@
 								<div class="row">
 									<div class="col-md-6">
 										<label>What are you</label>
-										<textarea readonly style="display: block; width:100%";><?php echo $user->{User::_WHAT_ARE_YOU}?></textarea>
+										<textarea class="mar-b-20" readonly style="display: block; width:100%";><?php echo $user->{User::_WHAT_ARE_YOU}?></textarea>
 									</div>
 									<div class="col-md-6">
 										<label>What do you want to become</label>
-										<textarea readonly style="display: block; width:100%";><?php echo $user->{User::_WHAT_YOU_WANT_TO_BECOME}?></textarea> 
+										<textarea class="mar-b-20"  readonly style="display: block; width:100%";><?php echo $user->{User::_WHAT_YOU_WANT_TO_BECOME}?></textarea> 
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="col-md-6">
+										<label>What do you need</label>
+										<textarea  class="mar-b-20" readonly style="display: block; width:100%";><?php echo $user->{User::_WHAT_DO_YOU_NEED}?></textarea>
+									</div>
+									<div class="col-md-6">
+										<label>Security Question</label>
+										<textarea  class="mar-b-20" readonly style="display: block; width:100%";><?php echo $user->{User::_SECRET_QUESTION}?></textarea> 
 									</div>
 								</div>
 								
