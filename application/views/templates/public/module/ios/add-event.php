@@ -35,6 +35,8 @@ $result = get_lat_lng_by_ip();
 }
 </style>
 <section id="midmain">
+<?php if($this->session->flashdata('welcome-message')){echo '<div class="message-box">'. $this->session->flashdata('welcome-message') .'</div>';}?>
+<?php if($this->message->hasFlashMessage()) $this->message->printFlashMessage();?>
 <div class="leftmain" style="height:auto">
 		
 	<h4 class="modal-title text-center">Add Event</h4>
