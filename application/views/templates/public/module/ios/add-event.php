@@ -2,6 +2,8 @@
 // $lockIcon = 'fa fa-lock';
 $lockIcon = '';
 
+$userId = $this->input->get('user-id');
+
 if($this->session->userdata('user_id')) $lockIcon = '';
 $result = get_lat_lng_by_ip();
 
@@ -32,18 +34,11 @@ $result = get_lat_lng_by_ip();
   opacity: 1;
 }
 </style>
-<div class="leftmain">
-	<ul class="left-menu-items">
-		<li class="text-center menu-li-style"><a href="<?php echo base_url();?>">HOME</a></li>		
-		<li class="text-center menu-li-style">
-			<i class="pull-left <?php echo $lockIcon; ?>"></i> Data
-			<a class="pull-right add-pss" href="<?php echo base_url('user/dashboard#myProducts');?>" title="View My Data" alt="View My Data"><i class="fa fa-bars"></i> </a>
-			<a class="pull-right add-pss" href="<?php echo base_url('user/add/data');?>" title="Add Data" alt="Add Data"><i class="fa fa-plus"></i> </a>			
-		</li>		
-	</ul>
-	
-	<h4 class="modal-title">Add Event</h4>
-	<form name="newEvent" method="post" action="<?php echo base_url('add/new/event'); ?>" enctype="multipart/form-data">
+<section id="midmain">
+<div class="leftmain" style="height:auto">
+		
+	<h4 class="modal-title text-center">Add Event</h4>
+	<form name="newEvent" method="post" action="<?php echo base_url('add/event?user-id='.$userId); ?>" enctype="multipart/form-data">
 	<div class="form-group font-10 mar-t-10">
 		<div clas="col-md-12">
 			<div class="form-group">
@@ -55,7 +50,7 @@ $result = get_lat_lng_by_ip();
         			<label style="color: #FFF;">Item</label> 
         			<select class="form-control" name="item_name" >
         				<option value="0">Select</option>
-        				<?php if($leftSideData['datas']) : foreach ($leftSideData['datas'] as $d):?>
+        				<?php if($datas) : foreach ($datas as $d):?>
         				<option value="<?php echo $d->{Page::_ID} ?>"><?php echo $d->{Page::_PAGE_TITLE} ?></option>
         				<?php endforeach; endif; ?>
         			</select>        									  		
@@ -92,8 +87,8 @@ $result = get_lat_lng_by_ip();
             				<input type="text" name="price" class="form-control" readonly>
             				<div class="input-group-addon" style="padding: 0;">
                                 <select name="price_currency" style="height: 32px;">
-                                	<?php if($leftSideData['currencyRates']): foreach ($leftSideData['currencyRates'] as $r) : ?>
-                                		<?php $selected = ""; if($r->{pct_setting::_CURRENCY} == $leftSideData['profile']->{User::_CURRENCY}) $selected = "selected";?>
+                                	<?php if($currencyRates): foreach ($currencyRates as $r) : ?>
+                                		<?php $selected = ""; if($r->{pct_setting::_CURRENCY} == $profile->{User::_CURRENCY}) $selected = "selected";?>
                                 		<option <?php echo $selected; ?> value="<?php echo $r->{pct_setting::_CURRENCY} ?>" data-rate="<?php echo $r->{pct_setting::_CONVERSION_RATE}?>">
                                 		<?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_NAME); ?>-
                                 		<?php echo $this->currency->get_by_id($r->{pct_setting::_CURRENCY}, Currency::_CURRENCY_SYMBOL); ?>
@@ -146,7 +141,7 @@ $result = get_lat_lng_by_ip();
         		   		
         		<div class="col-md-6">
     				<label style="color: #FFF;">Date Time</label>
-    				<?php if($this->session->userdata('membershipLevel') > 3) :?>
+    				<?php if($profile->{User::_USER_MEMBERSHIP_LEVEL} > 3) :?>
     				<input type="checkbox" name="has_date_time" checked data-toggle="toggle">  
     				<?php endif; ?>
     				<input type="text" name="escrow_date_time" class="form-control"/>
@@ -197,6 +192,7 @@ $result = get_lat_lng_by_ip();
     			</div>
     			<div class="clearfix"></div>
 			</div>
+			<div class="clearfix"></div>
 			
 			<div class="form-group">
 				<div class="col-md-12">
@@ -212,14 +208,14 @@ $result = get_lat_lng_by_ip();
     				<input type="hidden" name="lat">
     				<input type="hidden" name="lng">
     				
-    				<?php if($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} != 0):?>
-    					<?php if($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} == 1) :?>
-        					<input type="hidden" name="current_lat" value="<?php echo $leftSideData['profile']->{User::_HOME_LAT}; ?>">
-        					<input type="hidden" name="current_lng" value="<?php echo $leftSideData['profile']->{User::_HOME_LNG}; ?>">	
-    					<?php elseif ($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} == 2) :?>
-    						<input type="hidden" name="current_lat" value="<?php echo $leftSideData['profile']->{User::_WORK_LAT}; ?>">
-    						<input type="hidden" name="current_lng" value="<?php echo $leftSideData['profile']->{User::_WORK_LNG}; ?>">
-    					<?php elseif ($leftSideData['profile']->{User::_EVENT_DEFAULT_ADDRESS} == 3) :?>
+    				<?php if($profile->{User::_EVENT_DEFAULT_ADDRESS} != 0):?>
+    					<?php if($profile->{User::_EVENT_DEFAULT_ADDRESS} == 1) :?>
+        					<input type="hidden" name="current_lat" value="<?php echo $profile->{User::_HOME_LAT}; ?>">
+        					<input type="hidden" name="current_lng" value="<?php echo $profile->{User::_HOME_LNG}; ?>">	
+    					<?php elseif ($profile->{User::_EVENT_DEFAULT_ADDRESS} == 2) :?>
+    						<input type="hidden" name="current_lat" value="<?php echo $profile->{User::_WORK_LAT}; ?>">
+    						<input type="hidden" name="current_lng" value="<?php echo $profile->{User::_WORK_LNG}; ?>">
+    					<?php elseif ($profile->{User::_EVENT_DEFAULT_ADDRESS} == 3) :?>
         					<input type="hidden" name="current_lat" value="<?php echo $result->latitude; ?>">
     						<input type="hidden" name="current_lng" value="<?php echo $result->longitude; ?>">
     					<?php endif;?>    					
@@ -241,16 +237,18 @@ $result = get_lat_lng_by_ip();
         						<input type="range" min="1" max="20037.5" value="0" class="slider" id="myRange">
         					</div>
     					</div>    					
-    					<div class="col-md-2">
+    					<div class="col-md-2 mar-t-20">
     						<input type="text" class="form-control" name="kms-range" readony>
     					</div>
     					<div class="clearfix"></div>
     				</div>
     				
-    				 				
+    				<div class="text-center"> 				
     				<div class="mar-t-20"></div>
-    				<input type="hidden" name="user-id" value="<?php echo $this->session->userdata('id'); ?>">
+    				<input type="hidden" name="device" value="mobile">
+    				<input type="hidden" name="user-id" value="<?php echo $this->input->get('user-id'); ?>">
     				<button type="submit" class="btn btn-success" name="update_comment" value="2">Save</button>
+    				</div>
 				</div>
 				</div>
 				<div class="clearfix"></div>
@@ -261,15 +259,27 @@ $result = get_lat_lng_by_ip();
 		<div class="clearfix"></div>
 	</div>
 	</form>
-	<div class="clearfix"></div>
-	
-	
-	
+	<div class="clearfix"></div>	
 </div>	
 
-<link rel="stylesheet" href="<?php echo base_url('assets/css/select2/select2.min.css'); ?>">
-<script src="<?php echo base_url(); ?>assets/js/plugin/select2/select2.full.min.js"></script>
+</section>
 
+<link rel="stylesheet" href="<?php echo base_url('assets/css/custom.css'); ?>">
+<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap/bootstrap.min.css'); ?>">
+<link rel="stylesheet" href="<?php echo base_url('assets/css/font-awesome.css'); ?>">
+<link rel="stylesheet" href="<?php echo base_url('assets/css/select2/select2.min.css'); ?>">
+
+
+
+<script>BASE_URL='<?php echo base_url(); ?>'; </script>
+
+<script src="<?php echo base_url(); ?>assets/js/jquery/jquery.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/bootstrap/bootstrap.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/jquery-ui.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/moment.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/plugin/classy/js/jquery.classyedit.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/app.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/plugin/select2/select2.full.min.js"></script>
 <link rel="stylesheet" href="<?php echo base_url('assets/css/jquery.datetimepicker.min.css'); ?>">
 <script src="<?php echo base_url(); ?>assets/js/jquery.datetimepicker.full.js"></script>
 

@@ -22,7 +22,20 @@ $(function(){
 	
 	/* Enable Summernote Editor */
 	$('#summernote').summernote({
-				height: 300,disableResizeEditor: true});
+		 toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'italic', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['fontsize', ['fontsize']], // Still buggy
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],		        
+		        ['table', ['table']],
+		        ['insert', ['link', 'picture', 'video']],
+		        ['view', ['fullscreen', 'codeview']],
+		        ['help', ['help']]
+		      ],
+		height: 300,disableResizeEditor: true
+	});
 	
 	/* Enable Tag Inputs */
 	$('#tags_1').tagsInput({width: 'auto'});

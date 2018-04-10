@@ -346,7 +346,7 @@ class Library extends Application
 	        # Load user event model
 	        $this->load->model('user_event_model', 'event');
 	        
-	        $userId = $this->session->userdata('id');
+	        $userId = $this->input->post('user-id');
 	        $topic = $this->input->post('data_type');
 	        $itemId = $this->input->post('item_name');
 	        $priceCurrency =  $this->input->post('price_currency');
@@ -424,6 +424,11 @@ class Library extends Application
 	        else
 	        {
 	            $this->message->setFlashMessage(Message::EVENT_CREATE_FAILURE);
+	        }
+	        
+	        if($this->input->post('device') && $this->input->post('device') == "mobile")
+	        {
+	            redirect('add/event?user-id='.$userId);
 	        }
 	        
 	        redirect('profile');

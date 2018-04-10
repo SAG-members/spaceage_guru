@@ -239,6 +239,7 @@ $route['profile/update-wpq-ios'] = 'welcome/update_user_wpq_ios';
 # CALENDAR ROUTE
 $route['profile/calendar'] = 'webservice_controller/calendar_for_mobile';
 
+$route['add/event'] = 'webservice_controller/add_event'; 
 
 
 
