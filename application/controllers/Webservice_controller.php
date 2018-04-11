@@ -131,6 +131,7 @@ class Webservice_controller extends CI_Controller
 	const AJAX_ADD_EVENT = 'add_event';
 	
 	const AJAX_GET_COMMUNICATION_OFFERS = 'get_offers';
+	const AJAX_DECLINE_OFFER = 'decline_offer';
 	
 	
 	public function __construct()
@@ -274,6 +275,7 @@ class Webservice_controller extends CI_Controller
 			
 			
 			case self::AJAX_GET_COMMUNICATION_OFFERS : $response = $this->get_communication_offers($payload); break;
+			case self::AJAX_DECLINE_OFFER : $response = $this->decline_offer($payload); break;
 		}
 		
 		echo json_encode($response);
@@ -3863,6 +3865,32 @@ class Webservice_controller extends CI_Controller
 	        $response = array('flag'=>1, 'offers'=>$response);
 	    }
 	    
+	    return $response;
+	}
+	
+	public function decline_offer($payload)
+	{
+	    $response = array();
+	    
+	    if(empty($this->input->post('user-id')))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    
+        $eventId = $this->input->post('event-id');
+        $userId = $this->input->post('user-id');
+	        
+        # Load user event status model
+        $this->load->model('user_event_status_model','uesm');
+	    
+        $status = User_event_status_model::STATUS_DECLINE; 
+	    
+	    if($this->uesm->register_event_status($eventId, $userId, $status))
+	       $response = array('flag'=>1, 'message'=>$this->message->setFlashMessage(Message::OFFER_DECLINE_SUCCESS, array('id'=>'1')));
+	    else 
+	        $response = array('flag'=>0,'message'=>$this->message->setFlashMessage(Message::OFFER_DECLINE_FAILURE));
+	            
 	    return $response;
 	}
 	
