@@ -1896,3 +1896,25 @@ a.white-color:hover{
     background: #4CAF50; /* Green background */
     cursor: pointer; /* Cursor on hover */
 }
+
+.fullheight{
+	position : relative;
+}
+
+.left-col-identifier, .right-col-identifier{
+	
+}
+
+.left-col-identifier {
+	position: absolute;
+    top: 250px;
+    z-index: 999;
+    left: 5px;
+}
+
+.right-col-identifier {
+	position: absolute;
+    top: 250px;
+    z-index: 999;
+    right :5px;
+}
