@@ -11,8 +11,7 @@ if($this->session->userdata('user_id')) $lockIcon = '';
 		<li class="text-center menu-li-style"><a href="<?php echo base_url('club-laws');?>">CLUB GUIDELINES</a></li>		
 		
 		<!-- <li class="text-center menu-li-style"><a href="<?php echo base_url('escrow');?>"><i class="pull-left <?php echo $lockIcon; ?>"></i> ESCROW</a></li> -->
-		<li class="text-center menu-li-style"><a href="<?php echo base_url('shop');?>"><i class="pull-left <?php echo $lockIcon; ?>"></i> SHOP WITH CART</a></li>
-		<li class="text-center menu-li-style"><a href="<?php echo base_url('profile');?>"><i class="pull-left <?php echo $lockIcon; ?>"></i> PROFILE</a></li>
+		<li class="text-center menu-li-style"><a href="<?php echo base_url('shop');?>"><i class="pull-left <?php echo $lockIcon; ?>"></i> SHOP WITH CART</a></li>		
 		<li class="text-center menu-li-style"><a href="<?php echo base_url('service/number-game');?>"><i class="pull-left <?php echo $lockIcon; ?>"></i>Spiritual Guidance</a></li>
 		<li class="text-center menu-li-style"><a href="<?php echo base_url('lean-canvas-spaceage-guru')?>">LEAN CANVAS</a></li>
 		<li class="text-center menu-li-style">

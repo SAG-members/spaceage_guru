@@ -141,7 +141,7 @@
 									
 									<!-- <label class="control-label">What is the problem that is preventing you from becoming the one you desire to become ?</label> -->
 									<label class="control-label">What do you need ?</label>
-									<textarea style="height: auto;" class="password" name="problem_preventing"><?php echo $profile->{User::_WHAT_DO_YOU_NEED}?></textarea>
+									<textarea style="height: auto;" class="password" name="what_do_you_need"><?php echo $profile->{User::_WHAT_DO_YOU_NEED}?></textarea>
 								</div>
 									
 								<div class="row mar-t-10">

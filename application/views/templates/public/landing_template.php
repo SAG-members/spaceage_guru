@@ -55,7 +55,7 @@ ul.dropdown-menu li{}
                         	<li><a href="<?php echo base_url('feedback'); ?>">Feedback</a></li>
                         	<li><a href="<?php echo base_url('faq'); ?>">FAQ</a></li>
                         	<li><a href="<?php echo base_url('e-business'); ?>">E-Business</a></li>
-                        	
+                        	<li><a href="<?php echo base_url('logout'); ?>">Logout</a></li>
                       	</ul>
                     </div>
         			<?php endif; ?>

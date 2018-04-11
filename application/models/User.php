@@ -268,6 +268,18 @@ class User extends CI_Model
 	    
 	}
 	
+	public function set_what_do_you_need($userId, $whatDoYouNeed)
+	{
+	    $data = array(
+	        static::_WHAT_DO_YOU_NEED => $whatDoYouNeed	        
+	    );
+	    
+	    $this->db->where(static::_ID, $userId);
+	    $this->db->update(static::_TABLE, $data);
+	    
+	    return $this->db->affected_rows();
+	}
+	
 	public function set_event_default_address($userId, $preferedAddress)
 	{
 	    $data = array(
