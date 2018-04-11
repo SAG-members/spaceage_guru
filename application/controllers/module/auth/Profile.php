@@ -84,8 +84,7 @@ class Profile extends Application
 				$this->user->set_event_default_address($this->input->post('user-id'), $preferredLocation);
 				
 				# Set what do you need
-				$this->user->set_what_do_you_need($this->input->post('user-id'), $this->input->post('what_do_you_need'));
-				
+				$this->user->set_what_do_you_need($this->input->post('user-id'), $this->input->post('what_do_you_need'));				
 				
 				$offerInRadius = $this->input->post('kms-range') ? $this->input->post('kms-range') : "";
 								
