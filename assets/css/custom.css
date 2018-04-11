@@ -1911,6 +1911,7 @@ a.white-color:hover{
     z-index: 999;
     left: 5px;
 }
+.left-col-identifier i{ color : red; }
 
 .right-col-identifier {
 	position: absolute;
@@ -1918,3 +1919,5 @@ a.white-color:hover{
     z-index: 999;
     right :5px;
 }
+
+.right-col-identifier i{ color : purple; }
