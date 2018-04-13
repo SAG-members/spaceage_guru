@@ -240,6 +240,10 @@ border-radius: 5px;
 	margin-bottom: 10px;
 }
 */
+.midmain{
+	text-align:center;	
+}
+
 #midmain .copyright {
 	bottom: 0;
 	color: #fff;
@@ -348,9 +352,9 @@ border-radius: 5px;
 	position: relative !important;
 }
 .field.buttons {
-	float: left;
+	/*float: left;*/
 	margin-top: 60px;
-	text-align: right;
+	/*text-align: right;*/
 	width: 100%;
 }
 
@@ -603,6 +607,7 @@ border-radius: 5px;
 	padding: 5px;
 	resize: none;
 	width: 100%;
+	text-align:center;
 }
 
 
@@ -623,8 +628,11 @@ border-radius: 5px;
 	color:#000;
 	opacity: 10;
 	-webkit-border-radius: 5px;
--moz-border-radius: 5px;
-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	text-align:center; 
+	text-align-last: center;
+	
 }
 
 placeholder {
@@ -954,7 +962,7 @@ input[type="text"], textarea{
 .pad-20 { padding: 20px !important; }
 
 
-.buttonmain { width:195px; height:auto; float:left; background:#ec7505; border-radius:5px; background:#ec7505; padding:10px; display:inline-block; position:relative; min-height:200px;}
+.buttonmain { width:195px; height:auto; background:#ec7505; border-radius:5px; background:#ec7505; padding:10px; display:inline-block; position:relative; min-height:200px;}
 .buttonmain h2 img { height:50px; width:auto;}
 .buttonmain h3 { width:100%; height:auto; float:left; color:#FFF; font-family:Verdana, Geneva, sans-serif; font-size:35px; margin:0px; padding:0px;}
 .buttonmain p { width:100%; height:auto; float:left; color:#FFF; font-family:Verdana, Geneva, sans-serif; font-size:16px; margin:0px; padding:0px; margin-top:20px; line-height:21px;}
@@ -1906,18 +1914,61 @@ a.white-color:hover{
 }
 
 .left-col-identifier {
-	position: absolute;
-    top: 250px;
+	position: fixed;
+    top: 50%;
     z-index: 999;
+    left: -60px;
+}
+
+.left-col-identifier.open{	
     left: 5px;
 }
 .left-col-identifier i{ color : red; }
 
 .right-col-identifier {
-	position: absolute;
-    top: 250px;
+	position: fixed;
+    top: 50%;
     z-index: 999;
-    right :5px;
+    right: -60px;
+}
+
+.right-col-identifier.open{
+	right:5px;
 }
 
 .right-col-identifier i{ color : purple; }
+
+table thead tr th{
+	text-align:center;
+}
+
+table caption{
+	text-align:center !important;
+}
+
+.tooltip {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 72px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: left;
+  text-align: start;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  letter-spacing: normal;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  white-space: normal;
+  /* ... */
+}
+.tooltip-inner {
+  max-width: 200px;
+  padding: 3px 8px;
+  color: #fff;
+  text-align: center;
+  background-color: #000;
+  border-radius: 4px;
+}

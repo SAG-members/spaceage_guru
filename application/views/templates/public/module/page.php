@@ -916,7 +916,7 @@ switch ($page->{Page::_VISIBILITY})
 <div class ="row mar-b-20">
 	
 	<!-- Pay via Internal PCT Wallet -->
-	<div class="col-md-4">
+	<div class="col-md-12">
 		<div>
         	<h3>Internal PCT Wallet</h3><br/>        	        		
         	<form method="post" action="<?php echo base_url('pay-via-pct-wallet');?>">        		

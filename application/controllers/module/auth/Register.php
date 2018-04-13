@@ -48,7 +48,8 @@ class Register extends Base
 			$problemPreventing= $this->input->post('problem_preventing');
 			$password = $this->input->post('password');
 			$cpassword = $this->input->post('cpassword');
-			$suggestionRequired= $this->input->post('suggestion_required');
+// 			$suggestionRequired= $this->input->post('suggestion_required');
+			$suggestionRequired= 1;
 			$securityQuestion = $this->input->post('secret_question');
 			$securityQuestionAnswer = $this->input->post('secret_question_answer');
 			

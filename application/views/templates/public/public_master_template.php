@@ -90,7 +90,10 @@ mixpanel.track("<?php echo $title?>");
 					<?php $this->load->view($siteLeftSideBar)?>
 			    </div>
 			    
-			    <div class="left-col-identifier"><i class="fa fa-angle-double-right fa-5x"></i></div>
+			    <div class="left-col-identifier">
+			    	<img alt="left-arrow" src="<?php echo base_url('assets/img/left-arow.png'); ?>">
+<!-- 			    <i class="fa fa-angle-double-right fa-5x"></i> -->
+			    </div>
 				
 				<!-- Main content section -->
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 fullcol no-pad middle-col">
@@ -115,7 +118,10 @@ mixpanel.track("<?php echo $title?>");
 					</div>
 				</div>
 				
-				<div class="right-col-identifier"><i class="fa fa-angle-double-left fa-5x"></i></div>
+				<div class="right-col-identifier">
+				<img alt="left-arrow" src="<?php echo base_url('assets/img/right-arow.png'); ?>">
+<!-- 				<i class="fa fa-angle-double-left fa-5x"></i> -->
+				</div>
 				
 				<!-- Right Menu -->
 				<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 fullcol pad-r-15 hide right-col">
@@ -171,14 +177,15 @@ mixpanel.track("<?php echo $title?>");
 		{
 			$this.removeClass('open')
 			$('.left-col').addClass('hide');
-
+			
 			/* Check if right sidebar is open*/
 			
 			if($('.right-col').hasClass('hide')) {
 				$('.middle-col').addClass('col-xs-12 col-sm-12 col-md-12 col-lg-12').removeClass('col-xs-12 col-sm-9 col-md-9 col-lg-9');
 			}
 			else {
-				$('.middle-col').addClass('col-xs-12 col-sm-12 col-md-12 col-lg-12').removeClass('col-xs-12 col-sm-6 col-md-6 col-lg-6');	
+				$('.middle-col').addClass('col-xs-12 col-sm-12 col-md-12 col-lg-12').removeClass('col-xs-12 col-sm-6 col-md-6 col-lg-6');
+					
 			}		
 		}
 		else

@@ -5,6 +5,7 @@ $membershipLevel = $userProfile->{User::_USER_MEMBERSHIP_LEVEL};
 
 ?>
 
+<div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 col-sm-offset-2">
 <div class="services_text">
 	<?php if($shop): foreach ($shop as $s):?>
 		<div class="col-md-3 shop-item">
@@ -30,6 +31,7 @@ $membershipLevel = $userProfile->{User::_USER_MEMBERSHIP_LEVEL};
 	<?php endforeach; else:?>
 		<div class="alert alert-danger mar-t-20">Please upgrade to registed member first</div>
 	<?php endif;?>
+</div>
 </div>
 
 <script>

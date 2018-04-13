@@ -219,7 +219,7 @@
 								
 									$avtar = $profile->{User::_AVATAR_IMAGE} == "" ? '' : '<img src="'.base_url(Template::_PUBLIC_AVTAR_DIR.$profile->{User::_AVATAR_IMAGE}).'" width="120px;" height="120px"/>';?>
 								<div class="mar-t-20">
-									<div class="avtar-image-box">
+									<div class="avtar-image-box" style="margin:0px auto;">
 										<div class="fileUpload" style="bottom: 0px; position:absolute; color: #FFF;"><i class="fa fa-camera fa-2x"></i><input type="file" class="upload" id="profile-avtar" name="file"/></div>
 										<?php echo $avtar;?>
 									</div>

@@ -1,3 +1,4 @@
+<iframe src="https://www.youtube.com/embed/j4Q-J4Vz61Y" width="640" height="360"></iframe>
 <div class="quesmain">
 <h2>Registration</h2>
 <hr/>
@@ -24,8 +25,8 @@
 	<input type="text" name="avatar_name" class="password" placeholder="Enter avatar name" autocomplete="off">
 	
 	<div class="form-group">
-		<div class="row"><div class="col-md-6"><div class="fileUpload btn btn-primary"><span>Upload Avatar Image (Optional)</span><input type="file" class="upload" id="profile-avtar" name="file"/></div></div>
-		<div class="col-md-6"><div class="avtar-image-box"></div></div></div>
+		<div class="row"><div class="col-md-12"><div class="fileUpload btn btn-primary"><span>Upload Avatar Image (Optional)</span><input type="file" class="upload" id="profile-avtar" name="file"/></div></div>
+		<div class="col-md-12" ><div class="avtar-image-box" style="text-align:center; margin:10px auto;"></div></div></div>
 	</div>
 	<div class="clearfix"></div>
 	
@@ -70,14 +71,14 @@
 	<input name="secret_question_answer" type="password" placeholder="Please write a personal security question answer"	class="password">
 	 -->
 	 
-	<h2>Would you like to receive suggestions from our 3rd party partners to aid you reach your tasks & goals? </h2>
-	<div class="checkboobmain">
-		<input type="radio" name="suggestion_required" required="" value="1"> 
-		<label>Yes</label>
+<!-- 	<h2>Would you like to receive suggestions from our 3rd party partners to aid you reach your tasks & goals? </h2> -->
+<!-- 	<div class="checkboobmain"> -->
+<!-- 		<input type="radio" name="suggestion_required" required="" value="1">  -->
+<!-- 		<label>Yes</label> -->
 		
-		<input type="radio" name="suggestion_required" required="" value="0" checked> 
-		<label>No</label>
-	</div>
+<!-- 		<input type="radio" name="suggestion_required" required="" value="0" checked>  -->
+<!-- 		<label>No</label> -->
+<!-- 	</div> -->
     <div class="clearfix"></div>
     
 	<div class="checkboobmain">
@@ -88,9 +89,9 @@
 		I accept all terms of <a data-toggle="modal" data-target="#myModal">TOUS (Terms Of Usage And Service)</a> and 
 		<a href="<?php echo base_url('privacy-policy'); ?>" target="_blank">Privacy Policy</a>
 		
-		</label>
+		<div class="clearfix"></div>
 	</div>	 
-	
+	<div class="clearfix"></div>
 	<div class="field buttons">
 		<label class="main">&nbsp;</label>
 		<button type="button" name="confirm-user-registration" class="submit btn-round-red">Submit</button>

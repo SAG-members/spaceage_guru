@@ -40,9 +40,9 @@ ul.dropdown-menu li{}
 					?>
 					<div class="moon" style="background:url(<?php echo $backgroungImage;?>) no-repeat;">
 					<?php if(!$this->session->userdata('id')) : ?>
-        			<a alt="<?php echo strip_tags($this->cms->get_by_slug('what', Cms::_CONTENT))?>" title="<?php echo strip_tags($this->cms->get_by_slug('what', Cms::_CONTENT))?>" href="<?php echo base_url('what')?>" target="_blank">WHAT</a><br>
-					<a alt="<?php echo strip_tags($this->cms->get_by_slug('where', Cms::_CONTENT))?>" title="<?php echo strip_tags($this->cms->get_by_slug('where', Cms::_CONTENT))?>"  href="<?php echo base_url('where')?>"  target="_blank">WHERE</a><br>
-					<a alt="<?php echo strip_tags($this->cms->get_by_slug('how', Cms::_CONTENT))?>" title="<?php echo strip_tags($this->cms->get_by_slug('how', Cms::_CONTENT))?>"  href="<?php echo base_url('how')?>"  target="_blank">HOW
+        			<a data-placement="right" alt="<?php echo strip_tags($this->cms->get_by_slug('what', Cms::_CONTENT))?>" data-toggle="tooltip" title="<?php echo strip_tags($this->cms->get_by_slug('what', Cms::_CONTENT))?>" href="<?php echo base_url('what')?>" target="_blank">WHAT</a><br>
+					<a data-placement="right" alt="<?php echo strip_tags($this->cms->get_by_slug('where', Cms::_CONTENT))?>" data-toggle="tooltip" title="<?php echo strip_tags($this->cms->get_by_slug('where', Cms::_CONTENT))?>"  href="<?php echo base_url('where')?>"  target="_blank">WHERE</a><br>
+					<a data-placement="right" alt="<?php echo strip_tags($this->cms->get_by_slug('how', Cms::_CONTENT))?>" data-toggle="tooltip" title="<?php echo strip_tags($this->cms->get_by_slug('how', Cms::_CONTENT))?>"  href="<?php echo base_url('how')?>"  target="_blank">HOW
                 	</a>
         			<?php else :?>
         			<div class="dropdown">
@@ -128,6 +128,8 @@ ul.dropdown-menu li{}
 <!--<script src="js/fontawesome-all.js"></script>--> 
 <script src="<?php echo base_url('assets/landing')?>/js/owl.carousel.js"></script> 
 <script>
+
+
         $(document).ready(function() {
             var owl = $('.owl-carousel');
             owl.owlCarousel({
@@ -147,6 +149,9 @@ ul.dropdown-menu li{}
                     }
                 }
             })
+
+            $('[data-toggle="tooltip"]').tooltip(); 
+            
         })
         
         

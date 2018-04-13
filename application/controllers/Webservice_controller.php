@@ -132,6 +132,9 @@ class Webservice_controller extends CI_Controller
 	
 	const AJAX_GET_COMMUNICATION_OFFERS = 'get_offers';
 	const AJAX_DECLINE_OFFER = 'decline_offer';
+	const AJAX_GET_MY_OFFERS = 'my_offer';
+	const AJAX_YIELD_SMART_CONTRACT = 'yield_smart_contract';
+	const AJAX_PROCESS_SMART_CONTRACT = 'smart_contract_payment';
 	
 	
 	public function __construct()
@@ -276,6 +279,9 @@ class Webservice_controller extends CI_Controller
 			
 			case self::AJAX_GET_COMMUNICATION_OFFERS : $response = $this->get_communication_offers($payload); break;
 			case self::AJAX_DECLINE_OFFER : $response = $this->decline_offer($payload); break;
+			case self::AJAX_GET_MY_OFFERS : $response = $this->my_offer($payload); break;
+			case self::AJAX_YIELD_SMART_CONTRACT : $response = $this->yield_smart_contract($payload); break;
+			case self::AJAX_PROCESS_SMART_CONTRACT : $response = $this->process_smart_contract($payload); break;
 		}
 		
 		echo json_encode($response);
@@ -3872,14 +3878,14 @@ class Webservice_controller extends CI_Controller
 	{
 	    $response = array();
 	    
-	    if(empty($this->input->post('user-id')))
+	    if(empty($this->input->post('user_id')))
 	    {
 	        $response = array('flag'=>0, 'message'=>'Please login first');
 	        return $response;
 	    }
 	    
-        $eventId = $this->input->post('event-id');
-        $userId = $this->input->post('user-id');
+        $eventId = $this->input->post('event_id');
+        $userId = $this->input->post('user_id');
 	        
         # Load user event status model
         $this->load->model('user_event_status_model','uesm');
@@ -3887,11 +3893,160 @@ class Webservice_controller extends CI_Controller
         $status = User_event_status_model::STATUS_DECLINE; 
 	    
 	    if($this->uesm->register_event_status($eventId, $userId, $status))
-	       $response = array('flag'=>1, 'message'=>$this->message->setFlashMessage(Message::OFFER_DECLINE_SUCCESS, array('id'=>'1')));
+	       $response = array('flag'=>1, 'message'=>'Offer declined successfully');
 	    else 
-	        $response = array('flag'=>0,'message'=>$this->message->setFlashMessage(Message::OFFER_DECLINE_FAILURE));
+	        $response = array('flag'=>0,'message'=>'OOPS !!! Something went wrong, unable to decline offer');
 	            
 	    return $response;
 	}
+	
+	public function my_offer($payload)
+	{
+	    $response = array();
+	    
+	    if(empty($this->input->post('user_id')))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    
+	    $userId = $this->input->post('user_id');
+	    
+	    # Load page model
+	    $this->load->model('page');
+	    # Load user event model
+	    $this->load->model('user_event_model', 'uem');
+	    # Load user event status model
+	    $this->load->model('user_event_status_model', 'uesm');
+	    
+	    # Get Created offers
+	    $response['createdOffer'] = $this->uem->get_by_user($userId);
+	    # Get Incomplete Offers
+	    $response['incompleteOffers'] = $this->uem->get_incomplete_offers($userId);
+	    # Get Declined Offers
+	    $response['declinedOffers'] = $this->uesm->get_by_user_and_status($userId, User_event_status_model::STATUS_DECLINE);
+	    # Get completed offers
+	    $response['completedOffers'] = $this->uem->get_completed_offers($userId);
+	    
+	    $response = array('flag'=>1,'response'=> $response);	    
+	    
+	    return $response;
+	}
+	
+	public function yield_smart_contract($payload)
+	{
+	    $response = array();
+	    
+	    if(empty($this->input->post('user_id')))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    
+	    if(empty($this->input->post('event_id')))
+	    {
+	        $response = array('flag'=>0, 'message'=>'Please provide event id first');
+	        return $response;
+	    }
+
+	    $userId = $this->input->post('user_id');
+	    $eventId = $this->input->post('event_id');
+	    
+	    # Load user event status model
+	    $this->load->model('user_event_status_model','uesm');
+	    
+	    # Load user event model
+	    $this->load->model('user_event_model', 'uem');
+	    
+	    # Update event status to pending
+	    $this->uem->update_status($eventId, User_event_model::EVENT_PENDING);
+	    
+	    # Load user model
+	    $this->load->model('user');
+	    
+	    $status = User_event_status_model::STATUS_YIELD_SMART_CONTRACT;
+	    
+	    # Check if event status already exists
+	    $result = $this->uesm->get_by_id($eventId, $userId);
+	    if(empty($result)) $this->uesm->register_event_status($eventId, $userId, $status);
+	    
+	    
+	    # Load pct setting model
+	    $this->load->model('pct_setting');
+	    
+	    $response['eventData'] = $this->uem->get_by_id($eventId);
+// 	    $response['accounts'] = $this->db->from('user')->get()->result();
+	    $profile = $this->user->getUserProfile($userId);
+	    $response['walletBalance'] = $profile->pct_wallet_amount;
+	    
+	    $response = array('flag'=>1, 'result'=>$response);
+	    
+	    
+	    return $response;
+	}
+	
+	public function process_smart_contract($payload)
+	{
+	    $response = array();
+	    
+	    # Validate user credentials before processing the payment
+	    
+	    # Load model user
+	    $this->load->model('user');
+	    
+	    $result = $this->user->sign_in($this->input->post('username'), $this->input->post('userpassword'));
+	    
+	    if(!$result)
+	    {
+	        $response = array('flag'=>0, 'message'=>$this->message->setFlashMessage(Message::PCT_PAYMENT_FAILED_LOGIN_ERROR));
+	        return $response;
+	    }
+	    
+	    $txnId = "PCTINT".time();
+	    $fromUser = $result;
+	    $toUser = $this->input->post('to_account');
+	    $txnType = 'User To User Transfer';
+	    $txnPoints = $this->input->post('pct_transfer_points');
+	    $txnTopic = $this->input->post('pct_topic');
+	    $txnMessage = $this->input->post('pct_message');
+	    
+	    # Now before actually making the transaction store, we need to add points to users account
+	    
+	    $profile = $this->user->getUserProfile($result);
+	    
+	    $walletAmount = $profile->{User::_PCT_WALLET_AMOUNT};
+	    
+	    if($txnPoints > $walletAmount){
+	        $response = array('flag'=>0, 'message'=>'Insufficient PCT Points');
+	        return $response;
+	    }
+	    
+	    $this->db->where(User::_ID, $toUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $txnPoints));
+	    $this->db->where(User::_ID, $fromUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => ($walletAmount- $txnPoints)));
+	    
+	    
+	    # Load pct-transaction model
+	    $this->load->model('pct_transaction');
+	    $result = $this->pct_transaction->create_transaction($fromUser, $toUser, $txnId, $txnType, $txnPoints, $txnTopic, $txnMessage);
+	    
+	    if($this->input->post('transfer_type') && $this->input->post('transfer_type') == "smart contract")
+	    {
+	        $this->pct_transaction->update_transaction('Smart Contract Transfer', $this->input->post('event-id'), $result);
+	        
+	        # Now we have the smart contract done for the event, so let's update event status
+	        # Load user event model
+	        $this->load->model('user_event_model', 'uem');
+	        $this->db->where(User_event_model::_ID, $this->input->post('event_id'))->update(User_event_model::_TABLE, array(User_event_model::_STATUS => User_event_model::EVENT_COMPLETED));
+	    }
+	    
+	    
+	    if($result) $response = array('flag'=> 1, 'message'=>'PCT Payment transfer successfull');
+	    else  $response = array('flag'=>0, 'message'=>'PCT Payment transfer failed');
+	    
+	    return $response;
+	    
+	}
+	
+	
 	
 }
