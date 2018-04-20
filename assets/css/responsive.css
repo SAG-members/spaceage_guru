@@ -19,5 +19,46 @@ pre {
 .midmain img { width:100% !important;}
 
 .cometchat_embed_synergy_container { width:100% !important;}
+
+iframe.note-video-clip {
+    width: 100%;
+}
+.right-col-identifier {
+    position: fixed;
+    top: 50%;
+    z-index: 999;
+    right: 0px;
+}
+.left-col-identifier {
+    position: fixed;
+    top: 50%;
+    z-index: 999;
+    left: 0px;
+}
+
+.left-col-identifier img {
+    width: 66px;
+}
+
+
+.right-col-identifier img {
+    width: 66px;
+}
+
+.rightmain .btn { color:#fff !important;}
+
+.input-group-btn>.btn { color:#fff;}
+
+
+
+
+
+
+
+
+
+
+
 	
 	}
+	

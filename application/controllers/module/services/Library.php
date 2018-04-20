@@ -151,7 +151,7 @@ class Library extends Application
 			$description = $this->input->post('description');
 			$countriesAvailableIn = $this->input->post('countries');
 			$countriesLegalIn = $this->input->post('legal_countries');
-			$country_allowed_in = $this->input->post('physically_legal_countries');
+			$countryAllowedIn = $this->input->post('physically_legal_countries');
 			$price = $this->input->post('points');
 			$priceType = $this->input->post('chckbox-price-per-read-article') == 2 ? 1 : 0;
 			$metaTitle = '';
@@ -169,10 +169,13 @@ class Library extends Application
 			{
 				if($c == 'Select All') { $countriesLegal = $this->country->get_country_ids(); break; }
 			}
+			$countryAllowed = implode(',', $countryAllowedIn);
+			foreach ($countryAllowedIn as $c)
+			{
+			    if($c == 'Select All') { $countryAllowed = $this->country->get_country_ids(); break; }
+			}
 			
-			
-			
-			$lastId = $this->page->create_page($category, $userId, $visibility, $title, $description, $anonymous, $countries, $countriesLegal, $price, $priceType, $tag, $country_allowed_in);
+			$lastId = $this->page->create_page($category, $userId, $visibility, $title, $description, $anonymous, $countries, $countriesLegal, $price, $priceType, $tag, $countryAllowed);
 			
 			# Lets Check if we have some documents along with the data
 			

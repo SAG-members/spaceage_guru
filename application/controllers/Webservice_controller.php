@@ -136,6 +136,8 @@ class Webservice_controller extends CI_Controller
 	const AJAX_YIELD_SMART_CONTRACT = 'yield_smart_contract';
 	const AJAX_PROCESS_SMART_CONTRACT = 'smart_contract_payment';
 	
+	const AJAX_ACQUIRE_DATA = 'acquire_data';
+	
 	
 	public function __construct()
 	{
@@ -282,6 +284,8 @@ class Webservice_controller extends CI_Controller
 			case self::AJAX_GET_MY_OFFERS : $response = $this->my_offer($payload); break;
 			case self::AJAX_YIELD_SMART_CONTRACT : $response = $this->yield_smart_contract($payload); break;
 			case self::AJAX_PROCESS_SMART_CONTRACT : $response = $this->process_smart_contract($payload); break;
+			
+			case self::AJAX_ACQUIRE_DATA : $response = $this->acquire_data($payload); break;
 		}
 		
 		echo json_encode($response);
@@ -3323,7 +3327,10 @@ class Webservice_controller extends CI_Controller
 	        $result = $this->pld->like_data($pageId, $userId);
 	        $result = $this->pld->get_count_like_dislike($pageId);
 	        
-	        if($result) $response = array('flag'=>1, 'message'=>'You have liked this data','likecount'=>$result->likecount, 'dislikecount'=>$result->dislikecount);
+	        $output = array('message'=>'You have liked this data','likecount'=>$result->likecount, 'dislikecount'=>$result->dislikecount);
+	        
+	        
+	        if($result) $response = array('flag'=>1, 'result' => $output);
 	        else $response = array('flag'=>1, 'message'=>'Error occured while liking');
 	        
 	    }
@@ -3364,7 +3371,9 @@ class Webservice_controller extends CI_Controller
 	        $result = $this->pld->dislike_data($pageId, $userId);
 	        $result = $this->pld->get_count_like_dislike($pageId);
 	        
-	        if($result) $response = array('flag'=>1, 'message'=>'You have disliked this data', 'likecount'=>$result->likecount, 'dislikecount'=>$result->dislikecount);
+	        $output = array('message'=>'You have disliked this data', 'likecount'=>$result->likecount, 'dislikecount'=>$result->dislikecount);
+	        
+	        if($result) $response = array('flag'=>1, 'result'=>$output);
 	        else $response = array('flag'=>1, 'message'=>'Error occured while disliking');
 	        
 	    }
@@ -3409,7 +3418,9 @@ class Webservice_controller extends CI_Controller
 	        $result = $this->pld->love_data($pageId, $userId);
 	        $result = $this->pld->get_count_like_dislike($pageId);
 	        
-	        if($result) $response = array('flag'=>1, 'message'=>'You have loved this data', 'lovecount'=>$result->loveitcount, 'hatecount'=>$result->hateitcount);
+	        $output = array('message'=>'You have loved this data', 'lovecount'=>$result->loveitcount, 'hatecount'=>$result->hateitcount);
+	        
+	        if($result) $response = array('flag'=>1, 'result'=> $output);
 	        else $response = array('flag'=>1, 'message'=>'Error occured while loving it');
 	        
 	    }
@@ -3456,7 +3467,9 @@ class Webservice_controller extends CI_Controller
 	        
 	        // 			print_r($result);
 	        
-	        if($result) $response = array('flag'=>1, 'message'=>'You have hated this data', 'lovecount'=>$result->loveitcount, 'hatecount'=>$result->hateitcount);
+	        $output = array('message'=>'You have hated this data', 'lovecount'=>$result->loveitcount, 'hatecount'=>$result->hateitcount);
+	        
+	        if($result) $response = array('flag'=>1, 'result'=>$output);
 	        else $response = array('flag'=>1, 'message'=>'Error occured while hating');
 	        
 	    }
@@ -3594,8 +3607,11 @@ class Webservice_controller extends CI_Controller
 	        return $response;
 	    }
 	    
-	    $this->db->where(User::_ID, $toUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $txnPoints));
+	    $toUserProfile = $this->user->getUserProfile($toUser);
+	    
+	    $this->db->where(User::_ID, $toUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $toUserProfile->{User::_PCT_WALLET_AMOUNT} + $txnPoints));
 	    $this->db->where(User::_ID, $fromUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => ($walletAmount- $txnPoints)));
+	    
 	    
 	    # Load pct-transaction model
 	    $this->load->model('pct_transaction');
@@ -3621,7 +3637,7 @@ class Webservice_controller extends CI_Controller
 	    
 	    # Load user model
 	    $this->load->model('user');
-	    $result = $this->user->sign_in($this->input->post('user-name'), $this->input->post('user-password'));
+	    $result = $this->user->sign_in($this->input->post('username'), $this->input->post('userpassword'));
 	    
 	    if(!$result)
 	    {
@@ -4021,9 +4037,11 @@ class Webservice_controller extends CI_Controller
 	        return $response;
 	    }
 	    
-	    $this->db->where(User::_ID, $toUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $txnPoints));
-	    $this->db->where(User::_ID, $fromUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => ($walletAmount- $txnPoints)));
+	    $toUserProfile = $this->user->getUserProfile($toUser);
 	    
+	    $this->db->where(User::_ID, $toUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $toUserProfile->{User::_PCT_WALLET_AMOUNT} + $txnPoints));
+	    $this->db->where(User::_ID, $fromUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => ($walletAmount- $txnPoints)));
+	   
 	    
 	    # Load pct-transaction model
 	    $this->load->model('pct_transaction');
@@ -4045,6 +4063,45 @@ class Webservice_controller extends CI_Controller
 	    
 	    return $response;
 	    
+	}
+	
+	public function acquire_data($payload)
+	{
+	   $response = array();
+	   
+	   # Load Page Model
+	   $this->load->model('page');
+	   
+	   $dataId = $this->input->post('data_id');
+	   $userId = $this->input->post('user_id');
+	   
+	   $result = $this->page->get_by_id($dataId);
+	   
+	   # Check if data is already accquired
+	   
+	   # Load pss purchase history model
+	   $this->load->model('psss_purchase_history', 'pss');
+	   
+	   $condition = array(Psss_purchase_history::_ITEM_ID=> $dataId, Psss_purchase_history::_USER_ID => $userId);
+	   $output = $this->pss->check_if_pss_available($condition);
+	   
+	   if(!empty($output))
+	   {
+	       $response = array('flag'=>0, 'message'=>'This data is alreay accquired by you');
+	       return $response;
+	   }
+	   
+	   $this->load->model('user');
+	   $userProfile = $this->user->getUserProfile($userId);
+	   
+	   $this->load->model('psss_purchase_history','psss');
+	   
+	   $result = $this->psss->create_purchase_history('PRICELESS', $userId, $dataId, $result->{Page::_PAGE_TITLE}, $result->{Page::_CATEGORY_ID}, 0, 'EUR', $userProfile->{User::_EMAIL}, 'priceless');
+	   
+	   if($result) $response = array('flag'=>1, 'message'=>'Priceless data accquiring successfull');
+	   else $response = array('flag'=>0, 'message'=>'OOPS ! Unable to accquire priceless data');
+	   
+	   return $response;
 	}
 	
 	

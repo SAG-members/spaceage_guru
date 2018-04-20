@@ -87,7 +87,7 @@ class Page extends CI_Model
 				static::_CATEGORY_ID => $category,
 				static::_COUNTRY_AVAILABLE_IN=>$countriesAvailableIn,
 				static::_COUNTRY_LEGAL_IN=>$countryLegalIn,
-		        static::_COUNTRY_ALLOWED_IN => $countriesAvailableIn,
+		          static::_COUNTRY_ALLOWED_IN => $country_allowed_in,
 				static::_PRICE=>$price,
 				static::_PRICELESS=>$priceLess,
 				static::_ANONYMOUS => $anonymous,
@@ -163,7 +163,7 @@ class Page extends CI_Model
 	{
 		$response = array();
 		
-		$this->db->select('page_title, page_slug, tag, category_id');
+		$this->db->select('id, page_title, page_slug, tag, category_id');
 		$this->db->from(static::_TABLE);
 		$this->db->where(static::_STATUS, 1);
 				

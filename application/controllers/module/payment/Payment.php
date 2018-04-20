@@ -337,8 +337,10 @@ class Payment extends Application
             $this->message->setFlashMessage(Message::PCT_PAYMENT_TRANSFER_FAILURE_INSUFFICIENT_FUND);
             redirect('profile');
         }
-                
-        $this->db->where(User::_ID, $toUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $txnPoints));
+        
+        $toUserProfile = $this->user->getUserProfile($toUser);
+        
+        $this->db->where(User::_ID, $toUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $toUserProfile->{User::_PCT_WALLET_AMOUNT} + $txnPoints));
         $this->db->where(User::_ID, $fromUser)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => ($walletAmount- $txnPoints)));
         
         
