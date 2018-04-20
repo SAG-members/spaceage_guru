@@ -8,7 +8,7 @@ $result = get_lat_lng_by_ip();
 $topic=""; $item ="";
 $comment = ""; $image = ""; $pctPrice = ""; $price = ""; $paymentFrom = ""; $deliveryMethod = ""; $when = "";
 $dateTime = ""; $escrowType = ""; $escrowMax = ""; $escrowMin = ""; $location = "";
-$id = ""; $offerRange = "";
+$id = ""; $offerRange = ""; $hasExpiryDate = "";
 
 if(!empty($eventData))
 {
@@ -24,6 +24,7 @@ if(!empty($eventData))
     $paymentFrom = $eventData->{User_event_model::_PAYMENT_FROM}; 
     $deliveryMethod = $eventData->{User_event_model::_DELIVERY_METHOD}; 
     $when = $eventData->{User_event_model::_ESCROW_RELEASED};
+    $hasExpiryDate = $eventData->{User_event_model::_HAS_EXPIRY};
     $dateTime = $eventData->{User_event_model::_EXPIRY_DATE}; 
     $escrowType = $eventData->{User_event_model::_ESCROW_TYPE}; 
     $escrowMax = $eventData->{User_event_model::_ESCROW_MAX_LIMIT}; 
@@ -65,7 +66,7 @@ if(!empty($eventData))
 }
 </style>
 <div class="">
-	<h4 class="modal-title">Edit Event</h4>
+	<h4 class="modal-title">Edit Offer</h4>
 	<form name="newEvent" method="post" action="<?php echo base_url('edit/event/'.$id); ?>" enctype="multipart/form-data">
 	<div class="form-group font-10 mar-t-10">
 		<div clas="col-md-12">
@@ -170,7 +171,7 @@ if(!empty($eventData))
         		   		
         		<div class="col-md-6">
     				<label style="color: #FFF;">Date Time</label>
-    				<?php if($this->session->userdata('membershipLevel') > 3) :?>
+    				<?php if($this->session->userdata('membershipLevel') > 3 && $hasExpiryDate) :?>
     				<input type="checkbox" name="has_date_time" checked data-toggle="toggle">  
     				<?php endif; ?>
     				<input type="text" name="escrow_date_time" class="form-control" value="<?php echo $dateTime; ?>"/>
