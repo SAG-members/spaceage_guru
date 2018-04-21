@@ -361,7 +361,7 @@ class Library extends Application
 	        $deliveryMethod =  $this->input->post('delivery_method');
 	        $escrowReleased =  $this->input->post('payment_when');
 	        $expiryDate =  $this->input->post('escrow_date_time');
-	        $hasExpiry = $this->input->post('has_date_time') ? 0 : 1;
+	        $hasExpiry = $this->input->post('has_date_time') ? 1 : 0;
 	        
 	        $escrowType =  $this->input->post('escrow_type');
 	        $minLimit =  $this->input->post('min_limit');
@@ -710,7 +710,7 @@ class Library extends Application
             $deliveryMethod =  $this->input->post('delivery_method');
             $escrowReleased =  $this->input->post('payment_when');
             $expiryDate =  $this->input->post('escrow_date_time');
-            $hasExpiry = $this->input->post('has_date_time') ? 0 : 1;
+            $hasExpiry = $this->input->post('has_date_time') ? 1 : 0;
             
             $escrowType =  $this->input->post('escrow_type');
             $minLimit =  $this->input->post('min_limit');
@@ -726,19 +726,19 @@ class Library extends Application
                 # Get Image and Create Thumb and upload
                 
                 $file_exts = array("jpg", "bmp", "jpeg", "gif", "png");
-                $upload_exts = explode(".", $_FILES["file"]["name"]);
-                $upload_exts = end($upload_exts);
+                $extension = explode(".", $_FILES["file"]["name"]);
+                $extension = end($extension); 
                 
-                if ((($_FILES["file"]["type"] == "image/gif") || ($_FILES["file"]["type"] == "image/jpeg") || ($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/pjpeg")) && ($_FILES["file"]["size"] < 2000000) && in_array($upload_exts, $file_exts))
+                if ((($_FILES["file"]["type"] == "image/gif") || ($_FILES["file"]["type"] == "image/jpeg") || ($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/pjpeg")) && ($_FILES["file"]["size"] < 2000000) && in_array($extension, $file_exts))
                 {
                     if ($_FILES["file"]["error"] > 0) {  }
                     else
                     {
-                        $extensionArr = explode($_FILES["file"]["type"]);
-                        $extension = $extensionArr[1];
+//                         $upload_exts = explode(".", $_FILES["file"]["name"]);
+//                         $upload_exts = end($upload_exts);
                         
                         # Generate Timestamp name for image name and upload
-                        $image = md5($_FILES["file"]["name"].microtime()).$extension;
+                        $image = md5($_FILES["file"]["name"].microtime()).".$extension";
                         move_uploaded_file($_FILES["file"]["tmp_name"], Template::_PUBLIC_DATA_DOCUMENT_DIR . $image);
                         
                     }
@@ -767,6 +767,7 @@ class Library extends Application
                 User_event_model::_LNG => $lng,
                 User_event_model::_OFFER_RANGE => $offerInRange,
             );
+                        
             
             if($this->event->update_event($eventId, $data))
             {
