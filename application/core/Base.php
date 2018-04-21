@@ -114,6 +114,8 @@ class Base extends CI_Controller
 			
 			$this->template->setRightSideBar('right_sidebar', $this->data);
 			
+			$this->load->model('currency');
+			
 			if(isset($_COOKIE['bakeme']))
 			{
 			    $cookie = $_COOKIE['bakeme'];

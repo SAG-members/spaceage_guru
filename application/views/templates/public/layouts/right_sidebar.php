@@ -69,13 +69,17 @@ if($this->session->userdata('user_id')) $lockIcon = '';
         					<div class="clearfix"></div>
         				</div>
         				<div class="x_content">
+        					<?php if(!empty($c->image)) :?>
+        					<img class="image-responsive" alt="offer-image" title="offer-image" src="<?php echo base_url('assets/uploads/data_document/'.$c->image); ?>">        					
+        					<?php endif;?>
         					<h4><?php echo $c->comment; ?></h3>
         						<p>
         							<b>Location </b>
         						</p>
         						<p><?php echo $c->address?></p>
         						<p>
-        							<b>Price </b>
+        							
+        							<b>Price <?php echo $this->currency->get_by_id($c->price_currency, Currency::_CURRENCY_SYMBOL); ?> <?php echo $c->price?></b>
         						</p>
         						<p>PCT <?php echo $c->pct_price?></p>
         						

@@ -85,7 +85,7 @@ class User_event_model extends CI_Model
 	{
 	    $response = array();
 	    
-	    $this->db->select('A.id, A.user_id, A.topic, A.comment, A.item_id, A.image, A.pct_price, A.price, A.expiry_date, A.has_expiry_date, A.address');
+	    $this->db->select('A.id, A.user_id, A.topic, A.comment, A.item_id, A.image, A.pct_price, A.price, A.price_currency, A.expiry_date, A.has_expiry_date, A.address, A.image');
 	    $this->db->from("user_events as A");
 	    $this->db->join("rss_feed_subscription as C","C.item_id = A.item_id", 'left');
 // 	    $this->db->join("user_events_status as D","D.event_id = A.id", 'left');
