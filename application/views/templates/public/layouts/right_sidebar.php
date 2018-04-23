@@ -79,9 +79,9 @@ if($this->session->userdata('user_id')) $lockIcon = '';
         						<p><?php echo $c->address?></p>
         						<p>
         							
-        							<b>Price <?php echo $this->currency->get_by_id($c->price_currency, Currency::_CURRENCY_SYMBOL); ?> <?php echo $c->price?></b>
+        							Price <?php echo $this->currency->get_by_id($c->price_currency, Currency::_CURRENCY_SYMBOL); ?> <?php echo $c->price?>
         						</p>
-        						<p>PCT <?php echo $c->pct_price?></p>
+        						<p><strong>PCT <?php echo $c->pct_price?></strong></p>
         						
         						<?php if($c->has_expiry_date):?>
         							<p>
