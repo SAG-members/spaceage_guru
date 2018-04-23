@@ -96,6 +96,38 @@
                 </div>
             </div>
         </div>
+        
+        <div class="panel panel-default" id="mySymptoms">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">My Subscriptions</a>
+                </h4>
+            </div>
+            <div id="collapseFour" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                    	<thead>
+                    		<tr>
+                    			<th>Subscription Type</th>
+                    			<th>Subscription Item</th>
+                    			<th>Unsubscribe</th>
+                    		</tr>
+                    	</thead>
+                    	<tbody>
+                    		<?php if($subscriptions): foreach ($subscriptions as $s):?>
+								<?php $category = $this->page->get_category($s->category_id); ?>
+								<tr>
+									<td><?php echo $category; ?></td>
+									<td><?php echo $s->page_title;?></td>
+									<td><input type="checkbox" name="unsubscribe-feed-list" class="select-one-user" data-id="<?php echo $s->id;?>"/></td>
+								</tr>
+							<?php endforeach; endif;?>
+                    	</tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>
 <style>

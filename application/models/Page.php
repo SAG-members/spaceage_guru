@@ -41,7 +41,7 @@ class Page extends CI_Model
 	const VISIBILITY_MEMBERSHIP_B = 5;
 	const VISIBILITY_MEMBERSHIP_C = 6;
 	const VISIBILITY_MEMBERSHIP_D = 8;
-	const VISIBILITY_SPECIFIED_USER = 9;
+	const VISIBILITY_SPECIFIED_USER = 7;
 	
 	
 	
@@ -177,7 +177,7 @@ class Page extends CI_Model
 // 		    $this->db->like(static::_PAGE_TITLE, $searchKey);
 // 		    $this->db->or_like(static::_PAGE_DESCRIPTION, $searchKey);
 		    $this->db->where(static::_PAGE_TITLE ." LIKE '$searchKey%' OR ". static::_PAGE_DESCRIPTION ." LIKE '$searchKey%'");
-		    $this->db->or_where(static::_TAG ." LIKE '$searchKey%'");
+		    $this->db->or_where(static::_TAG ." LIKE '%$searchKey%'");
 		}
 		
 		if($categories)
@@ -187,13 +187,14 @@ class Page extends CI_Model
 		
 		if($tags)
 		{
-			$this->db->or_where(static::_TAG ." LIKE '%$tags%'"); 
+// 			$this->db->or_where(static::_TAG ." LIKE '%$tags%'"); 
+		    $this->db->or_where(find_in_set($tags, static::_TAG));
 		}
 		
 		$this->db->order_by(static::_DATE_CREATED, 'DESC');
 		
 		$response = $this->db->get()->result();
-		
+// 		echo $this->db->last_query();
 		return $response;
 	}
 	

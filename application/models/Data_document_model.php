@@ -48,4 +48,12 @@ class Data_document_model extends CI_Model
 		$this->db->insert(static::_TABLE, $data);
 		return $this->db->insert_id();
 	}
+	
+	public function remove_document($documentId)
+	{
+	    $this->db->where(static::_ID, $documentId);
+	    $this->db->delete(static::_TABLE);
+	    
+	    return $this->db->affected_rows();
+	}
 }

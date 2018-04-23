@@ -622,7 +622,7 @@ $(function(){
 		uploadMultiple: false,
 		createImageThumbnails: true,
 	    addRemoveLinks: true,
-		maxFiles: 7,
+		maxFiles: 20,
 		maxfilesexceeded: function(file) {
 		        this.removeAllFiles();
 		        this.addFile(file);

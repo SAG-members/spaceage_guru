@@ -59,6 +59,8 @@ class Public_ajax_controller extends CI_Controller
 	const AJAX_USER_CALENDAR_EVENT_MOBILE = 'calendar_events_for_mobile';
 	const AJAX_SAVE_CALENDAR_EVENT_MOBILE = 'save_calendar_events_for_mobile';
 	
+	const AJAX_REMOVE_DATA_IMAGE = 'remove_data_image';
+	
 	
 	
 	public function __construct()
@@ -127,6 +129,8 @@ class Public_ajax_controller extends CI_Controller
 			case self::AJAX_USER_CALENDAR_EVENT_MOBILE : $response = $this->getUserCalendarEventsForMobiile($payload); break;
 			
 			case self::AJAX_SAVE_CALENDAR_EVENT_MOBILE : $response = $this->saveUserCalendarEventsMobile($payload); break;
+			
+			case self::AJAX_REMOVE_DATA_IMAGE : $response = $this->removeDataImage($payload); break;
 			
 			
 		}
@@ -861,11 +865,39 @@ class Public_ajax_controller extends CI_Controller
 		{
 			$upload_exts = explode(".", $_FILES["file"]["name"]);
 			
+			$extension = end($upload_exts); 
+			
 				# Generate Timestamp name for image name and upload
 			$imageName = md5($_FILES["file"]["name"].microtime()).'.'.end($upload_exts);
 			
+			$imageArray = array('png', 'jpeg', 'jpg', 'bmp', 'gif');
+			
+			
 			if(move_uploaded_file($_FILES["file"]["tmp_name"], Template::_PUBLIC_DATA_DOCUMENT_DIR.$imageName))
 			{
+			    # Now file is moved, so let's resize based on whether the document is image or something else
+			        
+			    if(in_array($extension, $imageArray)){
+			        # Resize image
+			        
+			        $config['image_library'] = 'gd2';
+			        $config['source_image'] = Template::_PUBLIC_DATA_DOCUMENT_DIR.$imageName;
+			        $config['new_image'] = Template::_PUBLIC_DATA_DOCUMENT_DIR.'thumb/'.$imageName;
+			        $config['create_thumb'] = false;
+			        $config['maintain_ratio'] = TRUE;
+			        $config['width']         = 125;
+			        $config['height']       = 100;
+			        
+			        $this->load->library('image_lib', $config);
+			        
+			        $this->image_lib->resize();
+			        
+			        
+			        # Load 
+			    }
+			    
+			    
+			    
 				$response = array('flag'=>1, 'result'=>$imageName);
 			}
 			else
@@ -1266,6 +1298,24 @@ class Public_ajax_controller extends CI_Controller
 	        
 	        $response = array('flag'=>0, 'message'=>'Unable to create library event');
 	    }
+	    
+	    return $response;
+	}
+	
+	private function removeDataImage($payload)
+	{
+	    $response = array();
+	    
+	    $documentId = $payload['document-id'];
+	    $pageId = $payload['page-id'];
+	    
+	    
+	    # Load data document model
+	    $this->load->model('data_document_model', 'document');
+	    $result = $this->document->remove_document($documentId);
+	    
+	    if($result) $response = array('flag'=>1);
+	    else $response = array('flag'=>0);
 	    
 	    return $response;
 	}

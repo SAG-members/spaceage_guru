@@ -14,12 +14,15 @@ class Dashboard extends Application
 		# Load Page model
 		$this->load->model('page');
 		$this->load->model('tasks_goals');
+		$this->load->model('rss_feed_subscription_model','rss');
 		
 		$userId = $this->session->userdata('id');
 		
 		$this->data['datas'] = $this->page->get_user_data($userId);
 		$this->data['tasks'] = $this->tasks_goals->get_task_by_user($userId);
 		$this->data['goals'] = $this->tasks_goals->get_goals_by_user($userId);
+		
+		$this->data['subscriptions'] = $this->rss->get_rss_feed_subscription_by_user_id($this->session->userdata('id')); 
 		
 		$this->template->setLeftSideBar('library_left_menu',$this->data);
 		

@@ -86,6 +86,7 @@ switch ($page->{Page::_VISIBILITY})
 	case Page::VISIBILITY_MEMBERSHIP_A : $message = 'This Post is only accessible by Membership A User '; break;
 	case Page::VISIBILITY_MEMBERSHIP_B : $message = 'This Post is only accessible by Membership B User '; break;
 	case Page::VISIBILITY_MEMBERSHIP_C : $message = 'This Post is only accessible by Membership C User '; break;
+	case Page::VISIBILITY_SPECIFIED_USER : $message = 'This post is only accessible by specific users'; break;
 }
 
 
@@ -94,7 +95,7 @@ switch ($page->{Page::_VISIBILITY})
 
 
 ?>
-<?php if(isset($error)):?>
+<?php if(isset($error) && $error == true):?>
 <div class="alert alert-danger mar-t-20"><?php echo $message;?></div>
 <?php else :?>
 <style>
@@ -121,23 +122,23 @@ switch ($page->{Page::_VISIBILITY})
     	<?php if($files): foreach ($files as $file) :  $extn = get_file_extension($file->document);?>
         	
         	<?php if($extn == 'png' || $extn == 'jpg' || $extn == 'jpeg' || $extn == 'bmp' || $extn == 'x-png') :?>
-        	<div class="col-md-3" style="min-height: 160px;">
+        	<div class="col-md-3" style="min-height: 160px; margin-bottom:10px;">
         		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
-        			<img style="width: 100%;" src="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>"/>
+        			<img style="width: 100%;" src="<?php echo base_url('assets/uploads/data_document/thumb/').$file->document; ?>"/>
         		</a>
         	</div>
         	<?php elseif($extn == 'mp4' || $extn == 'mp3'):?>
-        	<div class="col-md-3"  style="min-height: 160px;">
+        	<div class="col-md-3"  style="min-height: 160px; margin-bottom:10px;">
         		<img src="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>"/>
         	</div>
         	<?php elseif($extn == 'pdf') :?>
-        	<div class="col-md-3" style="min-height: 160px;">
+        	<div class="col-md-3" style="min-height: 160px; margin-bottom:10px;">
         		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
         			<img style="width: 100%;" src="<?php echo base_url('assets/img/pdf.jpeg'); ?>"/>
         		</a>
         	</div>
         	<?php elseif ( $extn == 'doc' || $extn == 'docx') :?>
-        	<div class="col-md-3" style="min-height: 160px;">
+        	<div class="col-md-3" style="min-height: 160px; margin-bottom:10px;">
         		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
         			<img style="width: 100%;" src="<?php echo base_url('assets/img/doc.jpeg') ?>"/>
         		</a>
@@ -722,8 +723,9 @@ switch ($page->{Page::_VISIBILITY})
 		</div>
 	
 	</div>
-	<?php if($page->priceless):?>
-	<h3 class="mar-t-10 mar-b-10">Priceless</h3>
+	<?php if($page->price == 0):?>
+	<h1 class="mar-t-10 mar-b-10">Priceless</h1>
+	<div class="clearfix mar-b-10"></div>
 	<?php else:?>
 	<div class="checkboobmain">		
 		<div class="input-group">

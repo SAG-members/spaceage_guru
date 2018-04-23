@@ -31,4 +31,14 @@ class Page_specified_user_assignment_model extends CI_Model
 		$this->db->insert(static::_TABLE, $data);
 		return $this->db->insert_id();
 	}
+	
+	public function check_post_status($postId, $userId)
+	{	   
+	    $this->db->select('id');
+	    $this->db->from(static::_TABLE);
+	    $this->db->where(array(static::_PAGE_ID=>$postId, static::_USER_ID => $userId));
+	    return $this->db->get()->num_rows();
+	}
+	
+	
 }

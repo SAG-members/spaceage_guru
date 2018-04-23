@@ -303,59 +303,6 @@
 							<?php endif;?>
 						</div>
 						
-						
-						
-						<div id="subscriptions-tab" class="tab-pane">
-							<div class="pad-20">
-								<h3>Active Subscriptions</h3>
-								<div class="mar-t-10"></div>
-								<table id="datatable"
-										class="table table-striped table-bordered dataTable no-footer"
-										role="grid" aria-describedby="datatable_info">
-								<thead>
-									<tr role="row">
-										<th>Subscription Type</th>
-										<th>Subscription Item</th>
-										<th>Unsubscribe</th>
-									</tr>
-								</thead>
-								<tbody>
-								<?php if($subscriptions): foreach ($subscriptions as $s):?>
-									<?php 
-									   $category = $this->page->get_category($s->category_id);
-// 										$subscribedItem = ""; $subscriptionType="";
-
-// 										switch ($s->{Rss_feed_subscription_model::_CATEGORY_ID})
-// 										{
-// 											case 1: $subscriptionType = 'Service'; $subscribedItem = $this->page->get_by_id($s->{Rss_feed_subscription_model::_ITEM_ID})->{Page::_PAGE_TITLE}; break;
-// 											case 2: $subscriptionType = 'Product'; $subscribedItem = $this->page->get_by_id($s->{Rss_feed_subscription_model::_ITEM_ID})->{Page::_PAGE_TITLE};  break;
-// 											case 3: break;
-// 											case 4: break;
-// 											case 5: break;
-// 											case 6: break;
-// 											case 7: break;
-// 											case 8: $subscriptionType = 'Sensation'; $subscribedItem = $this->page->get_by_id($s->{Rss_feed_subscription_model::_ITEM_ID})->{Page::_PAGE_TITLE}; break;
-// 											case 9: break;
-// 											case 10: break;
-// 											case 11: break;
-// 											case 12: break;
-// 											case 13: break;
-// 											case 14: break;
-// 											case 15: break;
-// 										}
-										
-									?>
-									<tr>
-										<td><?php echo $category; ?></td>
-										<td><?php echo $s->page_title;?></td>
-										<td><input type="checkbox" name="unsubscribe-feed-list" class="select-one-user" data-id="<?php echo $s->id;?>"/></td>
-									</tr>
-								<?php endforeach; endif;?>
-								</tbody>
-								</table>
-							</div>
-						</div>
-						
 						<div id="tous-tab" class="tab-pane">
 							<?php if($profile->{User::_USER_MEMBERSHIP_LEVEL} > 3) :?>
 							<h3>Member TOUS</h3>

@@ -30,11 +30,23 @@ class Page_controller extends Application {
 		$response['files'] = $this->data_document->get_data_document($response['page']->{Page::_ID});
 		$response['like_dislike'] = $this->pld->get_count_like_dislike($response['page']->{Page::_ID});
 		
-		if($response['page']->{Page::_VISIBILITY} > $membershipLevel)
-		{
-			$response['error'] = true;
-		}
+		$userId = $this->session->userdata('id');
+		$postId = $response['page']->{Page::_ID};
 		
+		# Load page specified user assignment
+		$this->load->model('page_specified_user_assignment_model', 'specific_user');
+		$count = $this->specific_user->check_post_status($postId, $userId);
+		
+		# Check if page visibility is 7
+		
+		if($response['page']->{Page::_VISIBILITY} > $membershipLevel){
+		  $response['error'] = true;
+		}
+				
+		if($response['page']->{Page::_VISIBILITY} == Page::VISIBILITY_SPECIFIED_USER && $count > 0){
+		    $response['error'] = false;        
+		}
+// 		pre($response); die;
 		$response['metaTitle'] = $response['page']->{Page::_META_TITLE};
 		$response['metaKeywords'] = $response['page']->{Page::_META_KEYWORD};
 		$response['metaDescription'] = strip_tags($response['page']->{Page::_META_DESCRIPTION});

@@ -625,7 +625,8 @@ function getWikiSearchResult(e)
 		success:function(data)
 		{
 			var html = '';
-			if((data.result).length > 0) 
+			
+			if(data.flag == 1) 
 			{
 				html += '<table class="table table-bordered">';
 				html +='<caption><h2>Data List</h2></caption>';
@@ -654,6 +655,7 @@ function getWikiSearchResult(e)
 			
 				html +='<div class="blogmain"></div>';	
 			}
+			else html +='<p>No Result Found</p>';
 									
 			$('.content').html(html);	
 		}

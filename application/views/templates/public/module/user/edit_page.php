@@ -12,7 +12,7 @@ $auditory_pitch_val =''; $auditory_pace_val =''; $auditory_timbre_val =''; $audi
 $auditory_rhythm_val =''; $auditory_direction_val =''; $auditory_harmony_val =''; $auditory_ear_val =''; $kinesthic_breating_val ='';
 $kinesthic_location_in_body_val = '' ; $kinesthic_pulse_val =''; $kinesthic_skin_val =''; $kinesthic_weight_val =''; $kinesthic_pressure_val =''; $kinesthic_intensity_val ='';
 $kinesthic_tactile_val =''; $olafactory_sweet_val =''; $olafactory_sour_val =''; $olafactory_salt_val =''; $olafactory_bitter_val ='';
-$olafactory_aroma_val =''; $olafactory_fragrance_val =''; $olafactory_essence_val =''; $olafactory_pungence_val ='';
+$olafactory_aroma_val =''; $olafactory_fragrance_val =''; $olafactory_essence_val =''; $olafactory_pungence_val =''; $page_id = "";
 
 if($submodilities)
 {
@@ -80,6 +80,7 @@ $title = ''; $description = ''; $regions = ''; $priceBoxSelected = ''; $priceLes
 
 if($page)
 {
+    $page_id = $page->{Page::_ID};
 	$categoryId = $page->{Page::_CATEGORY_ID};
 	
 	switch($categoryId)
@@ -260,25 +261,29 @@ if($page)
         	<?php if($files): foreach ($files as $file) :  $extn = get_file_extension($file->document);?>
         	
         	<?php if($extn == 'png' || $extn == 'jpg' || $extn == 'jpeg' || $extn == 'bmp' || $extn == 'x-png') :?>
-        	<div class="col-md-3" style="min-height: 160px;">
+        	<div class="col-md-3" style="min-height: 160px; margin-bottom:10px; position:relative; ">
         		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
-        			<img style="width: 100%;" src="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>"/>
+        			<img  class="img-responsive" style="width: 100%;" src="<?php echo base_url('assets/uploads/data_document/thumb/').$file->document; ?>"/>
         		</a>
+        		<a class="remove-image"  data-page-id="<?php echo $page_id; ?>" data-id="<?php echo $file->id; ?>" style="position: absolute; top:-5px; right:10px; color: #000;"/><i class="fa fa-close fa-2x"></i></a>
         	</div>
         	<?php elseif($extn == 'mp4' || $extn == 'mp3'):?>
-        	<div class="col-md-3"  style="min-height: 160px;">
-        		<img src="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>"/>
+        	<div class="col-md-3"  style="min-height: 160px; margin-bottom:10px; position:relative; ">
+        		<img class="img-responsive" src="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>"/>
+        		<a class="remove-image" data-page-id="<?php echo $page_id; ?>"  data-id="<?php echo $file->id; ?>"  style="position: absolute; top:-5px; right:10px; color: #000;"/><i class="fa fa-close fa-2x"></i></a>
         	</div>
         	<?php elseif($extn == 'pdf') :?>
-        	<div class="col-md-3" style="min-height: 160px;">
+        	<div class="col-md-3" style="min-height: 160px; margin-bottom:10px; position:relative; ">
         		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
-        			<img style="width: 100%;" src="<?php echo base_url('assets/img/pdf.jpeg'); ?>"/>
+        			<img  class="img-responsive" style="width: 100%;" src="<?php echo base_url('assets/img/pdf.jpeg'); ?>"/>
+        			<a class="remove-image" data-page-id="<?php echo $page_id; ?>"  data-id="<?php echo $file->id; ?>"  style="position: absolute; top:-5px; right:10px; color: #000;"/><i class="fa fa-close fa-2x"></i></a>
         		</a>
         	</div>
         	<?php elseif ( $extn == 'doc' || $extn == 'docx') :?>
-        	<div class="col-md-3" style="min-height: 160px;">
+        	<div class="col-md-3" style="min-height: 160px; margin-bottom:10px; position:relative; ">
         		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
-        			<img style="width: 100%;" src="<?php echo base_url('assets/img/doc.jpeg') ?>"/>
+        			<img  class="img-responsive" style="width: 100%;" src="<?php echo base_url('assets/img/doc.jpeg') ?>"/>
+        			<a class="remove-image" data-page-id="<?php echo $page_id; ?>" data-id="<?php echo $file->id; ?>"  style="position: absolute; top:-5px; right:10px; color: #000;"/><i class="fa fa-close fa-2x"></i></a>
         		</a>
         	</div>
         	<?php endif;?>
@@ -831,7 +836,7 @@ $(function(){
 		uploadMultiple: false,
 		createImageThumbnails: true,
 	    addRemoveLinks: true,
-		maxFiles: 7,
+		maxFiles: 20,
 		maxfilesexceeded: function(file) {
 		        this.removeAllFiles();
 		        this.addFile(file);
@@ -921,7 +926,28 @@ $(function(){
 	
 });
 
+$('.remove-image').on('click', function(e){
+	var $this = $(this);
+	var pageId = $(this).data('pageId');
+	var documentId = $(this).data('id');
 
+	var payload = {'page-id':pageId, 'document-id':documentId};
+	/* Fire ajax request to remove document */
+	
+	$.ajax({
+		url:BASE_URL+'ajax', 
+		data:{acid:'remove_data_image', payload:JSON.stringify(payload)},
+		type:'post', 
+		dataType : 'JSON',		
+		success:function(data)
+		{
+			$this.parents('.col-md-3').remove();
+		}
+	});
+	
+
+	
+});
 
 
 
