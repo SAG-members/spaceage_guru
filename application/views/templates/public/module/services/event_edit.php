@@ -170,10 +170,8 @@ if(!empty($eventData))
         		</div> 
         		   		
         		<div class="col-md-6">
-    				<label style="color: #FFF;">Date Time</label>
-    				<?php if($this->session->userdata('membershipLevel') > 3 && $hasExpiryDate) :?>
-    				<input type="checkbox" name="has_date_time" checked data-toggle="toggle">  
-    				<?php endif; ?>
+    				<label style="color: #FFF;">Date Time</label>    				
+    				<input type="checkbox" name="has_date_time" checked data-toggle="toggle">
     				<input type="text" name="escrow_date_time" class="form-control" value="<?php echo $dateTime; ?>"/>
     			</div>   		
     			<div class="clearfix"></div>
