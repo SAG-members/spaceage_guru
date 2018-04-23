@@ -6295,3 +6295,40 @@ DEBUG - 2018-04-23 11:05:46 --> Global POST, GET and COOKIE data sanitized
 INFO - 2018-04-23 11:05:46 --> Input Class Initialized
 INFO - 2018-04-23 11:05:46 --> Language Class Initialized
 ERROR - 2018-04-23 11:05:46 --> 404 Page Not Found: Assets/landing
+INFO - 2018-04-23 11:09:32 --> Config Class Initialized
+INFO - 2018-04-23 11:09:32 --> Hooks Class Initialized
+DEBUG - 2018-04-23 11:09:32 --> UTF-8 Support Enabled
+INFO - 2018-04-23 11:09:32 --> Utf8 Class Initialized
+INFO - 2018-04-23 11:09:32 --> URI Class Initialized
+DEBUG - 2018-04-23 11:09:32 --> No URI present. Default controller set.
+INFO - 2018-04-23 11:09:32 --> Router Class Initialized
+INFO - 2018-04-23 11:09:32 --> Output Class Initialized
+INFO - 2018-04-23 11:09:32 --> Security Class Initialized
+DEBUG - 2018-04-23 11:09:32 --> Global POST, GET and COOKIE data sanitized
+INFO - 2018-04-23 11:09:32 --> Input Class Initialized
+INFO - 2018-04-23 11:09:32 --> Language Class Initialized
+INFO - 2018-04-23 11:09:32 --> Loader Class Initialized
+DEBUG - 2018-04-23 11:09:32 --> Config file loaded: /var/www/html/spaceage_guru/application/config/custom.php
+INFO - 2018-04-23 11:09:32 --> Helper loaded: url_helper
+INFO - 2018-04-23 11:09:32 --> Helper loaded: common_helper
+INFO - 2018-04-23 11:09:32 --> Database Driver Class Initialized
+INFO - 2018-04-23 11:09:32 --> Session: Class initialized using 'files' driver.
+INFO - 2018-04-23 11:09:32 --> Email Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Controller Class Initialized
+INFO - 2018-04-23 11:09:32 --> Helper loaded: cookie_helper
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> Model Class Initialized
+INFO - 2018-04-23 11:09:32 --> File loaded: /var/www/html/spaceage_guru/application/views/templates/public/landing_template.php
+INFO - 2018-04-23 11:09:32 --> Final output sent to browser
+DEBUG - 2018-04-23 11:09:32 --> Total execution time: 0.0146

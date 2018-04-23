@@ -151,11 +151,7 @@ ul.dropdown-menu li{}
                 }
             })
 
-            $('[data-toggle="tooltip"]').tooltip({
-                html: "true", 
-                placement: "auto-right", 
-                delay: {"show": 100, "hide": 100000} 
-              }); 
+            $('[data-toggle="tooltip"]').tooltip(); 
             
         })
         
