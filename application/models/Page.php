@@ -187,13 +187,13 @@ class Page extends CI_Model
 		
 		if($tags)
 		{
-			$this->db->or_where(static::_TAG ." LIKE '$tags%'");
+			$this->db->or_where(static::_TAG ." LIKE '%$tags%'"); 
 		}
 		
 		$this->db->order_by(static::_DATE_CREATED, 'DESC');
 		
 		$response = $this->db->get()->result();
-			
+		
 		return $response;
 	}
 	

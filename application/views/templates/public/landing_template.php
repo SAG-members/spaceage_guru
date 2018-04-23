@@ -9,9 +9,10 @@
 <link rel="icon" href="<?php echo base_url('assets/img/fav-32X32.png'); ?>" type="image/gif" sizes="32x32">
 
 <!-- Bootstrap -->
-<link href="<?php echo base_url('assets/landing')?>/css/style.css" rel="stylesheet">
+
 <link href="<?php echo base_url('assets/landing')?>/css/bootstrap.min.css" rel="stylesheet">
 <link href="<?php echo base_url('assets/landing')?>/css/responsive.css" rel="stylesheet">
+<link href="<?php echo base_url('assets/landing')?>/css/style.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400,500,600,700,800,900" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
@@ -150,7 +151,11 @@ ul.dropdown-menu li{}
                 }
             })
 
-            $('[data-toggle="tooltip"]').tooltip(); 
+            $('[data-toggle="tooltip"]').tooltip({
+                html: "true", 
+                placement: "auto-right", 
+                delay: {"show": 100, "hide": 100000} 
+              }); 
             
         })
         
