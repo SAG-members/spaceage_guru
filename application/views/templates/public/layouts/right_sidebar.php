@@ -72,7 +72,7 @@ if($this->session->userdata('user_id')) $lockIcon = '';
         					<?php if(!empty($c->image)) :?>
         					<img class="img-responsive" alt="offer-image" title="offer-image" src="<?php echo base_url('assets/uploads/data_document/'.$c->image); ?>">        					
         					<?php endif;?>
-        					<h4><?php echo $c->comment; ?></h3>
+        					<h4><?php echo $c->comment; ?></h4>
         						<p>
         							<b>Location </b>
         						</p>

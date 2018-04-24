@@ -138,6 +138,8 @@ class Webservice_controller extends CI_Controller
 	
 	const AJAX_ACQUIRE_DATA = 'acquire_data';
 	
+	const AJAX_GET_ESCROW_LIST = 'get_escrow_list';
+	
 	
 	public function __construct()
 	{
@@ -286,6 +288,8 @@ class Webservice_controller extends CI_Controller
 			case self::AJAX_PROCESS_SMART_CONTRACT : $response = $this->process_smart_contract($payload); break;
 			
 			case self::AJAX_ACQUIRE_DATA : $response = $this->acquire_data($payload); break;
+			
+			case self::AJAX_GET_ESCROW_LIST : $response = $this->get_escrow_list($payload); break;
 		}
 		
 		echo json_encode($response);
@@ -4104,6 +4108,43 @@ class Webservice_controller extends CI_Controller
 	   return $response;
 	}
 	
+	public function get_escrow_list($payload)
+	{
+	    $response = array();
+	    
+	    if(empty($this->input->post('user_id'))){
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    
+	    $userId = $this->input->post('user_id');
+	    
+	    # Load user model
+	    $this->load->model('user');
+	    
+	    # Load page view to be used
+	    $this->load->model('User_event_escrow_model', 'ueem');
+	    
+	    # Load library event comment model
+	    $this->load->model('user_event_status_model', 'uesm');
+	    
+	    # Load Library Event Model
+	    $this->load->model('user_event_model','uem');
+	    
+	    # Get Saved Escrow Data
+	    $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId .') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::YIELD_OFFER;
+	    $response['yielded_escrow'] = $this->ueem->get_by_criteria($criteria);
+	    
+	    # Get Saved Escrow Data
+	    $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId .') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::SAVE_AND_EXIT;
+	    $response['saved_escrow'] = $this->ueem->get_by_criteria($criteria);
+	    
+	    # Get Accepted Escrow Data
+	    $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId . ') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::ACCEPT_OFFER;
+	    $response['accepted_escrow'] = $this->ueem->get_by_criteria($criteria);
+	    
+	    return $response;
+	}
 	
 	
 }
