@@ -70,7 +70,7 @@ if($this->session->userdata('user_id')) $lockIcon = '';
         				</div>
         				<div class="x_content">
         					<?php if(!empty($c->image)) :?>
-        					<img class="image-responsive" alt="offer-image" title="offer-image" src="<?php echo base_url('assets/uploads/data_document/'.$c->image); ?>">        					
+        					<img class="img-responsive" alt="offer-image" title="offer-image" src="<?php echo base_url('assets/uploads/data_document/'.$c->image); ?>">        					
         					<?php endif;?>
         					<h4><?php echo $c->comment; ?></h3>
         						<p>
