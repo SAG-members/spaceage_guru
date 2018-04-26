@@ -121,5 +121,10 @@ class User_event_model extends CI_Model
 	    $this->db->where("B.user_id", $userId);
 	    return $this->db->get()->result();
 	}
+	
+	public function remove_by_criteria($criteria){
+	    $this->db->where($criteria);
+	    $this->db->delete(static::_TABLE);
+	}
 		
 }

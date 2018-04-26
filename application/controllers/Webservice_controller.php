@@ -139,6 +139,13 @@ class Webservice_controller extends CI_Controller
 	const AJAX_ACQUIRE_DATA = 'acquire_data';
 	
 	const AJAX_GET_ESCROW_LIST = 'get_escrow_list';
+	const AJAX_EDIT_ESCROW = 'edit_escrow';
+	const AJAX_DELETE_ESCROW = 'delete_escrow';
+	const AJAX_SAVE_EXIT_ESCROW = 'save_escrow';
+	const AJAX_DECLINE_ESCROW = 'decline_escrow';
+	const AJAX_ACCEPT_ESCROW = 'accept_escrow';
+	const AJAX_APPROVE_ESCROW = 'approve_escrow';
+	const AJAX_PAY_ESCROW = 'pay_escrow';
 	
 	
 	public function __construct()
@@ -290,6 +297,13 @@ class Webservice_controller extends CI_Controller
 			case self::AJAX_ACQUIRE_DATA : $response = $this->acquire_data($payload); break;
 			
 			case self::AJAX_GET_ESCROW_LIST : $response = $this->get_escrow_list($payload); break;
+			case self::AJAX_EDIT_ESCROW : $response = $this->edit_escrow($payload); break;
+			case self::AJAX_DELETE_ESCROW : $response = $this->delete_escrow($payload); break;
+			case self::AJAX_SAVE_EXIT_ESCROW : $response = $this->save_exit_escrow($payload); break;
+			case self::AJAX_DECLINE_ESCROW : $response = $this->decline_escrow($payload); break;
+			case self::AJAX_ACCEPT_ESCROW : $response = $this->accept_escrow($payload); break;
+			case self::AJAX_APPROVE_ESCROW : $response = $this->approve_escrow($payload); break;
+			case self::AJAX_PAY_ESCROW : $response = $this->pay_escrow($payload); break;
 		}
 		
 		echo json_encode($response);
@@ -4131,20 +4145,347 @@ class Webservice_controller extends CI_Controller
 	    # Load Library Event Model
 	    $this->load->model('user_event_model','uem');
 	    
+	    # Load page model
+	    $this->load->model('page');
+	    
+	    # Load user events model
+	    $this->load->model('user_event_model', 'event');
+	    
+	    # Load currency model
+	    $this->load->model('currency');
+	    
 	    # Get Saved Escrow Data
 	    $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId .') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::YIELD_OFFER;
-	    $response['yielded_escrow'] = $this->ueem->get_by_criteria($criteria);
+	    $yieldedEscrow = $this->ueem->get_by_criteria($criteria);
+	    	    
+	    if(!empty($yieldedEscrow)){
+	        foreach ($yieldedEscrow as $e){
+	            
+	            # Get event details based on event id
+	            $eventData = $this->event->get_by_id($e->event_id);
+	            
+	            $output = array();
+	            
+	            $output['event_id'] = $eventData->id;
+	            $output['item'] = $this->page->get_by_id($eventData->item_id, Page::_PAGE_TITLE);
+	            $output['pct_price'] = $eventData->pct_price;
+	            $output['price'] = $this->currency->get_by_id($eventData->price_currency, Currency::_CURRENCY_SYMBOL).' '.$eventData->price;
+	            $output['address'] = $eventData->location;
+	            $output['date_time'] = $eventData->date_created;
+	            
+	            $response['yielded_escrow'][] = $output;
+	        }
+	    }
 	    
 	    # Get Saved Escrow Data
 	    $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId .') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::SAVE_AND_EXIT;
-	    $response['saved_escrow'] = $this->ueem->get_by_criteria($criteria);
+	    $savedEscrow= $this->ueem->get_by_criteria($criteria);
+	    
+	    if(!empty($savedEscrow)){
+	        foreach ($savedEscrow as $e){
+	            # Get event details based on event id
+	            $eventData = $this->event->get_by_id($e->event_id);
+	            
+	            $output = array();
+	            
+	            $output['event_id'] = $eventData->id;
+	            $output['item'] = $this->page->get_by_id($eventData->item_id, Page::_PAGE_TITLE);
+	            $output['pct_price'] = $eventData->pct_price;
+	            $output['price'] = $this->currency->get_by_id($eventData->price_currency, Currency::_CURRENCY_SYMBOL).' '.$eventData->price;
+	            $output['address'] = $eventData->location;
+	            $output['date_time'] = $eventData->date_created;
+	            
+	            $response['saved_escrow'][] = $output;
+	        }
+	    }
 	    
 	    # Get Accepted Escrow Data
 	    $criteria = '('.User_event_escrow_model::_ESCROW_BUYER_ID.' = '.$userId. ' OR '. User_event_escrow_model::_ESCROW_SELLER_ID. ' = '.$userId . ') AND ' .User_event_escrow_model::_STATUS.' = '.User_event_escrow_model::ACCEPT_OFFER;
-	    $response['accepted_escrow'] = $this->ueem->get_by_criteria($criteria);
+	    $acceptedEscrow = $this->ueem->get_by_criteria($criteria);
+	    
+	    if(!empty($acceptedEscrow)){
+	        foreach ($acceptedEscrow as $e){
+	            # Get event details based on event id
+	            $eventData = $this->event->get_by_id($e->event_id);
+	            
+	            $output = array();
+	            
+	            $output['event_id'] = $eventData->id;
+	            $output['item'] = $this->page->get_by_id($eventData->item_id, Page::_PAGE_TITLE);
+	            $output['pct_price'] = $eventData->pct_price;
+	            $output['price'] = $this->currency->get_by_id($eventData->price_currency, Currency::_CURRENCY_SYMBOL).' '.$eventData->price;
+	            $output['address'] = $eventData->location;
+	            $output['date_time'] = $eventData->date_created;
+	            	            
+	            if($e->escrow_buyer_id == $userId && $e->status == User_event_escrow_model::ACCEPT_OFFER && $e->seller_approved == 0) 
+                $output['action'] =	"Waiting for Seller Approval";
+                elseif($e->escrow_seller_id == $userId && $e->status == User_event_escrow_model::ACCEPT_OFFER && $e->seller_approved == 0) 
+                $output['action'] =	"Approval Required";
+    			elseif($e->escrow_seller_id == $userId && $e->status == User_event_escrow_model::ACCEPT_OFFER && $e->seller_approved == 1)
+    			$output['action'] =	"Waiting to be paid";
+				elseif($e->escrow_buyer_id == $userId && $e->status == User_event_escrow_model::ACCEPT_OFFER && $e->seller_approved == 1)
+				$output['action'] =	"Pay";    				
+	            
+	            $response['accepted_escrow'][] = $output;
+	        }
+	    }
+	     
+	    return $response;
+	}
+	
+	private function edit_escrow($payload)
+	{
+	    $response = array();
+	    
+	    if(empty($this->input->post('user_id'))){
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    
+	    # Load user model
+	    $this->load->model('user');
+	    
+	    # Load page view to be used
+	    $this->load->model('User_event_escrow_model', 'ueem');
+	    
+	    # Load library event comment model
+	    $this->load->model('user_event_status_model', 'uesm');
+	    
+	    # Load Library Event Model
+	    $this->load->model('user_event_model','uem');
+	    
+	    # Load page model
+	    $this->load->model('page');
+	    
+	    # Load user events model
+	    $this->load->model('user_event_model', 'event');
+	    
+	    # Load currency model
+	    $this->load->model('currency');
+	    
+	    $userId = $this->input->post('user_id');	    
+	    $eventId = $this->input->post('event_id');
+	    
+	    # get payment method
+	    $paymentMethods = $this->ueem->get_payment_method();
+	    $deliveryMethods = $this->ueem->get_delivery_method();
+	    $paymentWhen = $this->ueem->payment_when();
+	    
+	    # Get event details based on event id
+	    $eventData = $this->event->get_by_id($eventId);
+	    
+	    # Get escrow id based on event id
+	    $criteria = array(User_event_escrow_model::_EVENT_ID => $eventId);
+	    $escrowData = $this->ueem->get_by_criteria($criteria);
+	        
+	    
+	    $response['escrow_id'] = $escrowData[0]->id;
+        $response['event_id'] = $eventData->id; 
+	    $response['item_name'] = $this->page->get_by_id($eventData->item_id, Page::_PAGE_TITLE);;
+	    $response['notes'] = $eventData->topic;
+	    $response['price'] = $eventData->pct_price;
+	    $response['payment_from'] = $paymentMethods[$eventData->payment_from];
+	    $response['delivery_method'] = $deliveryMethods[$eventData->delivery_method];
+	    $response['when'] = $paymentWhen[$eventData->escrow_released];
+	    $response['to'] = $eventData->address;
+	    $response['date_time'] = $eventData->date_created;
+	    
+	    //pre($eventData);
+	    
+	    # Now since we are doing the escrow, let's store the details in esrow table
+	    
+	    $criteria = array(User_event_escrow_model::_EVENT_ID => $eventId);
+	    $result = $this->ueem->get_by_criteria($criteria);
+	    
+	    $escrowId = ""; $sellerId = ""; $sellerApproved = "";
+	    
+	    if(!empty($result))
+	    {
+	        $escrowId = $result[0]->{User_event_escrow_model::_ID};
+	        $sellerId = $result[0]->{User_event_escrow_model::_ESCROW_SELLER_ID};
+	        $sellerApproved = $result[0]->{User_event_escrow_model::_SELLER_APPROVED};
+	    }
+	    else
+	    {
+	        $escrowId = $this->ueem->yield_offer($eventId, $eventData->{User_event_model::_USER_ID}, $userId);
+	        $eventEscrowData = $this->ueem->get_by_id($escrowId);
+	        
+	        $sellerId = $eventEscrowData->{User_event_escrow_model::_ESCROW_SELLER_ID};
+	        $sellerApproved = $eventEscrowData->{User_event_escrow_model::_SELLER_APPROVED};
+	    }
+// 	    echo $sellerApproved;
+// 	    echo $userId;
+// 	    echo $sellerId;
+	    if(($sellerApproved == 1) && ($userId != $sellerId)) {
+	       $response['accept'] = "no"; 
+	       $response['approve'] = "no";
+	       $response['pct'] = "yes";
+	    }	    
+	    elseif(isset($sellerId) && $userId == $sellerId && $sellerApproved != 1){
+	        $response['accept'] = "no";
+	        $response['approve'] = "yes";
+	        $response['pct'] = "no";
+	    }				
+		elseif($sellerApproved == 1){
+		    $response['accept'] = "no";
+		    $response['approve'] = "no";
+		    $response['pct'] = "no";
+	    }
+	    else{
+	        $response['accept'] = "yes";
+	        $response['approve'] = "no";
+	        $response['pct'] = "no";
+	    }
+	    
+// 	    $response['event_data'][] = $response;
+
 	    
 	    return $response;
 	}
 	
+	public function delete_escrow($payload)
+	{
+	    $response = array();
+	    
+	    if(empty($this->input->post('user_id'))){
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    
+	    
+	    $eventId = $this->input->post('event_id');
+	    $userId = $this->input->post('user_id');
+	    
+	    # Load user events model
+	    $this->load->model('user_event_model','uem');
+	    
+	    # Load user event escrow model
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    
+	    # Load user event status model
+	    $this->load->model('user_event_status_model', 'uesm');
+	    
+	    # First step is to remove escrow
+	    $this->ueem->remove_by_criteria(array(User_event_escrow_model::_EVENT_ID => $eventId));
+	    
+	    # Remove escrow status
+	    $this->uesm->remove_by_criteria(array(User_event_status_model::_EVENT_ID => $eventId, User_event_status_model::_USER_ID => $userId));
+	    
+	    $response = array('flag'=>1, 'message'=>'Escrow Deleted Successfully');
+	    
+	    return $response;
+	}
 	
+	public function save_exit_escrow($payload)
+	{
+	    $response = array();
+	    
+	    if(empty($this->input->post('user_id'))){
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    
+	    $escrowId = $this->input->post('escrow_id');
+	    $escrowNotes = $this->input->post('escrow_notes');
+	    $paymentFrom = $this->input->post('payment_from');
+	    $deliveryMethod = $this->input->post('delivery_method');
+	    $paymentWhen = $this->input->post('payment_when');
+	    $escrowAddress = $this->input->post('escrow_address');
+	    $escrowPrice = $this->input->post('escrow_price');
+	    	    
+	    if(empty($escrowNotes) || empty($paymentFrom) || empty($deliveryMethod) || empty($paymentWhen) || empty($escrowAddress) || empty($escrowPrice)){
+	        $response = array('flag'=>0, 'Please provide escrow notes, payment from, delivery method, payment when, escrow address or escrow price');
+	        return $response;
+	    }
+	    	    
+	    # Load model
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    $result = $this->ueem->save_offer($escrowId, $escrowNotes, $paymentFrom, $deliveryMethod, $paymentWhen, $escrowAddress, $escrowPrice);
+	    
+	    if($result) $response = array('flag'=>1, 'message'=>'Offer Saved Successfully');
+	    else $response = array('flag'=>0, 'message'=>'Please login first');
+	    
+	    return $response;
+	}
+	
+	public function decline_escrow($payload)
+	{
+	    $response = array();
+	    
+	    if(empty($this->input->post('user_id'))){
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    $eventId = $this->input->post('event_id');
+	    $userId = $this->input->post('user_id');
+	    
+	    # Load user event status model
+	    $this->load->model('user_event_status_model','uesm');
+	    
+	    $status = User_event_status_model::STATUS_DECLINE;
+	    
+	    if($this->uesm->register_event_status($eventId, $userId, $status))
+        $response = array('flag'=>1, 'message'=>'Offer declined successfully');
+	    else
+	    $response = array('flag'=>0,'message'=>'OOPS !!! Something went wrong, unable to decline offer');
+	    
+	    return $response;
+	}
+	
+	public function accept_escrow($payload)
+	{
+	    $response = array();
+	    
+	    if(empty($this->input->post('user_id'))){
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    
+	    $escrowId = $this->input->post('escrow_id');
+	    $escrowNotes = $this->input->post('escrow_notes');
+	    $paymentFrom = $this->input->post('payment_from');
+	    $deliveryMethod = $this->input->post('delivery_method');
+	    $paymentWhen = $this->input->post('payment_when');
+	    $escrowAddress = $this->input->post('escrow_address');
+	    $escrowPrice = $this->input->post('escrow_price');
+	    
+	    if(empty($escrowNotes) || empty($paymentFrom) || empty($deliveryMethod) || empty($paymentWhen) || empty($escrowAddress) || empty($escrowPrice)){
+	        $response = array('flag'=>0, 'Please provide escrow notes, payment from, delivery method, payment when, escrow address or escrow price');
+	        return $response;
+	    }
+	    
+	    # Load model
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    $result = $this->ueem->accept_offer($escrowId, $escrowNotes, $paymentFrom, $deliveryMethod, $paymentWhen, $escrowAddress, $escrowPrice);
+	    
+	    if($result) $response = array('flag'=>1, 'message'=>'Offer Accepted Successfully, Please wait for Seller Approval');
+	    else $response = array('flag'=>0, 'message'=>'Error accepting offer');
+	    
+	    return $response;
+	}
+	
+	public function approve_escrow($payload)
+	{
+	    $response = array();
+	    
+	    if(empty($this->input->post('user_id'))){
+	        $response = array('flag'=>0, 'message'=>'Please login first');
+	        return $response;
+	    }
+	    
+	    $escrowId = $this->input->post('escrow_id');
+	    $userId = $this->input->post('user_id');
+	    
+	    # Load model
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    $result = $this->ueem->approve_offer($escrowId);
+	    
+	    if($result) $response = array('flag=>1', 'message'=>'Offer Approved Successfully');
+	    else  $response = array('flag=>0', 'message'=>'Error approving offer');
+	}
+	
+	public function pay_escrow($payload)
+	{
+	    
+	}
 }

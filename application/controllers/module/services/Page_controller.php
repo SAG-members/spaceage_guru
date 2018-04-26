@@ -306,10 +306,26 @@ class Page_controller extends Application {
 	
 	public function delete_escrow()
 	{
-	    $escrowId = $this->uri->segment(3);
+	    $eventId = $this->uri->segment(3);
 	    $userId = $this->session->userdata('id');
+	    	    
 	    
-	    # Load user library event escrow model
+	    # Load user events model
+	    $this->load->model('user_event_model','uem');
+	    
+	    # Load user event escrow model
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    
+	    # Load user event status model
+	    $this->load->model('user_event_status_model', 'uesm');
+	    
+	    # First step is to remove escrow
+	    $this->ueem->remove_by_criteria(array(User_event_escrow_model::_EVENT_ID => $eventId));
+	    
+	    # Remove escrow status
+	    $this->uesm->remove_by_criteria(array(User_event_status_model::_EVENT_ID => $eventId, User_event_status_model::_USER_ID => $userId));
+	    
+	    /*
 	    
 	    $this->load->model('user_library_event_escrow_model', 'escrow');
 	    $escrowDetail = $this->escrow->get_by_id($escrowId);
@@ -343,8 +359,8 @@ class Page_controller extends Application {
 	    }
 	     
 	    $this->escrow->delete_escrow($escrowId);
-	    
-	    redirect(base_url('escrow'));	    
+	    */
+	    redirect(base_url('e-business'));	    
 	}
 	
 	public function escrow_success()

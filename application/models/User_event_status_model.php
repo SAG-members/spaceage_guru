@@ -52,6 +52,9 @@ class User_event_status_model extends CI_Model
 	    return $this->db->get()->result();
 	}
 	
-	
+	public function remove_by_criteria($criteria){
+	    $this->db->where($criteria);
+	    $this->db->delete(static::_TABLE);
+	}
 	
 }

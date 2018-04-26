@@ -212,7 +212,7 @@ $(document).on('click', 'button[type="button"][name="confirm-user-registration"]
 	 * Check if error exists, then prevent form submit and force user to correct details
 	 */ 
  
-	$('#register_form').children('input[type="text"], input[type="password"], select').each(function(k, v){
+	$('#register_form').children('input[type="text"], input[type="password"], textarea, select').each(function(k, v){
 		if($(v).val() == '' && $(v).attr('name') != 'recommendor' && $(v).attr('name') != 'fakeusernameremembered' && $(v).attr('name') != 'fakepasswordremembered')
 		{
 			

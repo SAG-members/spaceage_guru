@@ -120,5 +120,21 @@ class User_event_escrow_model extends CI_Model
 	    return $this->db->affected_rows();
 	}
     
+	public function remove_by_criteria($criteria){
+	    $this->db->where($criteria);
+	    $this->db->delete(static::_TABLE);
+	}
+	
+	public function get_payment_method(){
+	    return array('1'=>'PCT Account', '2'=>'Cash');
+	}
+	
+	public function get_delivery_method(){
+	    return array('1'=>'By Seller', '2'=>'By Post', '3'=>'Pickup by Buyer from given location', '4'=>'Mental');
+	}
+	
+	public function payment_when(){
+	    return array('1'=>'done/delivered', '2'=>'sent', '3'=>'plans ready', '4'=>'write to notes');
+	}
     
 }

@@ -1917,7 +1917,11 @@ a.white-color:hover{
 	position: fixed;
     top: 50%;
     z-index: 999;
-    left: -60px;
+    left: -25px;
+}
+
+.left-col-identifier img{
+	width:70px;
 }
 
 .left-col-identifier.open{	
@@ -1929,7 +1933,11 @@ a.white-color:hover{
 	position: fixed;
     top: 50%;
     z-index: 999;
-    right: -60px;
+    right: -25px;
+}
+  
+.right-col-identifier img{
+	width:70px;
 }
 
 .right-col-identifier.open{
