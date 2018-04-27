@@ -313,8 +313,9 @@ if(isset($page))
 		        	<?php endforeach; endif;?>
 	                
 					<!-- If files exists ends here-->
-								
+					<div class="clearfix mar-t-10"></div>			
 					<div class="form-group">
+						<label>Countries where data is available</label>
 						<select name="countries[]" class="form-control select_2_multiple" multiple required>
 							<option></option>
 							<?php if($countries): foreach ($countries as $country) :?>
@@ -326,6 +327,7 @@ if(isset($page))
 					</div>
 					
 					<div class="form-group">
+						<label>Ccountries where data is legal to accquire physically</label>
 						<select name="legal_countries[]" class="form-control select_4_multiple" multiple required>
 							<option></option>
 							<?php if($countries): foreach ($countries as $country) :?>

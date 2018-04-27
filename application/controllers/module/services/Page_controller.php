@@ -113,12 +113,13 @@ class Page_controller extends Application {
 	{
 	    $data = array();
 	    
+	    /*
 	    if($this->input->post('escrow_id'))
 	    {
 	        $this->load->model('user_library_event_escrow_model', 'escrow');
 	        
 	        $lastId = $this->escrow->decline_offer_by_id($this->input->post('escrow_id'));
-	        
+	        echo $this->db->last_query();
 	        if($lastId) {$this->message->setFlashMessage(Message::OFFER_DECLINE_SUCCESS, array('id'=>'1'));}
 	        else {$this->message->setFlashMessage(Message::OFFER_DECLINE_FAILURE);}
 	    }
@@ -157,8 +158,47 @@ class Page_controller extends Application {
 	        if($lastId) {$this->message->setFlashMessage(Message::OFFER_DECLINE_SUCCESS, array('id'=>'1'));}
 	        else {$this->message->setFlashMessage(Message::OFFER_DECLINE_FAILURE);}
 	    }
-	    	    
-        redirect(base_url('escrow'));
+	    */
+	    
+	    # Update new logic for declining offer
+	    
+	    $eventId = $this->input->post('event_id');
+	    
+	    # Load user event model
+	    $this->load->model('user_event_model', 'uem');
+	    
+	    # Load user event status model
+	    $this->load->model('user_event_status_model', 'uesm');
+	    
+	    # Load user event escrow model
+	    $this->load->model('user_event_escrow_model', 'ueem');
+	    
+	    # Get event data
+	    $eventData = $this->uem->get_by_id($eventId);
+	    
+	    # Update status of event
+	    $data = array(User_event_status_model::_STATUS => User_event_status_model::STATUS_DECLINE);
+	    $criteria = array(User_event_status_model::_EVENT_ID => $eventId);
+	    
+	    $this->uesm->update_by_criteria($data, $criteria);
+	    
+	    # Get event escrow data
+	    
+	    $criteria = array(User_event_escrow_model::_EVENT_ID => $eventId);
+	    $escrowData = $this->ueem->get_by_criteria($criteria); 
+	    
+	    if(!empty($escrowData))
+	    {
+	       $escrowId = $escrowData[0]->id;    
+	       
+	       # Update status of escrow
+	       $data = array(User_event_escrow_model::_STATUS => User_event_escrow_model::DECLINE_OFFER);
+	       $criteria = array(User_event_model::_ID => $escrowId);
+	       
+	       $this->ueem->update_by_criteria($data, $criteria);
+	    }
+	    
+        redirect(base_url('e-business'));
 	}
 	
 	public function save_offer()

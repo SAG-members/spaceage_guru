@@ -125,6 +125,8 @@
 			
 			
 		</div>
+		
+		<input type="hidden" name="hidden_event_id" value="<?php echo $this->uri->segment(4); ?>"/>
 		<input type="hidden" name="hidden_escrow_id" value="<?php echo $escrowId; ?>"/>
 	</form>
 </div>
@@ -135,6 +137,24 @@
 <script type="text/javascript"
 	src="https://maps.googleapis.com/maps/api/js?key=<?php echo $this->config->item('google_map_api_key');?>&libraries=places"></script>
 <script type="text/javascript">
+
+/* Decline Escrow*/
+$('button[type="button"][name="btn_decline_escrow"]').on('click', function(){
+
+	var commentId = $('input[type="hidden"][name="hidden_escrow_id"]').val();
+	var eventId = $('input[type="hidden"][name="hidden_event_id"]').val();
+	
+	var newForm = jQuery('<form>', {
+        'action': BASE_URL+'user/decline-offer',
+        'target': '_top',
+        'method':'post'	
+    });
+
+	newForm.append(jQuery('<input>', {'name': 'escrow_id', 'type': 'hidden', 'value': commentId}));
+	newForm.append(jQuery('<input>', {'name': 'event_id', 'type': 'hidden', 'value': eventId}));
+		
+	newForm.appendTo("body").submit();
+});
 
 $('.edit_me').on('click', function(){
 	$(this).parents('td').siblings('td').find('.enable-me').prop('readonly', false);

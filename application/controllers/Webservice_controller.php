@@ -4416,15 +4416,39 @@ class Webservice_controller extends CI_Controller
 	        $response = array('flag'=>0, 'message'=>'Please login first');
 	        return $response;
 	    }
+	    
+	    # Load user event model
+	    $this->load->model('user_event_model');
+	    
 	    $eventId = $this->input->post('event_id');
 	    $userId = $this->input->post('user_id');
+	    	    
+	    # Load user event escrow model
+	    $this->load->model('user_event_escrow_model', 'escrow');
+	    # Get event escrow data	    	    
+	    $condition = array(User_event_escrow_model::_EVENT_ID => $eventId);
+	    $escrowData = $this->escrow->get_by_criteria($condition);
+	    	    
+	    if(!empty($escrowData))
+	    {
+	        $escrowId = $escrowData[0]->id;
+	        
+	        # Update status of escrow
+	        $data = array(User_event_escrow_model::_STATUS => User_event_escrow_model::DECLINE_OFFER);
+	        $criteria = array(User_event_model::_ID => $escrowId);
+	        
+	        $this->escrow->update_by_criteria($data, $criteria);
+	    }
 	    
 	    # Load user event status model
-	    $this->load->model('user_event_status_model','uesm');
+	    $this->load->model('user_event_status_model', 'uesm');
+	    # Update status of event
+	    $data = array(User_event_status_model::_STATUS => User_event_status_model::STATUS_DECLINE);
+	    $criteria = array(User_event_status_model::_EVENT_ID => $eventId);
+	    $rs = $this->uesm->update_by_criteria($data, $criteria);
 	    
-	    $status = User_event_status_model::STATUS_DECLINE;
 	    
-	    if($this->uesm->register_event_status($eventId, $userId, $status))
+	    if($rs)
         $response = array('flag'=>1, 'message'=>'Offer declined successfully');
 	    else
 	    $response = array('flag'=>0,'message'=>'OOPS !!! Something went wrong, unable to decline offer');
@@ -4480,12 +4504,79 @@ class Webservice_controller extends CI_Controller
 	    $this->load->model('user_event_escrow_model', 'ueem');
 	    $result = $this->ueem->approve_offer($escrowId);
 	    
-	    if($result) $response = array('flag=>1', 'message'=>'Offer Approved Successfully');
-	    else  $response = array('flag=>0', 'message'=>'Error approving offer');
+	    if($result) $response = array('flag'=>1, 'message'=>'Offer Approved Successfully');
+	    else  $response = array('flag'=>0, 'message'=>'Error approving offer');
+	    
+	    return $response;
 	}
 	
 	public function pay_escrow($payload)
 	{
+	    $response = array();
+	    
+	    $result = $this->user->sign_in($this->input->post('username'), $this->input->post('userpassword'));
+	    
+	    if(!$result)
+	    {
+	        $response = array('flag'=>0, 'message'=>'Payment failed since invalid login credentials provided');
+	        return $response;
+	    }
+	    
+	    $userId = $result;
+	        
+        $eventId = $this->input->post('event_id');
+        $escrowId = $this->input->post('escrow_id');
+	        
+        # First step to make the event complete
+	        
+        # Load user event model
+        $this->load->model('user_event_model', 'uem');
+	        
+        # Load user event escrow model
+        $this->load->model('user_event_escrow_model', 'ueem');
+	        
+        # Get event data
+        $eventData = $this->uem->get_by_id($eventId);
+	        
+        # Get escrow data
+        $escrowData = $this->ueem->get_by_id($escrowId);
+	        
+        $profile = $this->user->getUserProfile($userId);
+        $walletAmount = $profile->{User::_PCT_WALLET_AMOUNT};
+	        
+        if($eventData->{User_event_model::_PCT_PRICE} > $walletAmount){
+            $response = array('flag'=>0, 'message'=>'Insufficient PCT Points');
+            return $response;            
+        }
+	        
+        $this->db->where(User_event_model::_ID, $eventId);
+        $this->db->update(User_event_model::_TABLE, array(User_event_model::_STATUS => User_event_model::EVENT_COMPLETED));
+	        
+        # New step to make the escrow status complete
+	        
+	        
+        $this->db->where(User_event_escrow_model::_ID, $escrowId);
+        $this->db->update(User_event_escrow_model::_TABLE, array(User_event_escrow_model::_STATUS => User_event_escrow_model::OFFER_COMPLETE));
+	        
+        $toUserProfile = $this->user->getUserProfile($escrowData->{User_event_escrow_model::_ESCROW_SELLER_ID});
+        $toUserWalletAmount = $toUserProfile->{User::_PCT_WALLET_AMOUNT};
+        $toUserWalletAmount += $eventData->{User_event_model::_PCT_PRICE};
+
+        # Update wallet balances
+	        
+        $this->db->where(User::_ID, $escrowData->{User_event_escrow_model::_ESCROW_SELLER_ID})->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => $toUserWalletAmount));
+        $this->db->where(User::_ID, $userId)->update(User::_TABLE, array(User::_PCT_WALLET_AMOUNT => ($walletAmount- $eventData->{User_event_model::_PCT_PRICE})));
+	        
+        $txnNum = "PCTINT".time();
+	        
+        # Load pct-transaction model
+        $this->load->model('pct_transaction');
+        $result = $this->pct_transaction->create_transaction($userId, $escrowData->{User_event_escrow_model::_ESCROW_SELLER_ID}, $txnNum, "Escrow Payment", $eventData->{User_event_model::_PCT_PRICE}, $eventData->{User_event_model::_TOPIC}, $eventData->{User_event_model::_COMMENT});
+	     
+        if($result) $response = array('flag'=>1, 'message'=>'Offer Paid Successfully');
+        else $response = array('flag'=>0, 'message'=>'Offer Payment Unsuccessfull');
+	        
+	    return $response;    
 	    
 	}
 }

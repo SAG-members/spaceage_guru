@@ -110,6 +110,14 @@ class User_event_escrow_model extends CI_Model
 	    return $this->db->affected_rows();
 	}
 	
+	public function update_by_criteria($data, $criteria){
+	    $this->db->select(static::_TABLE);
+	    $this->db->where($criteria);
+	    $this->db->update(static::_TABLE, $data);
+	    
+	    return $this->db->affected_rows();
+	}
+	
 	public function approve_offer($escrowId)
 	{   
 	    $data = array( static::_SELLER_APPROVED=>1);

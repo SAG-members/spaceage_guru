@@ -30,3 +30,5 @@
  Mar 26 07:57:44 : {"LATEST_VERSION":"7.0.9","api_response":""}
  Mar 26 08:00:14 : {"disableGroupTab":"0","allowUsers":"1","allowGuests":"0","allowDelete":"1","allowAvatar":"1","crguestsMode":"0","showChatroomUsers":"1","messageBeep":"1","newMessageIndicator":"1","showUsername":"1","showGroupsOnlineUsers":"0","chatroomTimeout":"999999999999999999","lastMessages":"10"}
  Apr 5 12:00:11 : {"LATEST_VERSION":"7.0.10","api_response":""}
+ Apr 26 08:03:54 : {"LATEST_VERSION":"7.0.20","api_response":""}
+ Apr 26 08:04:48 : {"chatboxHeight":"350","chatboxWidth":"230","dockedChatBoxAvatar":"1","dockedAlignToLeft":"0","dockedChatListAudioCall":"1"}
