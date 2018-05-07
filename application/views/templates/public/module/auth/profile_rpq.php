@@ -271,7 +271,7 @@
 						
 				?>	
 				<section class="idealsteps-step" id="step-5">
-					<h3>13. What is a good way for you to increase your your success in your relationship? </h3>
+					<h3>13. What is a good way for you to increase your success in your relationship? </h3>
 					<div class="checkboobmain">
 						<input name="rpq_question13" type="radio" class="rpq_question14" value="a" <?php echo $achecked?>/> <!-- <label class="checkbox-title">My</label>-->
 						<p>My rules for me</p>
@@ -481,7 +481,7 @@ $('.rpq_question16').on('click', function(e){
 			
 			q16 += as +''+ bs+''+ cs+''+ds+' that you are convinced that your friends are good for you?';
 
-			$('#rpq_question_number_17').html('16. '+q16);
+			$('#rpq_question_number_16').html('16. '+q16);
 		}
 			
 	});
