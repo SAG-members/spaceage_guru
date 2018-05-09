@@ -1,166 +1,127 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<title><?php echo $title; ?></title>
-<link rel="icon" href="<?php echo base_url('assets/img/fav-32X32.png'); ?>" type="image/gif" sizes="32x32">
-
-<!-- Bootstrap -->
-
-<link href="<?php echo base_url('assets/landing')?>/css/bootstrap.min.css" rel="stylesheet">
-<link href="<?php echo base_url('assets/landing')?>/css/responsive.css" rel="stylesheet">
-<link href="<?php echo base_url('assets/landing')?>/css/style.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400,500,600,700,800,900" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
-</head>
-<link rel="stylesheet" href="<?php echo base_url('assets/landing')?>/css/owl.carousel.min.css">
-<link rel="stylesheet" href="<?php echo base_url('assets/landing')?>/css/owl.theme.default.min.css">
-<style>
-header { width:100%; height:auto; float:left; background:url(<?php echo base_url('assets')?>/img/head-bg.png); background-size:cover; padding:10px 0px;}
-.midbgmain { width:100%; height:auto; float:left; background:url(<?php echo base_url('assets')?>/img/mid-bg.png); background-size:cover; min-height:775px; position:relative;}
-.botttom-main { width:100%; height:auto; float:left; background:url(<?php echo base_url('assets')?>/img/bottom-bg.png); background-size:cover;  position:relative;}
-.dropdown-menu>li>a { display: inline-block !important;}
-.dropdown-menu { min-width:210px !important;}
-
-ul.dropdown-menu li{}
-
-</style>
-<body>
-<div class="main_wrap">
-	<header>
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-xs-4 col-sm-6 col-md-6 col-lg-6">
-					<?php 
-					   $backgroungImage = base_url('assets/img/white-moon.png');
-					   if($this->session->userdata('id')) $backgroungImage = base_url('assets/img/red-moon.png');
-					?>
-					<div class="moon" style="background:url(<?php echo $backgroungImage;?>) no-repeat;">
-					<?php if(!$this->session->userdata('id')) : ?>
-        			<a data-placement="right" alt="<?php echo strip_tags($this->cms->get_by_slug('what', Cms::_CONTENT))?>" data-toggle="tooltip" title="<?php echo strip_tags($this->cms->get_by_slug('what', Cms::_CONTENT))?>" href="<?php echo base_url('what')?>" target="_blank">WHAT</a><br>
-					<a data-placement="right" alt="<?php echo strip_tags($this->cms->get_by_slug('where', Cms::_CONTENT))?>" data-toggle="tooltip" title="<?php echo strip_tags($this->cms->get_by_slug('where', Cms::_CONTENT))?>"  href="<?php echo base_url('where')?>"  target="_blank">WHERE</a><br>
-					<a data-placement="right" alt="<?php echo strip_tags($this->cms->get_by_slug('how', Cms::_CONTENT))?>" data-toggle="tooltip" title="<?php echo strip_tags($this->cms->get_by_slug('how', Cms::_CONTENT))?>"  href="<?php echo base_url('how')?>"  target="_blank">HOW
-                	</a>
-        			<?php else :?>
-        			<div class="dropdown">
-                    	<button class="btd dropdown-toggle" type="button" data-toggle="dropdown"> <img src="<?php echo base_url('assets')?>/img/home-icon.png"></button>
-                      	<ul class="dropdown-menu left-dropdown">
-                        	<li><a href="<?php echo base_url('club-laws'); ?>">Club Guidelines</a></li>
-                        	<li><a href="<?php echo base_url('shop'); ?>">Shop</a></li>
-                        	<li><a href="<?php echo base_url('service/number-game'); ?>">Spiritual guidance</a></li>
-                        	<li><a href="<?php echo base_url('lean-canvas-spaceage-guru'); ?>">Lean Canvas</a></li>
-                        	<li><a href="<?php echo base_url('feedback'); ?>">Feedback</a></li>
-                        	<li><a href="<?php echo base_url('faq'); ?>">FAQ</a></li>
-                        	<li><a href="<?php echo base_url('e-business'); ?>">E-Business</a></li>
-                        	<li><a href="<?php echo base_url('logout'); ?>">Logout</a></li>
-                      	</ul>
+<div class="menu">
+    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 fullcol">
+        <div class="leftmain">
+            <div>
+                <div class="input-group">
+                    <input type="text" name="wiki-search" value="<?php if(isset($_POST['btn-search'])) echo $_POST['wiki-search'];?>" class="form-control" placeholder="Write what you want" aria-describedby="basic-addon1">
+                    <span class="input-group-btn">
+                        <button class="btn btn-secondary" id="srch" name="btn-wiki-search" type="button"><i class="fa fa-search" aria-hidden="true"></i></button>
+                    </span>
+                </div>
+                
+                <h4>Advance Search Option <a class="open_library_advance_search pull-right"><i class="fa fa-plus"></i></a></h4>
+                <div class="library_advance_search" id="new-post">
+                    <div class="row">
+                        <div class="col-md-12" style="margin-bottom: 5px;">
+                            <div class="input-group">
+                                <span class="input-group-addon level-public"><input type="checkbox" name="data_type[]" value="<?php echo Page::_CATEGORY_SERVICE?>"/></span>
+                                <input type="text" class="form-control level-public data_type" value="Service">
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-bottom: 5px;">
+                            <div class="input-group">
+                                <span class="input-group-addon level-registered"><input type="checkbox" name="data_type[]" value="<?php echo Page::_CATEGORY_PRODUCT?>"/></span>
+                                <input type="text" class="form-control level-registered data_type" value="Product">
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-bottom: 5px;">
+                            <div class="input-group">
+                                <span class="input-group-addon level-upgraded"><input type="checkbox" name="data_type[]" value="<?php echo Page::_CATEGORY_SENSES?>"/></span>
+                                <input type="text" class="form-control level-upgraded data_type" value="Sensation">
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-bottom: 5px;">
+                            <div class="input-group">
+                                <span class="input-group-addon level-membershipa"><input type="checkbox" name="data_type[]" value="<?php echo Page::_CATEGORY_LEAGAL_NOTE?>"/></span>
+                                <input type="text" class="form-control level-membershipa data_type" value="Legal Note">
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-bottom: 5px;">
+                            <div class="input-group">
+                                <span class="input-group-addon level-membershipb"><input type="checkbox" name="data_type[]" value="<?php echo Page::_CATEGORY_AUDIO_VISUAL?>"/></span>
+                                <input type="text" class="form-control level-membershipb data_type" value="Audio/Visual">
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-bottom: 5px;">
+                            <div class="input-group">
+                                <span class="input-group-addon level-membershipc"><input type="checkbox" name="data_type[]" value="<?php echo Page::_CATEGORY_ARTICLE?>"/></span>
+                                <input type="text" class="form-control level-membershipc data_type" value="Article">
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-bottom: 5px;">
+                            <div class="input-group">
+                                <span class="input-group-addon level-symptom"><input type="checkbox" name="data_type[]" value="<?php echo Page::_CATEGORY_SYMPTOM?>"/></span>
+                                <input type="text" class="form-control level-symptom data_type" value="Symptom">
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-bottom: 5px;">
+                            <div class="input-group">
+                                <span class="input-group-addon level-cures"><input type="checkbox" name="data_type[]" value="<?php echo Page::_CATEGORY_CURES?>"/></span>
+                                <input type="text" class="form-control level-cures data_type" value="Cures">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-12" style="margin-bottom: 5px;">
+                            <input type="text" name="tags" class="form-control tags data_type" placeholder="Tags">
+                        </div>
                     </div>
-        			<?php endif; ?>
-       				</div>	
-						
-				</div>
-				<div
-					class="col-xs-8 col-sm-6 col-md-6 col-lg-6 text-right head-right-main">
-<!-- 					<input name="" type="text"> -->
-<!-- 					<button> -->
-<!-- 						<i class="fa fa-search" aria-hidden="true"></i> -->
-<!-- 					</button> -->
-<!-- 					<br>  -->
-					
-					<?php if(!$this->session->userdata('id')) : ?>
-					<form action="<?php echo base_url('login')?>" method="post">
-    					<input name="username" type="text" placeholder="User Name">
-                        <input name="password" type="password" placeholder="Password">
-                        <button type="submit">Login</button>
-                    </form>
-					<?php else :?>
-					
-					<div class="santa">  
-                    	<div class="dropdown">
-              				<button class="btd dropdown-toggle" type="button" data-toggle="dropdown"><img src="<?php echo base_url('assets')?>/img/santa.png"></button>
-              				<ul class="dropdown-menu">
-                				<li><a href="<?php echo base_url('timeline'); ?>">Timeline</a></li>
-            					<li><a href="<?php echo base_url('profile'); ?>">Profile</a></li>
-                				<li><a href="<?php echo base_url('whitepaper'); ?>">Whitepaper</a></li>
-                				<li>
-                					<a href="<?php echo base_url('whitepaper'); ?>">Tasks</a>
-                					<a class="pull-right"  href="<?php echo base_url('profile')?>"><i class="fa fa-plus"></i></a>
-                				</li>
-                				<li>
-                					<a href="<?php echo base_url('whitepaper'); ?>">Goals & Dreams</a>
-                					<a class="pull-right"  href="<?php echo base_url('profile')?>"><i class="fa fa-plus"></i></a>
-                				</li>
-                				<li>
-                    				<a href="<?php echo base_url('user/dashboard')?>">Personal Channel</a>
-                    				<a class="pull-right" href="<?php echo base_url('user/add/data')?>"><i class="fa fa-plus"></i></a>                    				
-                				</li>
-                				<li><a href="<?php echo base_url('user/dashboard')?>">Communication</a></li>
-                				<li><a href="<?php echo base_url('user/dashboard')?>">Chat</a></li>                				
-              				</ul>
-            			</div>
-            		</div>
-					
-					<?php endif;?>
-				</div>
-				<div class="clearfix"></div>					
-			</div>
-		</div>		
-	</header>
-	<div class="midbgmain">
-		<img src="<?php echo base_url('assets/')?>img/mid-bg.png" class="img-responsive hide1">
-		<div class="dnamain">
-			<img src="<?php echo base_url('assets/')?>img/d-n-a.png">
-		</div>
-		<div class="bottom_pic">
-			<img src="<?php echo base_url('assets/')?>img/bottom-pic.png">
-		</div>
-	</div>
-	<div class="botttom-main"></div>
-</div>
-
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
-<!-- Include all compiled plugins (below), or include individual files as needed --> 
-<script src="<?php echo base_url('assets/landing')?>/js/bootstrap.min.js"></script> 
-<!--<script src="js/fontawesome-all.js"></script>--> 
-<script src="<?php echo base_url('assets/landing')?>/js/owl.carousel.js"></script> 
-<script>
-
-
-        $(document).ready(function() {
-            var owl = $('.owl-carousel');
-            owl.owlCarousel({
-                margin: 10,
-                nav: true,
-                navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
-                loop: true,
-                responsive: {
-                    0: {
-                        items: 1
-                    },
-                    600: {
-                        items: 2
-                    },
-                    1000: {
-                        items: 5
-                    }
-                }
-            })
-
-            $('[data-toggle="tooltip"]').tooltip(); 
+                </div>
             
-        })
-        
-        
-        $('.dropdown').hover(function() {
-          $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
-        }, function() {
-          $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
-        });
-    </script>
-</body>
-</html>
+            
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 fullcol">
+        <div class="midmain">
+            <p>!WE ARE LIVING IN IT SO LETS START HEALING IT WHILE ENJOYING LIFE ON IT!</p>
+        </div>
+    </div>
+    
+    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 fullcol">
+        <div class="rightmain">
+            <?php if(!$this->session->userdata('id')) : ?>
+            <div class="text-center white-color">
+                <p>
+                    
+                    <a class="white-color" href="<?php echo base_url('register'); ?>">REGISTER</a>
+                </p>
+            </div>
+            <form action="<?php echo base_url('login')?>" method="post">
+                <div class="col-md-6 pad-l-0 pad-r-0"><input class="password" name="username" type="text" placeholder="username"></div>
+                <div class="col-md-6 pad-l-0 pad-r-0">
+                    <div class="input-group">
+                        <input class="password" type="password" name="password" placeholder="password">
+                        <span class="input-group-btn">
+                            <button style="height: 43px;" class="btn btn-secondary" name="btn-wiki-search" type="submit">Login</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+            <?php else : ?>
+            <!-- <a class="pull-right btn btn-danger button mar-t-20" href="<?php //echo base_url('logout'); ?>">Logout</a> -->
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<script>
+$('.open_library_advance_search').on('click', function(e){
+    e.preventDefault();
+    
+    if($('.library_advance_search').is(':visible'))
+    {
+        $(this).children('i').removeClass('fa fa-minus').addClass('fa fa-plus');
+        $('.library_advance_search').hide();
+    }
+    else
+    {
+        $(this).children('i').removeClass('fa fa-plus').addClass('fa fa-minus');
+        $('.library_advance_search').show();
+    }
+    
+});
+$(document).ready(function(){
+      $(function() {
+    $("#srch").trigger("click");
+   });
+});  
+</script>
