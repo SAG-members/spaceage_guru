@@ -743,7 +743,7 @@ if($page)
 		    <div class="row">		
 			<div class="input-group">
 				<span class="input-group-addon" id="basic-addon1"><label><input name="chckbox-price-per-read-article" value="1" type="radio" class="flat" <?php echo $priceBoxSelected;?>> Price per read article</label></span>
-  				<input type="text" class="form-control" name="points" placeholder="Enter word price here" aria-describedby="basic-addon1" style="height: 40px;" value="<?php echo $wordPrice; ?>" disabled>
+  				<input type="text" class="form-control" name="points" placeholder="Enter word price here" aria-describedby="basic-addon1" style="height: 40px;" value="<?php echo $wordPrice; ?>">
   				<span class="input-group-addon"><label>word price</label></span>
 			</div>
 			</div></div>
