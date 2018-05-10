@@ -68,12 +68,12 @@ mixpanel.track("<?php echo $title?>");
 			<div class="row fullheight">
 				
 				<!-- Left Menu -->
-				<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 fullcol pad-l-15">
+				<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
 					<?php $this->load->view($siteLeftSideBar)?>
 			    </div>
 				
 				<!-- Main content section -->
-				<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 fullcol no-pad-library">
+				<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9 head-right-main">
 					<div class="midmain">
 						<?php if($this->session->flashdata('welcome-message')){echo '<div class="message-box">'. $this->session->flashdata('welcome-message') .'</div>';}?>
 						<?php if($this->message->hasFlashMessage()) $this->message->printFlashMessage();?>

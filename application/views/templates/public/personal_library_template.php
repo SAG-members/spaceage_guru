@@ -68,12 +68,12 @@ mixpanel.track("<?php echo $title?>");
 			<div class="row ">
 				<div class="fullheight">
 				<!-- Left Menu -->
-				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 fullcol pad-l-15">
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 					<?php $this->load->view($siteLeftSideBar)?>
 			    </div>
 				
 				<!-- Main content section -->
-				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 fullcol no-pad-library">
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 					<div class="">
 						<?php $this->load->view($view); ?>				
 					</div>
