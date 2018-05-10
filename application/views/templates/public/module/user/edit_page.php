@@ -761,6 +761,7 @@ if($page)
 		
 		
 		<div class="countries-combobox mar-t-20">
+		   <label>Countries where data is available</label>
     		<select name="countries[]" class="select_2_multiple password" multiple required>
 				<option data-id="select-all" value="Select All">Select All</option>
 				<?php if($countries) : foreach($countries as $country):?>
@@ -771,6 +772,7 @@ if($page)
 		</div>
 		
 		<div class="countries-combobox mar-t-20">
+			<label>Ccountries where data is legal to accquire physically</label>			
     		<select name="legal_countries[]" class="select_4_multiple password" multiple required>
 				<option data-id="select-all" value="Select All">Select All</option>
 				<?php if($countries) : foreach($countries as $country):?>
@@ -781,6 +783,7 @@ if($page)
 		</div>	 
 		
 		<div class="countries-combobox mar-t-20">
+			<label>Select countries where data is legal to use physically with restriction</label>
     		<select name="physically_legal_countries[]" class="select_6_multiple password" multiple required>
 				<option data-id="select-all" value="Select All">Select All</option>
 				<?php if($countries) : foreach($countries as $country):?>
