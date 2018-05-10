@@ -2734,7 +2734,9 @@ class Webservice_controller extends CI_Controller
 			
 			# Load page model
 			$this->load->model('page');
-			$result = $this->user->get_chat_friend_lists($membershipLevel, $this->input->post('user_id'));
+			#$result = $this->user->get_chat_friend_lists($membershipLevel, $this->input->post('user_id'));
+			$result = $this->db->from('user')->where('id !=', $this->input->post('user_id'))->get()->result();
+			
 			
 			$response = array('flag'=>1, 'data'=>$result, 'image_path'=>base_url('assets/uploads/avtar'));
 		}
