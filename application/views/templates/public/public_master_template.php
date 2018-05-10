@@ -86,7 +86,7 @@ mixpanel.track("<?php echo $title?>");
 				
 				<div class="fullheight">
 				<!-- Left Menu -->
-				<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 fullcol pad-l-15 hide left-col">
+				<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 pad-l-15 hide left-col">
 					<?php $this->load->view($siteLeftSideBar)?>
 			    </div>
 			    
@@ -96,7 +96,7 @@ mixpanel.track("<?php echo $title?>");
 			    </div>
 				
 				<!-- Main content section -->
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 fullcol no-pad middle-col">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 no-pad middle-col">
 					<div class="midmain">
 						<?php if($this->session->flashdata('welcome-message')){echo '<div class="message-box">'. $this->session->flashdata('welcome-message') .'</div>';}?>
 						<?php if($this->message->hasFlashMessage()) $this->message->printFlashMessage();?>
@@ -124,8 +124,7 @@ mixpanel.track("<?php echo $title?>");
 				</div>
 				
 				<!-- Right Menu -->
-				<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 fullcol pad-r-15 hide right-col">
-					<?php // pre($_SESSION['id']);?>
+				<div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 pad-r-15 hide right-col">
 					<?php $this->load->view($siteRightSideBar)?>
       			</div>
 			</div>
