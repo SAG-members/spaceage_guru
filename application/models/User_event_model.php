@@ -26,6 +26,7 @@ class User_event_model extends CI_Model
 	const _ESCROW_MIN_LIMIT = 'escrow_min_limit';
 	const _ESCROW_MAX_LIMIT = 'escrow_max_limit';
 	const _LOCATION = 'location';
+    const _CURRENT_LOCATION = 'current_location';
 	const _ADDRESS = 'address';
 	const _LAT = 'lat';
 	const _LNG = 'lng';

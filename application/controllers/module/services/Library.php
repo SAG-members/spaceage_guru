@@ -716,6 +716,7 @@ class Library extends Application
             $minLimit =  $this->input->post('min_limit');
             $maxLimit =  $this->input->post('max_limit');
             $location =  $this->input->post('location');
+            $current_loc =  $this->input->post('current_location') ? 1: 0;
             $address =  $this->input->post('address');
             $lat =  $this->input->post('lat');
             $lng =  $this->input->post('lng');
@@ -762,6 +763,7 @@ class Library extends Application
                 User_event_model::_ESCROW_MIN_LIMIT => $minLimit,
                 User_event_model::_ESCROW_MAX_LIMIT => $maxLimit,
                 User_event_model::_LOCATION => $location,
+                User_event_model::_CURRENT_LOCATION => $current_loc,
                 User_event_model::_ADDRESS => $address,
                 User_event_model::_LAT => $lat,
                 User_event_model::_LNG => $lng,
@@ -787,4 +789,3 @@ class Library extends Application
         
     }
 }
-
