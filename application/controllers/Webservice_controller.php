@@ -3683,7 +3683,7 @@ class Webservice_controller extends CI_Controller
 	    
 	    # Load pct-transaction model
 	    $this->load->model('pct_transaction');
-	    $result = $this->pct_transaction->create_transaction($userId, 1, $txnNum, 'PSSS Purchase', $grossAmount);
+	    $result = $this->pct_transaction->create_transaction($userId, 1, $txnNum, 'Data Purchase', $grossAmount);
 	    
 	    
 	    # Now since the payment is done, we need to subtract gross amount
