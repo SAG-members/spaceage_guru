@@ -248,7 +248,7 @@ if($page)
 		<input type="text" id="tags_1" name="tags" class="password mar-b-20" placeholder="Tags" value="<?php echo $tags?>"/>
 		
 		<div class="mar-t-20">
-		<textarea name="description" id="summernote" class="password" required><?php echo $description?></textarea>
+		<textarea name="description" id="summernote1" class="password" required><?php echo $description?></textarea>
 		<div class="clearfix"></div>
 		</div>
 		
@@ -280,7 +280,7 @@ if($page)
         			<a class="remove-image" data-page-id="<?php echo $page_id; ?>"  data-id="<?php echo $file->id; ?>"  style="position: absolute; top:-5px; right:10px; color: #000;"/><i class="fa fa-close fa-2x"></i></a>
         		</a>
         	</div>
-        	<?php elseif ( $extn == 'doc' || $extn == 'docx') :?>
+        	<?php elseif ( $extn == 'doc' || $extn == 'docx' || $extn == 'ppt' || $extn == 'pptx' || $extn == 'xls' || $extn == 'xlsx') :?>
         	<div class="col-md-3" style="min-height: 160px; margin-bottom:10px; position:relative; ">
         		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
         			<img  class="img-responsive" style="width: 100%;" src="<?php echo base_url('assets/img/doc.jpeg') ?>"/>
@@ -952,6 +952,7 @@ $('.remove-image').on('click', function(e){
 
 	
 });
+
 
 
 

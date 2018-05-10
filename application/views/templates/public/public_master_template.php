@@ -240,7 +240,24 @@ mixpanel.track("<?php echo $title?>");
 
 		}
 	});
-	
+
+
+	/* Enable Summernote Editor */
+	$('#summernote1').summernote({
+		 toolbar: [
+		        ['style', ['style']],
+		        ['font', ['bold', 'italic', 'underline', 'clear']],
+		        ['fontname', ['fontname']],
+		        ['fontsize', ['fontsize']], // Still buggy
+		        ['color', ['color']],
+		        ['para', ['ul', 'ol', 'paragraph']],		        
+		        ['table', ['table']],
+		        ['insert', ['link', 'picture', 'video']],
+		        ['view', ['fullscreen', 'codeview']],
+		        ['help', ['help']]
+		      ],
+		height: 300,disableResizeEditor: true
+	});
 	
 	</script>
 	

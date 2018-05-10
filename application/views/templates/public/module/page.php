@@ -137,7 +137,7 @@ switch ($page->{Page::_VISIBILITY})
         			<img style="width: 100%;" src="<?php echo base_url('assets/img/pdf.jpeg'); ?>"/>
         		</a>
         	</div>
-        	<?php elseif ( $extn == 'doc' || $extn == 'docx') :?>
+        	<?php elseif ( $extn == 'doc' || $extn == 'docx' || $extn == 'ppt' || $extn == 'pptx' || $extn == 'xls' || $extn == 'xlsx') :?>
         	<div class="col-md-3" style="min-height: 160px; margin-bottom:10px;">
         		<a href="<?php echo base_url('assets/uploads/data_document/').$file->document; ?>" target="_blank">
         			<img style="width: 100%;" src="<?php echo base_url('assets/img/doc.jpeg') ?>"/>

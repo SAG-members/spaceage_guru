@@ -1763,3 +1763,55 @@ INFO - 2018-05-10 10:45:43 --> File loaded: /var/www/html/spaceage_guru/applicat
 INFO - 2018-05-10 10:45:43 --> File loaded: /var/www/html/spaceage_guru/application/views/templates/public/public_master_template.php
 INFO - 2018-05-10 10:45:43 --> Final output sent to browser
 DEBUG - 2018-05-10 10:45:43 --> Total execution time: 0.0628
+INFO - 2018-05-10 10:48:46 --> Config Class Initialized
+INFO - 2018-05-10 10:48:46 --> Hooks Class Initialized
+DEBUG - 2018-05-10 10:48:46 --> UTF-8 Support Enabled
+INFO - 2018-05-10 10:48:46 --> Utf8 Class Initialized
+INFO - 2018-05-10 10:48:46 --> URI Class Initialized
+INFO - 2018-05-10 10:48:46 --> Router Class Initialized
+INFO - 2018-05-10 10:48:46 --> Output Class Initialized
+INFO - 2018-05-10 10:48:46 --> Security Class Initialized
+DEBUG - 2018-05-10 10:48:46 --> Global POST, GET and COOKIE data sanitized
+INFO - 2018-05-10 10:48:46 --> Input Class Initialized
+INFO - 2018-05-10 10:48:46 --> Language Class Initialized
+INFO - 2018-05-10 10:48:46 --> Loader Class Initialized
+DEBUG - 2018-05-10 10:48:46 --> Config file loaded: /var/www/html/spaceage_guru/application/config/custom.php
+INFO - 2018-05-10 10:48:46 --> Helper loaded: url_helper
+INFO - 2018-05-10 10:48:46 --> Helper loaded: common_helper
+INFO - 2018-05-10 10:48:46 --> Database Driver Class Initialized
+INFO - 2018-05-10 10:48:46 --> Session: Class initialized using 'files' driver.
+INFO - 2018-05-10 10:48:46 --> Email Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Controller Class Initialized
+INFO - 2018-05-10 10:48:46 --> Helper loaded: cookie_helper
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> Model Class Initialized
+INFO - 2018-05-10 10:48:46 --> File loaded: /var/www/html/spaceage_guru/application/views/templates/public/layouts/main_menu.php
+INFO - 2018-05-10 10:48:46 --> File loaded: /var/www/html/spaceage_guru/application/views/templates/public/layouts/library_left_menu.php
+INFO - 2018-05-10 10:48:46 --> File loaded: /var/www/html/spaceage_guru/application/views/templates/public/module/services/add_data.php
+INFO - 2018-05-10 10:48:46 --> File loaded: /var/www/html/spaceage_guru/application/views/templates/public/layouts/right_sidebar.php
+INFO - 2018-05-10 10:48:46 --> File loaded: /var/www/html/spaceage_guru/application/views/templates/public/public_master_template.php
+INFO - 2018-05-10 10:48:46 --> Final output sent to browser
+DEBUG - 2018-05-10 10:48:46 --> Total execution time: 0.1347
+INFO - 2018-05-10 10:49:07 --> Config Class Initialized
+INFO - 2018-05-10 10:49:07 --> Hooks Class Initialized
+DEBUG - 2018-05-10 10:49:07 --> UTF-8 Support Enabled
+INFO - 2018-05-10 10:49:07 --> Utf8 Class Initialized
+INFO - 2018-05-10 10:49:07 --> URI Class Initialized
+INFO - 2018-05-10 10:49:07 --> Router Class Initialized
+INFO - 2018-05-10 10:49:07 --> Output Class Initialized
+INFO - 2018-05-10 10:49:07 --> Security Class Initialized
+DEBUG - 2018-05-10 10:49:07 --> Global POST, GET and COOKIE data sanitized
+INFO - 2018-05-10 10:49:07 --> Input Class Initialized
+INFO - 2018-05-10 10:49:07 --> Language Class Initialized
+ERROR - 2018-05-10 10:49:07 --> 404 Page Not Found: Assets/landing
