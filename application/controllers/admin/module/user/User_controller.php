@@ -72,7 +72,7 @@ class User_controller extends Application {
 	    
 	    $data['user'] = $this->user->getUserById($userId);
 	    $data['countries'] = $this->country->getCountries();
-	    $data['questionnaire'] = $this->ques->get_user_questionnaire($userId);
+	    $data['rpq'] = $this->ques->get_user_rpq($userId);
 	    
 	    $this->template->title("User RPQ's");
 	    $this->template->render('user/user_rpqs', $data);
@@ -84,7 +84,7 @@ class User_controller extends Application {
 	    
 	    $data['user'] = $this->user->getUserById($userId);
 	    $data['countries'] = $this->country->getCountries();
-	    $data['questionnaire'] = $this->ques->get_user_questionnaire($userId);
+	    $data['questionnaire'] = $this->ques->get_user_wpq($this->session->userdata('id'));
 	    
 	    $this->template->title("User WPQ's");
 	    $this->template->render('user/user_wpqs', $data);
