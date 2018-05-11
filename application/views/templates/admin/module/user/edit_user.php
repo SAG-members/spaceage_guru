@@ -23,7 +23,9 @@
 							<button type="button" class="btn btn-primary btn-xs"
 								name="btn-upgrade-user" data-toggle="modal" data-target="#upgrade-user-model">Upgrade User</button>	
 								
-							<a href="<?php echo base_url('admin/show/ppqs/user-id/'.$user->{User::_ID})?>" class="btn btn-success btn-xs">Access PPQ's</a>	
+							<a href="<?php echo base_url('admin/show/ppqs/user-id/'.$user->{User::_ID})?>" class="btn btn-success btn-xs">Access PPQ's</a>
+							<a href="<?php echo base_url('admin/show/rpqs/user-id/'.$user->{User::_ID})?>" class="btn btn-success btn-xs">Access RPQ's</a>
+							<a href="<?php echo base_url('admin/show/wpqs/user-id/'.$user->{User::_ID})?>" class="btn btn-success btn-xs">Access WPQ's</a>	
 						</div>
 						<div class="clearfix"></div>
 					</div>

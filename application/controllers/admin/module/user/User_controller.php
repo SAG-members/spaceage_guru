@@ -66,6 +66,30 @@ class User_controller extends Application {
 		$this->template->render('user/user_ppqs', $data);
 	}
 	
+	public function show_rpqs()
+	{
+	    $userId = $this->uri->segment(5);
+	    
+	    $data['user'] = $this->user->getUserById($userId);
+	    $data['countries'] = $this->country->getCountries();
+	    $data['questionnaire'] = $this->ques->get_user_questionnaire($userId);
+	    
+	    $this->template->title("User RPQ's");
+	    $this->template->render('user/user_rpqs', $data);
+	}
+	
+	public function show_wpqs()
+	{
+	    $userId = $this->uri->segment(5);
+	    
+	    $data['user'] = $this->user->getUserById($userId);
+	    $data['countries'] = $this->country->getCountries();
+	    $data['questionnaire'] = $this->ques->get_user_questionnaire($userId);
+	    
+	    $this->template->title("User WPQ's");
+	    $this->template->render('user/user_wpqs', $data);
+	}
+	
 	public function delete_user()
 	{
 		$userId = $this->uri->segment(2);

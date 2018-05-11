@@ -274,7 +274,10 @@ $route['admin/edit-user/(:num)'] = 'admin/module/user/user_controller/edit_user'
 $route['admin/delete-user/(:num)'] = 'admin/module/user/user_controller/delete_user';
 $route['admin/activate-user'] = 'admin/module/user/user_controller/activate_user';
 $route['admin/deactivate-user'] = 'admin/module/user/user_controller/deactivate_user';
+
 $route['admin/show/ppqs/user-id/(:num)'] = 'admin/module/user/user_controller/show_ppqs';
+$route['admin/show/rpqs/user-id/(:num)'] = 'admin/module/user/user_controller/show_rpqs';
+$route['admin/show/wpqs/user-id/(:num)'] = 'admin/module/user/user_controller/show_wpqs';
 
 # Blog Routes
 $route['admin/blogs'] = 'admin/module/blog/blog_controller';

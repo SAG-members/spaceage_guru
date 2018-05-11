@@ -67,15 +67,15 @@
 										<label>3. Why is above important for you?</label>
 										<textarea class="form-control" rows="3" cols="50"><?php echo $questionnaire[2]->answer?></textarea>
 									</div>
-									<div class="col-md-6"> 
-										<label>4. Why is statement <?php echo $questionnaire[2]->answer?> important for you?</label>
+									<div class="col-md-6">
+										<label>4. Why is statement important for you?</label>
 										<textarea class="form-control" rows="3" cols="50"><?php echo $questionnaire[3]->answer?></textarea>
 									</div>
 								</div>
 								<div class="x_title"></div>
 								<div class="row">
 									<div class="col-md-6">
-										<label>5. Why is above statement <?php echo $questionnaire[3]->answer?> important for you?</label>
+										<label>5. Why is above statement important for you?</label>
 										<textarea class="form-control" rows="3" cols="50"><?php echo $questionnaire[4]->answer?></textarea>
 									</div>
 									<?php 
@@ -211,7 +211,7 @@
 											}
 											
 										?>	
-										<label>12. Think about a free time situation that was <?php echo $questionnaire[4]->answer; ?>?</label>
+										<label>12. Think about a free time situation that was ?</label>
 										<div class="checkbox">
 			                            	<label><input type="checkbox" <?php echo $achecked;?>>Feeling, </label>
 			                            	<p>You go in and stay in feelings</p>
@@ -244,7 +244,7 @@
 											}
 																
 										?>	
-										<label>13. What did you like about the situation that was <?php echo $questionnaire[3]->answer ?>?</label>
+										<label>13. What did you like about the situation that was ?</label>
 										<div class="checkbox">
 			                            	<label><input type="checkbox" <?php echo $achecked;?>>Person, </label>
 			                            	<p>People</p>
@@ -355,28 +355,23 @@
 								<div class="x_title"></div>
 								<div class="row">
 									<?php 
-									    $as = ''; $bs = ''; $cs = ''; $ds = '';
 										$achecked=""; $bchecked=""; $cchecked=""; $dchecked="";
-										
-										$q17 = 'How many times do you have to';
-										
+											
 										$answers = explode(',', $questionnaire[16]->answer);
 										foreach ($answers as $a)
 										{
 											switch ($a)
 											{
-											    case 'a' : $achecked="checked"; $as .= ' see it'; break;
-											    case 'b' : $bchecked="checked"; $bs = $as != '' ? ' and hear it' : ' hear it'; break;
-											    case 'c' : $cchecked="checked"; $cs .= $as != '' ? ' and read it' : $bs != '' ? ' and read it' : ' read it'; break;
-											    case 'd' : $dchecked="checked"; $ds .= $as != '' ? ' and do it' : $bs != '' ? ' and do it' : $cs != '' ? ' and do it' : ' do it'; break;
+												case 'a' : $achecked="checked"; break;
+												case 'b' : $bchecked="checked"; break;
+												case 'c' : $cchecked="checked"; break;
+												case 'd' : $dchecked="checked"; break;
 											}
 										}
-										
-										$q17 .=$as .''.$bs.''.$cs.''.$ds.' that you are convinced that your friends are good for you?';
 											
 									?>	
 									<div class="col-md-6">
-										<label>17. <?php echo $q17; ?></label>
+										<label>17. How many times do you have to (chosen options from up) that you are convinced that your friends are good for you?</label>
 										<div class="checkbox">
 			                            	<label><input type="checkbox" <?php echo $achecked;?>># of examples</label>
 			                            	<p>give number<input type="text"/></p>
